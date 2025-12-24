@@ -29,6 +29,18 @@ export interface PatientProfile {
   role: 'Patient';
 }
 
+export interface ProviderProfile {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  gender: string;
+  dob: string;
+  fee: number;
+  speciality: string;
+  profileUrl: string;
+}
+
 export interface RegisterFormData {
   name: string;
   email: string;

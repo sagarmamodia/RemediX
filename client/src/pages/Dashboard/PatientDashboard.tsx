@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import ProfileSection from '../../components/patient/dashboard/ProfileSection';
+import FindDoctorsSection from '../../components/patient/dashboard/FindDoctorsSection';
 
 const PatientDashboard = () => {
   const { logout, userRole } = useAuth();
@@ -169,14 +170,6 @@ const OverviewSection = () => (
         </button>
       </div>
     </div>
-  </div>
-);
-
-const FindDoctorsSection = () => (
-  <div className="bg-white p-8 rounded-xl border border-slate-200 text-center">
-    <Search className="w-12 h-12 text-text-muted mx-auto mb-4" />
-    <h3 className="text-lg font-semibold text-text-main">Find Doctors</h3>
-    <p className="text-text-muted">Search and filter functionality will be implemented here.</p>
   </div>
 );
 
