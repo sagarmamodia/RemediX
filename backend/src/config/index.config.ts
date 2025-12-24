@@ -20,6 +20,10 @@ const config = {
     secret: process.env.JWT_SECRET ?? "secret-key",
     expiresIn: process.env.JWT_EXPIRES_IN ?? "30d",
   },
+
+  square: {
+    access_token: process.env.SQUARE_ACCESS_TOKEN,
+  },
 } as const;
 
 export { config };

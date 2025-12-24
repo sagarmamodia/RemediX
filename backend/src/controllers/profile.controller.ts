@@ -43,28 +43,3 @@ export const getProfileHandler = async (
     return next(err);
   }
 };
-
-export const getPatientDetailsHandler = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    // req.body must contain the id of the patient
-    const id: string = req.body.id;
-    if (!id) {
-      throw new AppError("Invalid data", 400);
-    }
-
-    const patient = PatientRepository.getPatientById(id);
-    if (!patient) {
-      throw new AppError("Patient does not exist", 400);
-    }
-
-    return res
-      .status(200)
-      .json({ success: true, data: { role: "Patient", ...patient } });
-  } catch (err) {
-    return next(err);
-  }
-};

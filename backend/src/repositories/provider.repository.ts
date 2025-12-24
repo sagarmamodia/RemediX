@@ -75,3 +75,9 @@ export const getProvidersList = async (
 
   return providersAsDTO;
 };
+
+export const getProviderFee = async (id: string): Promise<number | null> => {
+  const provider = await ProviderModel.findById(id);
+  if (!provider) return null;
+  else return provider.fee;
+};

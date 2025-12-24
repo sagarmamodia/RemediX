@@ -4,6 +4,7 @@ import { config } from "./src/config/index.config";
 import { globalErrorHandler } from "./src/middleware/globalErrorHandler.middleware";
 import { requestLogger } from "./src/middleware/logger.middleware";
 import authRoutes from "./src/routes/auth.routes";
+import consultationRoutes from "./src/routes/consultation.routes";
 import patientRoutes from "./src/routes/patient.routes";
 import profileRoutes from "./src/routes/profile.routes";
 import providerRoutes from "./src/routes/provider.routes";
@@ -32,6 +33,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/provider", providerRoutes);
 app.use("/api/patient", patientRoutes);
+app.use("/api/consultation", consultationRoutes);
 
 // Global Error Handler
 app.use(globalErrorHandler);

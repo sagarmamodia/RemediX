@@ -1,6 +1,5 @@
 import { PatientDTO } from "../dtos/patient.dto";
 import { IPatient, PatientModel } from "../models/patient.model";
-import logger from "../utils/logger";
 import { CreatePatientDTO } from "../validators/patient.validator";
 
 // =================== IPatient to dtoPatient Mapper ================================
@@ -34,8 +33,6 @@ export const registerPatient = async (
 ): Promise<string> => {
   const doc = new PatientModel(data);
   const createdDoc = await doc.save();
-
-  logger.info("[PatientRepository][registerPatient] Patient Registered.");
   return createdDoc._id.toHexString();
 };
 
