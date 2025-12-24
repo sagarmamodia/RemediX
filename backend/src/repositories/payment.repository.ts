@@ -1,4 +1,5 @@
 import { PaymentModel } from "../models/payment.model";
+import logger from "../utils/logger";
 
 export const createPaymentRecord = async (
   squarePaymentId: string,
@@ -10,5 +11,7 @@ export const createPaymentRecord = async (
   });
 
   const createdDoc = await doc.save();
+  logger.info("payment doc saved");
+
   return createdDoc._id.toHexString();
 };

@@ -1,16 +1,16 @@
-import { Schema, model, Document, Types } from "mongoose";
+import { Document, Schema, Types, model } from "mongoose";
 
 export interface IPayment extends Document {
-    _id: Types.ObjectId,
-    amount: number,
-    consultationId: string,
-    createdAt: Date
+  _id: Types.ObjectId;
+  squarePaymentId: string;
+  amount: number;
+  createdAt: Date;
 }
 
 const paymentSchema = new Schema<IPayment>({
-    amount: {type: Number, required: true},
-    consultationId: {type: String, required: true},
-    createdAt: {type: Date, default: Date.now},
-})
+  squarePaymentId: { type: String, required: true },
+  amount: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
 
-export const PaymentModel = model<IPayment>('Payment', paymentSchema);
+export const PaymentModel = model<IPayment>("Payment", paymentSchema);
