@@ -11,6 +11,11 @@ const config = {
         origin: process.env.CORS_ORIGIN ?? "*",
         credentials: process.env.CORS_CREDENTIALS === "true",
     },
+
+    mongo: {
+        uri: process.env.MONGO_URI ?? "mongodb://localhost:27017"
+    }
+    
 } as const;
 
 export { config };
