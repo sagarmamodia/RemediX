@@ -13,5 +13,10 @@ consultationRoutes.get(
   "/id/:id",
   ConsultationController.getConsultationByIdHandler
 );
+consultationRoutes.post(
+  "/update/complete",
+  protect,
+  ConsultationController.updateConsultationStatusHandler
+);
 
 export default consultationRoutes;
