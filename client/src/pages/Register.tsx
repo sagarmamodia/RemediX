@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Stethoscope, Mail, Phone, Lock, Calendar, IndianRupee, Award, UserCircle } from 'lucide-react';
-import type { Role } from '../types';
+import type { Role, RegisterFormData } from '../types';
 import api from '../services/api';
 
 const Register = () => {
@@ -10,7 +10,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     name: '',
     email: '',
     phone: '',

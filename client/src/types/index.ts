@@ -7,3 +7,23 @@ export interface User {
   role: Role;
   image?: string;
 }
+
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  userRole: Role | null;
+  token: string | null;
+  login: (token: string, role: Role) => void;
+  logout: () => void;
+  loading: boolean;
+}
+
+export interface RegisterFormData {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  gender: string;
+  dob: string;
+  fee: string;
+  speciality: string;
+}

@@ -3,10 +3,12 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Phone, Lock, LogIn, User } from 'lucide-react';
 import type { Role } from '../types';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { login } = useAuth();
   
   const [role, setRole] = useState<Role>('Patient');
   const [phone, setPhone] = useState('');
@@ -38,9 +40,8 @@ const Login = () => {
       if (response.data.success) {
         const { accessToken } = response.data.data;
         
-        // Store token
-        localStorage.setItem('token', accessToken);
-        localStorage.setItem('userRole', role);
+        // Use context login function
+        login(accessToken, role);
         
         // Redirect to dashboard
         navigate('/dashboard');
