@@ -115,3 +115,37 @@ export const getConsultationByIdHandler = async (
     return next(err);
   }
 };
+
+export const updateConsultationStatusHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    if (user.role != "Provider") {
+      throw new AppError("Only providers are authorized", 401);
+    }
+
+    const id = req.body.id;
+    if (!id) {
+      throw new AppError("Invalid data", 400);
+    }
+
+    // Check if provider is has the permission to update this consultation
+    const consultation = await ConsultationRepository.getConsultationById(id);
+    if (!consultation) {
+      throw new AppError("Consultation does not exist", 400);
+    }
+
+    if (consultation.providerId != user.id) {
+      throw new AppError("You are unauthorized", 401);
+    }
+
+    // Update the status to fulfilled
+    await ConsultationRepository.updateConsultationStatus(id, "completed");
+    return res.status(200).json({ success: true, data: {} });
+  } catch (err) {
+    return next(err);
+  }
+};

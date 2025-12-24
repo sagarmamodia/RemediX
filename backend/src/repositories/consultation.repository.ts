@@ -60,3 +60,7 @@ export const nextConsultationStartTimeByProviderId = async (
 
   return mostRecentDoc.startTime;
 };
+
+export const updateConsultationStatus = async (id: string, status: string) => {
+  await ConsultationModel.findByIdAndUpdate(id, { status: status });
+};
