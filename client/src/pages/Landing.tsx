@@ -5,7 +5,7 @@ import { User, Stethoscope, ArrowRight, ShieldCheck, Clock } from 'lucide-react'
 const Landing = () => {
   const navigate = useNavigate();
 
-  const handleLoginRedirect = (role: 'patient' | 'provider') => {
+  const handleLoginRedirect = (role: 'Patient' | 'Provider') => {
     navigate(`/login?role=${role}`);
   };
 
@@ -36,7 +36,7 @@ const Landing = () => {
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
-              onClick={() => handleLoginRedirect('patient')}
+              onClick={() => handleLoginRedirect('Patient')}
               className="group relative w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-xl font-semibold text-lg shadow-lg shadow-primary/30 hover:bg-primary-hover hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2"
             >
               <User className="w-5 h-5" />
@@ -45,7 +45,7 @@ const Landing = () => {
             </button>
             
             <button
-              onClick={() => handleLoginRedirect('provider')}
+              onClick={() => handleLoginRedirect('Provider')}
               className="group w-full sm:w-auto px-8 py-4 bg-white text-text-main border border-slate-200 rounded-xl font-semibold text-lg shadow-soft hover:border-primary/30 hover:bg-slate-50 hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2"
             >
               <Stethoscope className="w-5 h-5 text-primary" />

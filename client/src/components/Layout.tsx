@@ -14,7 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
       <footer className="bg-white border-t border-slate-200 py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-4 text-center text-text-muted text-sm">
-          © {new Date().getFullYear()} RemidiX. All rights reserved.
+          © {new Date().getFullYear()} RemediX. All rights reserved.
         </div>
       </footer>
     </div>

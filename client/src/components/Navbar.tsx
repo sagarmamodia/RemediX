@@ -13,7 +13,7 @@ const Navbar = () => {
               <Stethoscope className="h-6 w-6 text-primary" />
             </div>
             <span className="text-xl font-bold text-text-main tracking-tight">
-              Remidi<span className="text-primary">X</span>
+              Remedi<span className="text-primary">X</span>
             </span>
           </Link>
 
