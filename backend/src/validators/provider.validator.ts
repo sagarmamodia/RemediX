@@ -7,6 +7,7 @@ export const CreateProviderSchema = z.object({
   phone: z.string(),
   speciality: z.string(),
   password: z.string().min(8, "password must have minimum of 8 characters"),
+
   // Email validation
   email: z.email("Invalid email address"),
 
