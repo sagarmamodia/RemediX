@@ -3,6 +3,7 @@ import {
   CreateConsultationDTO,
 } from "../dtos/consultation.dto";
 import { ConsultationModel, IConsultation } from "../models/consultation.model";
+import logger from "../utils/logger";
 
 // ================== Convert IConsultation to ConsultationDTO =======================
 function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
@@ -30,4 +31,32 @@ export const getConsultationById = async (
   const consultation = await ConsultationModel.findById(id);
   if (!consultation) return null;
   return toConsultationDTO(consultation);
+};
+
+export const getPendingConsultationsByProviderId = async (
+  id: string
+): Promise<ConsultationDTO[]> => {
+  const queryFilter = { providerId: id, status: "pending" };
+  const docs = await ConsultationModel.find(queryFilter);
+  logger.info("pending consultations fetched from database");
+
+  const consultationDtos: ConsultationDTO[] = [];
+  docs.forEach((doc) => {
+    consultationDtos.push(toConsultationDTO(doc));
+  });
+
+  return consultationDtos;
+};
+
+export const nextConsultationStartTimeByProviderId = async (
+  id: string
+): Promise<Date | null> => {
+  const queryFilter = { providerId: id, startTime: { $gte: new Date() } };
+  const docs = await ConsultationModel.find(queryFilter).sort({ startTime: 1 });
+  logger.info("upcoming consultations fetched from database");
+
+  if (docs.length == 0) return null;
+  const mostRecentDoc = docs[0];
+
+  return mostRecentDoc.startTime;
 };

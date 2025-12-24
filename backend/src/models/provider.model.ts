@@ -11,7 +11,7 @@ export interface IProvider extends Document {
   fee: number;
   speciality: string;
   profileUrl: string;
-  onShift: boolean; // Whether doctor current is on the shift or not
+  available: boolean; // Whether doctor is available for new consultation booking or not
 }
 
 const providerSchema = new Schema<IProvider>({
@@ -24,7 +24,7 @@ const providerSchema = new Schema<IProvider>({
   fee: { type: Number, required: true },
   speciality: { type: String, required: true },
   profileUrl: { type: String, required: true },
-  onShift: { type: Boolean, default: false },
+  available: { type: Boolean, default: false },
 });
 
 export const ProviderModel = model<IProvider>("Provider", providerSchema);

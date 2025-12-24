@@ -15,6 +15,7 @@ function toProviderDTO(provider: IProvider): ProviderDTO {
     dob: provider.dob.toISOString(),
     fee: provider.fee,
     speciality: provider.speciality,
+    available: provider.available,
     profileUrl: provider.profileUrl,
   };
 }
@@ -67,11 +68,15 @@ export const getProvidersList = async (
     queryFilter.name = { $regex: name, $options: "i" };
   }
 
+  logger.info("query filter created");
   const providers: IProvider[] = await ProviderModel.find(queryFilter);
+  logger.info("providers retrieved from db");
+
   const providersAsDTO: ProviderDTO[] = [];
   providers.forEach((provider) => {
     providersAsDTO.push(toProviderDTO(provider));
   });
+  logger.info("providers converted to DTOs");
 
   return providersAsDTO;
 };
@@ -80,4 +85,16 @@ export const getProviderFee = async (id: string): Promise<number | null> => {
   const provider = await ProviderModel.findById(id);
   if (!provider) return null;
   else return provider.fee;
+};
+
+export const updateProviderAvailability = async (
+  id: string,
+  availability: boolean
+) => {
+  await ProviderModel.findByIdAndUpdate(
+    id,
+    { available: availability },
+    { new: false, runValidators: true }
+  ).exec();
+  logger.info("provider availability changed}");
 };

@@ -26,8 +26,18 @@ export const paymentAndConsultationBookingHandler = async (
       throw new AppError("Invalid data format", 400);
     }
 
-    // retrieve provider's fees
-    const fee = await ProviderRepository.getProviderFee(parsed.data.providerId);
+    // check if provided is available or not
+    const provider = await ProviderRepository.getProviderById(
+      parsed.data.providerId
+    );
+    if (!provider) {
+      throw new AppError("Provider not found", 400);
+    }
+    if (!provider.available) {
+      throw new AppError("Provider not available", 400);
+    }
+
+    const fee = provider.fee;
     if (!fee) {
       throw new AppError("Provider not found", 400);
     }
@@ -61,11 +71,17 @@ export const paymentAndConsultationBookingHandler = async (
       patientId: user.id,
       paymentId: paymentId,
     };
-
-    logger.info("consultation created");
-
     const consultationId =
       await ConsultationRepository.createConsultationRecord(data);
+    logger.info("consultation created");
+
+    // set provider availability to false
+    await ProviderRepository.updateProviderAvailability(
+      parsed.data.providerId,
+      false
+    );
+
+    logger.info("provider availability set to false");
 
     return res
       .status(200)
