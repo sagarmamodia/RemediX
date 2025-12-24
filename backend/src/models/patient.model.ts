@@ -2,12 +2,12 @@ import { Schema, model, Document, Types } from "mongoose";
 
 export interface IPatient extends Document {
     _id: Types.ObjectId,
-    name: String, 
-    email: String, 
-    phone: String, 
-    gender: String, 
+    name: string, 
+    email: string, 
+    phone: string, 
+    gender: string, 
     dob: Date,
-    profileUrl: String // if user uploads no profile picture then a general profile pic url is added as a default
+    profileUrl: string // if user uploads no profile picture then a general profile pic url is added as a default
 }
 
 const patientSchema = new Schema<IPatient>({

@@ -2,14 +2,14 @@ import {Schema, model, Document, Types} from "mongoose";
 
 interface IProvider extends Document {
     _id: Types.ObjectId
-    name: String 
-    email: String
-    phone: String 
-    gender: String 
+    name: string 
+    email: string
+    phone: string 
+    gender: string 
     dob: Date 
-    speciality: String
-    profileUrl: String  
-    onShift: Boolean // Whether doctor current is on the shift or not
+    speciality: string
+    profileUrl: string  
+    onShift: boolean // Whether doctor current is on the shift or not
 }
 
 const providerSchema = new Schema<IProvider>({

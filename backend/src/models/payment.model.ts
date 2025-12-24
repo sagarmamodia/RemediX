@@ -2,8 +2,8 @@ import { Schema, model, Document, Types } from "mongoose";
 
 export interface IPayment extends Document {
     _id: Types.ObjectId,
-    amount: Number,
-    consultationId: String,
+    amount: number,
+    consultationId: string,
     createdAt: Date
 }
 

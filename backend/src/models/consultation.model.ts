@@ -2,10 +2,10 @@ import { Schema, model, Document, Types } from "mongoose";
 
 export interface IConsultation extends Document {
     _id: Types.ObjectId,
-    providerId: String,
-    patientId: String,
-    slotId: String,
-    status: String
+    providerId: string,
+    patientId: string,
+    slotId: string,
+    status: string
 }
 
 const consultationSchema = new Schema<IConsultation>({

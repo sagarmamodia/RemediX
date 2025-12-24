@@ -2,11 +2,11 @@ import { Schema, model, Document, Types } from "mongoose";
 
 export interface IChat extends Document {
     _id: Types.ObjectId,
-    consultationId: String,
-    sender: String,
-    receiver: String,
-    messageType: String,
-    message: String,
+    consultationId: string,
+    sender: string,
+    receiver: string,
+    messageType: string,
+    message: string,
     createdAt: Date
 }
 
