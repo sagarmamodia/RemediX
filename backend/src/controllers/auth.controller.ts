@@ -1,0 +1,102 @@
+import type { NextFunction, Request, Response } from "express";
+import * as PatientRepository from "../repositories/patient.repository";
+import * as ProviderRepository from "../repositories/provider.repository";
+
+import { AppError } from "../utils/AppError";
+import { generateAccessToken } from "../utils/jwt";
+import { LoginSchema } from "../validators/login.validator";
+import { CreatePatientSchema } from "../validators/patient.validator";
+import { CreateProviderSchema } from "../validators/provider.validator";
+
+export const patientRegistrationHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Parse data from the request
+    const data = req.body;
+    const parsed = CreatePatientSchema.safeParse(data);
+    if (!parsed.success) {
+      throw new AppError("Invalid data", 400);
+    }
+
+    // Register patient in the repository
+    const id = await PatientRepository.registerPatient(parsed.data);
+    console.log(id);
+
+    // return response
+    return res.json({ success: true, data: { id: id } });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const providerRegistrationHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Parse data from the request
+    const data = req.body;
+    const parsed = CreateProviderSchema.safeParse(data);
+    if (!parsed.success) {
+      throw new AppError("Invalid data", 400);
+    }
+
+    // Register patient in the repository
+    const id = await ProviderRepository.registerProvider(parsed.data);
+
+    // return response
+    return res.json({ success: true, data: { id: id } });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const loginHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const parsed = LoginSchema.safeParse(req.body);
+    if (!parsed.success) {
+      throw new AppError("Invalid data", 400);
+    }
+
+    const data = parsed.data;
+    let account: { id: string; password: string } | null = null;
+    // Authenticate user
+    if (data.role == "Provider") {
+      account = await ProviderRepository.getProviderByPhoneWithPassword(
+        data.phone
+      );
+    } else {
+      account = await PatientRepository.getPatientByPhoneWithPassword(
+        data.phone
+      );
+    }
+
+    // if no account exists with this phone number
+    if (!account) {
+      return res
+        .status(400)
+        .json({ success: false, data: { error: "user does not exist" } });
+    }
+
+    // if a provider exists with this phone number then match passwords and return access token
+    if (data.password != account.password) {
+      return res
+        .status(400)
+        .json({ success: false, data: { error: "Invalid password" } });
+    }
+    const token = generateAccessToken(account.id, data.role);
+    return res
+      .status(200)
+      .json({ success: true, data: { accessToken: token } });
+  } catch (error) {
+    return next(error);
+  }
+};
