@@ -2,6 +2,7 @@ import { ProviderDTO } from "../dtos/provider.dto";
 import { IProvider, ProviderModel } from "../models/provider.model";
 import logger from "../utils/logger";
 import { CreateProviderDTO } from "../validators/provider.validator";
+import { ProviderFilterQueryDTO } from "../validators/providerFilter.validator";
 
 // =================== IPatient to toProviderDTO Mapper ================================
 function toProviderDTO(provider: IProvider): ProviderDTO {
@@ -49,4 +50,28 @@ export const getProviderByPhoneWithPassword = async (
   });
   if (!provider) return null;
   return { id: provider._id.toHexString(), password: provider.password };
+};
+
+export const getProvidersList = async (
+  filter: ProviderFilterQueryDTO
+): Promise<ProviderDTO[]> => {
+  const { speciality, fee, name } = filter;
+  const queryFilter: any = {};
+  if (speciality) {
+    queryFilter.speciality = speciality;
+  }
+  if (fee) {
+    queryFilter.fee = { $gte: fee[0], $lte: fee[1] };
+  }
+  if (name) {
+    queryFilter.name = { $regex: name, $options: "i" };
+  }
+
+  const providers: IProvider[] = await ProviderModel.find(queryFilter);
+  const providersAsDTO: ProviderDTO[] = [];
+  providers.forEach((provider) => {
+    providersAsDTO.push(toProviderDTO(provider));
+  });
+
+  return providersAsDTO;
 };
