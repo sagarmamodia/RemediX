@@ -6,6 +6,7 @@ import * as ConsultationRepository from "../repositories/consultation.repository
 import * as PaymentRepository from "../repositories/payment.repository";
 import * as ProviderRepository from "../repositories/provider.repository";
 import { AppError } from "../utils/AppError";
+import logger from "../utils/logger";
 import { BookConsultationSchema } from "../validators/consultation.validator";
 
 export const paymentAndConsultationBookingHandler = async (
@@ -44,6 +45,7 @@ export const paymentAndConsultationBookingHandler = async (
     if (!response.result.payment || !response.result.payment.id) {
       throw new AppError("Payment failed", 400);
     }
+    logger.info("payment charged");
 
     // record payment in db
     const paymentId = await PaymentRepository.createPaymentRecord(
@@ -51,12 +53,16 @@ export const paymentAndConsultationBookingHandler = async (
       fee
     );
 
+    logger.info("payment recorded");
+
     // create consultation
     const data: CreateConsultationDTO = {
       providerId: parsed.data.providerId,
       patientId: user.id,
       paymentId: paymentId,
     };
+
+    logger.info("consultation created");
 
     const consultationId =
       await ConsultationRepository.createConsultationRecord(data);
@@ -89,5 +95,7 @@ export const getConsultationByIdHandler = async (
       success: true,
       data: consultation,
     });
-  } catch (err) {}
+  } catch (err) {
+    return next(err);
+  }
 };
