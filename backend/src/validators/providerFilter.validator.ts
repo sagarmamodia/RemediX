@@ -26,4 +26,4 @@ export const ProviderFilterQuerySchema = z.object({
     .optional(),
 });
 
-export type ProviderFilterQueryType = z.infer<typeof ProviderFilterQuerySchema>;
+export type ProviderFilterQueryDTO = z.infer<typeof ProviderFilterQuerySchema>;

@@ -17,7 +17,7 @@ export interface IProvider extends Document {
 const providerSchema = new Schema<IProvider>({
   name: { type: String, required: true },
   email: { type: String, required: true },
-  phone: { type: String, required: true },
+  phone: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   gender: { type: String, enum: ["Male", "Female", "Other"] },
   dob: { type: Date, required: true },
