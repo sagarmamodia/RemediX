@@ -40,7 +40,10 @@ const Register = () => {
         // will later user can edit profile imaage from prodile update section 
         profileUrl: defaultProfileUrl,
         // Convert fee to number for doctor
-        ...(role === 'Doctor' && { fee: Number(formData.fee) })
+        ...(role === 'Doctor' && { 
+          fee: Number(formData.fee),
+          specialty: formData.speciality
+        })
       };
 
       const endpoint = role === 'Patient' ? '/auth/patient/register' : '/auth/doctor/register';
@@ -216,8 +219,8 @@ const Register = () => {
             </div>
           </div>
 
-          {/* Provider Specific Fields */}
-          {role === 'Provider' && (
+          {/* Doctor Specific Fields */}
+          {role === 'Doctor' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-100 animate-fade-in">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-text-main">Speciality</label>
@@ -228,7 +231,7 @@ const Register = () => {
                   <input
                     type="text"
                     name="speciality"
-                    required={role === 'Provider'}
+                    required={role === 'Doctor'}
                     className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white"
                     placeholder="e.g. Cardiologist"
                     value={formData.speciality}
@@ -246,7 +249,7 @@ const Register = () => {
                   <input
                     type="number"
                     name="fee"
-                    required={role === 'Provider'}
+                    required={role === 'Doctor'}
                     min="0"
                     className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white"
                     placeholder="0.00"
