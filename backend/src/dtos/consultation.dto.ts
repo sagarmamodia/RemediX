@@ -29,6 +29,7 @@ export interface PatientConsultationsDTO {
   id: string;
   doctorName: string;
   doctorProfileUrl: string;
+  doctorSpecialty: string;
   startTime: string;
   endTime?: string;
   status: string;
