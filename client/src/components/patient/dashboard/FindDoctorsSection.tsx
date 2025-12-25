@@ -136,7 +136,7 @@ const FindDoctorsSection = () => {
                   onClick={() => navigate(`/booking/${doctor.id}`)}
                   className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:bg-primary-dark transition-colors"
                 >
-                  Book Appointment
+                  Book Consultation
                 </button>
               </div>
             </div>

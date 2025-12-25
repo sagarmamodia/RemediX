@@ -118,9 +118,10 @@ const BookingPage = () => {
                     // Redirect to success/dashboard
                     navigate('/dashboard', { state: { bookingSuccess: true } });
                   }
-                } catch (err) {
+                } catch (err: any) {
                   console.error('Booking failed:', err);
-                  alert('Payment processed but booking failed. Please contact support.');
+                  const errorMessage = err.response?.data?.data?.error || err.message || 'Booking failed';
+                  alert(`Booking failed: ${errorMessage}`);
                 } finally {
                   setProcessing(false);
                 }
