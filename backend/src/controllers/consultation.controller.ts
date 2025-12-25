@@ -7,7 +7,7 @@ import * as PaymentRepository from "../repositories/payment.repository";
 import * as ProviderRepository from "../repositories/provider.repository";
 import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
-import { createRoomAPI } from "../utils/room";
+import { createRoomAPI, deleteRoomAPI } from "../utils/room";
 import { BookConsultationSchema } from "../validators/consultation.validator";
 
 export const paymentAndConsultationBookingHandler = async (
@@ -162,7 +162,7 @@ export const updateConsultationStatusHandler = async (
       throw new AppError("Invalid data", 400);
     }
 
-    // Check if provider is has the permission to update this consultation
+    // Check if provider has the permission to update this consultation
     const consultation = await ConsultationRepository.getConsultationById(id);
     if (!consultation) {
       throw new AppError("Consultation does not exist", 404);
@@ -170,6 +170,12 @@ export const updateConsultationStatusHandler = async (
 
     if (consultation.providerId != user.id) {
       throw new AppError("You are unauthorized", 401);
+    }
+
+    // Check if the consultation have a room associated with it
+    if (consultation.roomName) {
+      await deleteRoomAPI(consultation.roomName);
+      await ConsultationRepository.deleteRoom(consultation.id);
     }
 
     // Update the status to completed
@@ -203,12 +209,16 @@ export const joinConsultationHandler = async (
     // get url from consultation
     const roomUrl = consultation.roomUrl;
 
-    // create roomUrl if it does not exist
+    // create room if it does not exist
     if (!roomUrl) {
-      const newRoomUrl = await createRoomAPI();
+      const { newRoomUrl, newRoomName } = await createRoomAPI();
 
       // save this roomUrl to consultation
-      await ConsultationRepository.updateRoomUrl(consultation.id, newRoomUrl);
+      await ConsultationRepository.addRoom(
+        consultation.id,
+        newRoomUrl,
+        newRoomName
+      );
 
       return res
         .status(200)

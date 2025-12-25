@@ -12,5 +12,6 @@ export interface ConsultationDTO {
   startTime: string;
   endTime?: string;
   roomUrl?: string;
+  roomName?: string;
   status: string;
 }

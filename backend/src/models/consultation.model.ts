@@ -8,6 +8,7 @@ export interface IConsultation extends Document {
   startTime: Date;
   endTime: Date | undefined;
   roomUrl: string | undefined;
+  roomName: string | undefined;
   status: string;
 }
 
@@ -23,6 +24,10 @@ const consultationSchema = new Schema<IConsultation>({
     required: false,
   },
   roomUrl: {
+    type: String,
+    required: false,
+  },
+  roomName: {
     type: String,
     required: false,
   },
