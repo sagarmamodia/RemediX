@@ -182,6 +182,7 @@ export const getAllConsultationsHandler = async (
             obj.startTime = consultation.startTime;
             obj.endTime = consultation.endTime;
             obj.status = consultation.status;
+            obj.doctorSpecialty = doctor.specialty;
             data.push(obj);
           }
         } catch (err) {
