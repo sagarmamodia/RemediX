@@ -5,7 +5,6 @@ export const getVideoSDKToken = (): string => {
   if (!config.videosdk.API_KEY || !config.videosdk.SECRET) {
     throw new Error("API_KEY and SECRET are missing");
   }
-  console.log(config.videosdk.API_KEY);
   const options = { expiresIn: "120m", algorithm: "HS256" };
   const payload = {
     apikey: config.videosdk.API_KEY,

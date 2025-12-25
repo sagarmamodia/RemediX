@@ -8,7 +8,7 @@ import * as DoctorRepository from "../repositories/doctor.repository";
 import * as PatientRepository from "../repositories/patient.repository";
 import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
-import { createRoomAPI } from "../utils/videosdk";
+import { createRoomAPI, getVideoSDKToken } from "../utils/videosdk";
 
 // SEND CONSULTATION DETAILS FOR A PARTICULAR ID
 export const getConsultationByIdHandler = async (
@@ -175,6 +175,7 @@ export const joinConsultationHandler = async (
 
     // get url from consultation
     const roomId = consultation.roomId;
+    const token = getVideoSDKToken();
     // create room if it does not exist
     if (!roomId) {
       logger.info("creating room");
@@ -192,10 +193,12 @@ export const joinConsultationHandler = async (
 
       return res
         .status(200)
-        .json({ success: true, data: { roomId: newRoomId } });
+        .json({ success: true, data: { roomId: newRoomId, token: token } });
     }
 
-    return res.status(200).json({ success: true, data: { roomId: roomId } });
+    return res
+      .status(200)
+      .json({ success: true, data: { roomId: roomId, token: token } });
   } catch (err) {
     return next(err);
   }
