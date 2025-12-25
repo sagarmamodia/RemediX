@@ -305,12 +305,17 @@ export const checkSlotAvailabilityHandler = async (
       throw new AppError("Invalid data format", 400);
     }
 
-    // check if the slot is in the shift of the doctor
     const doctor = await DoctorRepository.getDoctorById(parsed.data.doctorId);
     if (!doctor) {
       throw new AppError("Doctor does not exist", 404);
     }
 
+    // check if the doctor is available for bookings
+    if (!doctor.available) {
+      return false;
+    }
+
+    // check if the slot is in the shift of the doctor
     const startTime = new Date(parsed.data.slot[0]);
     const endTime = new Date(parsed.data.slot[1]);
 
