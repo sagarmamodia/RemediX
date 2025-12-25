@@ -9,7 +9,7 @@ export interface IDoctor extends Document {
   gender: string;
   dob: Date;
   fee: number;
-  speciality: string;
+  specialty: string;
   profileUrl: string;
   available: boolean; // Whether doctor is available for new consultation booking or not
 }
@@ -22,7 +22,7 @@ const doctorSchema = new Schema<IDoctor>({
   gender: { type: String, enum: ["Male", "Female", "Other"] },
   dob: { type: Date, required: true },
   fee: { type: Number, required: true },
-  speciality: { type: String, required: true },
+  specialty: { type: String, required: true },
   profileUrl: { type: String, required: true },
   available: { type: Boolean, default: false },
 });

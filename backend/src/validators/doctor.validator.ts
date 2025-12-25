@@ -5,7 +5,7 @@ export const CreateDoctorSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   profileUrl: z.string().min(2, "Url must have atleast 2 characters"),
   phone: z.string(),
-  speciality: z.string(),
+  specialty: z.string(),
   password: z.string().min(8, "password must have minimum of 8 characters"),
 
   // Email validation

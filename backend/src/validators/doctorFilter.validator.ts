@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const DoctorFilterQuerySchema = z.object({
-  speciality: z.string().optional(),
+  specialty: z.string().optional(),
   name: z.string().optional(),
   fee: z
     .preprocess(
