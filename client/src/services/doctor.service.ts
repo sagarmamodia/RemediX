@@ -19,5 +19,12 @@ export const doctorService = {
   getProfile: async () => {
     const response = await api.get<{ success: boolean; data: DoctorProfile }>('/profile');
     return response.data;
+  },
+
+  updateAvailability: async (available: boolean) => {
+    const response = await api.post<{ success: boolean }>('/doctor/availability/update', {
+      available: String(available)
+    });
+    return response.data;
   }
 };

@@ -1,8 +1,61 @@
-import React from 'react';
-import { Calendar, Clock, Users, Video } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, Clock, Users, Video, Power } from 'lucide-react';
+import { doctorService } from '../../../services/doctor.service';
 
-const OverviewSection = () => (
+const OverviewSection = () => {
+  const [available, setAvailable] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await doctorService.getProfile();
+        if (response.success) {
+          setAvailable(response.data.available);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const toggleAvailability = async () => {
+    try {
+      const newStatus = !available;
+      await doctorService.updateAvailability(newStatus);
+      setAvailable(newStatus);
+    } catch (err) {
+      console.error('Failed to update availability', err);
+      alert('Failed to update availability. You may have pending consultations.');
+    }
+  };
+
+  return (
   <div className="space-y-6">
+    {/* Availability Toggle Header */}
+    <div className="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+      <div>
+        <h2 className="text-xl font-bold text-text-main">Overview</h2>
+        <p className="text-text-muted text-sm">Welcome back, Doctor</p>
+      </div>
+      <button
+        onClick={toggleAvailability}
+        disabled={loading}
+        className={`flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all ${
+          available 
+            ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+        }`}
+      >
+        <div className={`w-3 h-3 rounded-full ${available ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`} />
+        {loading ? 'Loading...' : available ? 'Available for Consultations' : 'Unavailable'}
+        <Power size={18} />
+      </button>
+    </div>
+
     {/* Stats Grid */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
@@ -59,5 +112,6 @@ const OverviewSection = () => (
     </div>
   </div>
 );
+};
 
 export default OverviewSection;
