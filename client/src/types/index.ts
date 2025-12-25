@@ -37,7 +37,7 @@ export interface DoctorProfile {
   gender: string;
   dob: string;
   fee: number;
-  speciality: string;
+  specialty: string;
   profileUrl: string;
   available: boolean;
 }
@@ -50,5 +50,62 @@ export interface RegisterFormData {
   gender: string;
   dob: string;
   fee: string;
-  speciality: string;
+  specialty: string;
+}
+
+// Consultation Types
+export interface BookConsultationPayload {
+  doctorId: string;
+  sourceId: string;
+}
+
+export interface BookConsultationResponse {
+  success: boolean;
+  data: {
+    id: string;
+  };
+}
+
+export interface Consultation {
+  _id: string;
+  doctor: {
+    _id: string;
+    name: string;
+    specialization: string;
+    image: string;
+  };
+  patient?: {
+    name: string;
+    image: string;
+  };
+  date: string;
+  timeSlot: string;
+  status: 'scheduled' | 'completed' | 'cancelled' | 'pending';
+  amount: number;
+}
+
+export interface BackendConsultationDTO {
+  consultationId: string;
+  doctorName?: string;
+  patientName?: string;
+  doctorProfileUrl?: string;
+  patientProfileUrl?: string;
+  doctorSpecialty?: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+}
+
+export interface ConsultationListResponse {
+  success: boolean;
+  data: {
+    list: BackendConsultationDTO[];
+  };
+}
+
+export interface DoctorListResponse {
+  success: boolean;
+  data: {
+    list: DoctorProfile[];
+  };
 }

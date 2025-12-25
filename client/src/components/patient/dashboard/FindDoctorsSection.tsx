@@ -29,10 +29,10 @@ const FindDoctorsSection = () => {
   const fetchDoctors = async () => {
     try {
       setLoading(true);
-      const filters: { name?: string; speciality?: string } = {};
+      const filters: { name?: string; specialty?: string } = {};
       
       if (searchQuery) filters.name = searchQuery;
-      if (selectedSpeciality !== 'All') filters.speciality = selectedSpeciality;
+      if (selectedSpeciality !== 'All') filters.specialty = selectedSpeciality;
 
       const response = await doctorService.getDoctors(filters);
       if (response.success) {
@@ -115,7 +115,7 @@ const FindDoctorsSection = () => {
                   />
                 </div>
                 <h3 className="text-lg font-bold text-text-main">{doctor.name}</h3>
-                <p className="text-primary font-medium text-sm">{doctor.speciality}</p>
+                <p className="text-primary font-medium text-sm">{doctor.specialty}</p>
                 
                 <div className="flex items-center gap-1 mt-2 text-yellow-500">
                   <Star size={16} fill="currentColor" />

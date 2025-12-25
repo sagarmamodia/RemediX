@@ -30,7 +30,7 @@ const doctors = [
     gender: 'Male',
     dob: '1990-01-01',
     fee: 1000,
-    speciality: 'Cardiologist',
+    specialty: 'Cardiologist',
     role: 'Doctor',
     available: true
   },
@@ -42,7 +42,7 @@ const doctors = [
     gender: 'Female',
     dob: '1992-05-15',
     fee: 800,
-    speciality: 'Dermatologist',
+    specialty: 'Dermatologist',
     role: 'Doctor',
     available: true
   }

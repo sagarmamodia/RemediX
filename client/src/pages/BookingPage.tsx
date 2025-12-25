@@ -60,7 +60,7 @@ const BookingPage = () => {
               </div>
               <div>
                 <h3 className="font-bold text-text-main">{doctor.name}</h3>
-                <p className="text-primary text-sm">{doctor.speciality}</p>
+                <p className="text-primary text-sm">{doctor.specialty}</p>
               </div>
             </div>
 
