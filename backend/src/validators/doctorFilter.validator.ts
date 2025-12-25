@@ -24,6 +24,20 @@ export const DoctorFilterQuerySchema = z.object({
         })
     )
     .optional(),
+  available: z
+    .preprocess(
+      // Transform the string to boolean first
+      (val) => {
+        if (typeof val === "string") {
+          const lower = val.toLowerCase();
+          if (lower === "true") return true;
+          if (lower === "false") return false;
+        }
+        return val;
+      },
+      z.boolean()
+    )
+    .optional(),
 });
 
 export type DoctorFilterQueryDTO = z.infer<typeof DoctorFilterQuerySchema>;

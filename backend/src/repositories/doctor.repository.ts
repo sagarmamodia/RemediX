@@ -54,7 +54,7 @@ export const getDoctorByPhoneWithPassword = async (
 export const getDoctorsList = async (
   filter: DoctorFilterQueryDTO
 ): Promise<DoctorDTO[]> => {
-  const { specialty, fee, name } = filter;
+  const { specialty, fee, name, available } = filter;
   const queryFilter: any = {};
   if (specialty) {
     queryFilter.specialty = specialty;
@@ -64,6 +64,9 @@ export const getDoctorsList = async (
   }
   if (name) {
     queryFilter.name = { $regex: name, $options: "i" };
+  }
+  if (available !== undefined) {
+    queryFilter.available = available;
   }
 
   logger.info("query filter created");
