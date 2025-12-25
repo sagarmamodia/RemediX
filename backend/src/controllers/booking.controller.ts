@@ -1,0 +1,336 @@
+import { NextFunction, Request, Response } from "express";
+import { randomUUID } from "node:crypto";
+import squareClient from "../config/square.config";
+import { CreateConsultationDTO } from "../dtos/consultation.dto";
+import * as ConsultationRepository from "../repositories/consultation.repository";
+import * as DoctorRepository from "../repositories/doctor.repository";
+import * as PaymentRepository from "../repositories/payment.repository";
+import { AppError } from "../utils/AppError";
+import logger from "../utils/logger";
+import { BookSlotSchema } from "../validators/bookSlot.validator";
+import { CheckSlotSchema } from "../validators/checkSlot.validator";
+import { BookConsultationSchema } from "../validators/consultation.validator";
+import { RescheduleSchema } from "../validators/reschedule.validator";
+
+// =============================== HELPER ARRAY ===========================
+const DAYS: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+const checkSlotAvailability = async (
+  doctorId: string,
+  startTime: Date,
+  endTime: Date
+): Promise<boolean> => {
+  const doctor = await DoctorRepository.getDoctorById(doctorId);
+  if (!doctor) return false;
+  const dayOfWeek = DAYS[startTime.getDay()];
+  let validShift = false;
+  const doctorShifts = doctor.shifts;
+  for (const shift of doctorShifts) {
+    // match day
+    const dayOfWeek = DAYS[startTime.getDay()];
+    if (dayOfWeek != shift.dayOfWeek) {
+      continue;
+    }
+
+    // match time
+    const startTimeMSM = startTime.getHours() * 60 + startTime.getMinutes();
+    const endTimeMSM = endTime.getHours() * 60 + endTime.getMinutes();
+    if (startTimeMSM < shift.startTime || endTimeMSM > shift.endTime) {
+      continue;
+    }
+
+    validShift = true;
+    break;
+  }
+
+  if (!validShift) {
+    return false;
+  }
+
+  // Check if the doctor have no other consultations booked at this time.
+  const consultations =
+    await ConsultationRepository.getPendingConsultationsByDoctorId(doctorId);
+
+  let noOtherShift = true;
+  for (const consultation of consultations) {
+    const consultationStartTime = new Date(consultation.startTime);
+    const consultationEndTime = new Date(consultation.endTime);
+    if (startTime >= consultationStartTime && endTime <= consultationEndTime) {
+      noOtherShift = false;
+      break;
+    }
+  }
+
+  if (!noOtherShift) {
+    return false;
+  }
+
+  return true;
+};
+
+// ========================================================================
+
+// PROCESS PAYMENT AND CREATE INSTANT CONSULTATION IN DB
+export const instantPaymentAndConsultationBookingHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    if (user.role != "Patient") {
+      throw new AppError("Only patients can book consultation", 400);
+    }
+
+    // parse json payload
+    const parsed = BookConsultationSchema.safeParse(req.body);
+    if (!parsed.success) {
+      throw new AppError("Invalid data format", 400);
+    }
+
+    // check if provided is available or not
+    const doctor = await DoctorRepository.getDoctorById(parsed.data.doctorId);
+    if (!doctor) {
+      throw new AppError("doctor not found", 400);
+    }
+    if (!doctor.available) {
+      throw new AppError("doctor not available", 400);
+    }
+
+    const fee = doctor.fee;
+    if (!fee) {
+      throw new AppError("doctor not found", 400);
+    }
+
+    // Charge payment
+    const response = await squareClient.paymentsApi.createPayment({
+      sourceId: parsed.data.sourceId,
+      idempotencyKey: randomUUID(),
+      amountMoney: {
+        amount: BigInt(fee),
+        currency: "USD",
+      },
+    });
+
+    if (!response.result.payment || !response.result.payment.id) {
+      throw new AppError("Payment failed", 400);
+    }
+    logger.info("payment charged");
+
+    // record payment in db
+    const paymentId = await PaymentRepository.createPaymentRecord(
+      response.result.payment.id,
+      fee
+    );
+
+    logger.info("payment recorded");
+
+    // create consultation
+    const startTime = new Date(Date.now() + 5 * 60 * 1000);
+    const endTime = new Date(Date.now() + 35 * 60 * 1000);
+    const data: CreateConsultationDTO = {
+      doctorId: parsed.data.doctorId,
+      patientId: user.id,
+      paymentId: paymentId,
+      startTime: startTime,
+      endTime: endTime,
+      fee: fee,
+    };
+    const consultationId =
+      await ConsultationRepository.createConsultationRecord(data);
+    logger.info("consultation created");
+
+    // set doctor availability to false
+    await DoctorRepository.updateDoctorAvailability(
+      parsed.data.doctorId,
+      false
+    );
+
+    logger.info("doctor availability set to false");
+
+    return res
+      .status(200)
+      .json({ success: true, data: { id: consultationId } });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// PROCESS PAYMENT AND BOOK THE CONSULTATION SLOT
+export const paymentAndSlotBookingHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    if (user.role != "Patient") {
+      throw new AppError("Only patients are authorized", 401);
+    }
+
+    const parsed = BookSlotSchema.safeParse(req.body);
+    if (!parsed.success) {
+      throw new AppError("Invalid data", 400);
+    }
+    const doctorId = parsed.data.doctorId;
+    const startTime = new Date(parsed.data.slot[0]);
+    const endTime = new Date(parsed.data.slot[1]);
+
+    // check if the doctor even exists
+    const doctor = await DoctorRepository.getDoctorById(doctorId);
+    if (!doctor) {
+      throw new AppError("Doctor not found", 404);
+    }
+
+    // check slot availability
+    const check = await checkSlotAvailability(doctorId, startTime, endTime);
+    if (!check) {
+      return res
+        .status(200)
+        .json({ success: false, data: { error: "slot not avaliable" } });
+    }
+
+    // == PROCEED SLOT BOOKING ==
+    const fee = doctor.fee;
+    if (!fee) {
+      throw new AppError("doctor not found", 400);
+    }
+
+    // Charge payment
+    const response = await squareClient.paymentsApi.createPayment({
+      sourceId: parsed.data.sourceId,
+      idempotencyKey: randomUUID(),
+      amountMoney: {
+        amount: BigInt(fee),
+        currency: "USD",
+      },
+    });
+
+    if (!response.result.payment || !response.result.payment.id) {
+      throw new AppError("Payment failed", 400);
+    }
+    logger.info("payment charged");
+
+    // record payment in db
+    const paymentId = await PaymentRepository.createPaymentRecord(
+      response.result.payment.id,
+      fee
+    );
+
+    logger.info("payment recorded");
+
+    // create consultation
+    const data: CreateConsultationDTO = {
+      doctorId: parsed.data.doctorId,
+      patientId: user.id,
+      paymentId: paymentId,
+      startTime: startTime,
+      endTime: endTime,
+      fee: fee,
+    };
+    const consultationId =
+      await ConsultationRepository.createConsultationRecord(data);
+
+    return res
+      .status(200)
+      .json({ success: true, data: { consultationId: consultationId } });
+    //
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// CHECK AND RETURN IF THE SLOT IS AVAILABLE FOR BOOKING
+export const checkSlotAvailabilityHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const parsed = CheckSlotSchema.safeParse(req.body);
+    if (!parsed.success) {
+      throw new AppError("Invalid data format", 400);
+    }
+
+    // check if the slot is in the shift of the doctor
+    const doctor = await DoctorRepository.getDoctorById(parsed.data.doctorId);
+    if (!doctor) {
+      throw new AppError("Doctor does not exist", 404);
+    }
+
+    const startTime = new Date(parsed.data.slot[0]);
+    const endTime = new Date(parsed.data.slot[1]);
+
+    const check = await checkSlotAvailability(
+      parsed.data.doctorId,
+      startTime,
+      endTime
+    );
+
+    if (!check) {
+      return res
+        .status(200)
+        .json({ success: true, data: { validSlot: false } });
+    }
+
+    return res.status(200).json({ success: true, data: { validSlot: true } });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// RESCHEDULE A CONSULTATION
+export const rescheduleConsultationHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    if (user.role != "Patient") {
+      throw new AppError("Only patients are authorized", 401);
+    }
+
+    // parse json data
+    const parsed = RescheduleSchema.safeParse(req.body);
+    if (!parsed.success) {
+      throw new AppError("Invalid data", 400);
+    }
+
+    // Check if consultation even exists
+    const consultation = await ConsultationRepository.getConsultationById(
+      parsed.data.consultationId
+    );
+    if (!consultation) {
+      throw new AppError("Consultation not found", 404);
+    }
+    const doctorId = consultation.doctorId;
+    const startTime = new Date(parsed.data.slot[0]);
+    const endTime = new Date(parsed.data.slot[1]);
+
+    // check if the startTime of consultation is less than an hour away
+    const sT = new Date(consultation.startTime);
+    const diff = sT.getTime() - Date.now(); // in millisecond
+    const hour = 60 * 60 * 1000;
+    if (diff < hour) {
+      throw new AppError("You have exceeded the time to reschedule", 400);
+    }
+
+    // check slot availability
+    const check = checkSlotAvailability(doctorId, startTime, endTime);
+    if (!check) {
+      throw new AppError("Slot not available", 400);
+    }
+
+    // reschdule
+    await ConsultationRepository.updateSlot(
+      consultation.id,
+      startTime,
+      endTime
+    );
+
+    return res.status(200).json({ success: true, data: {} });
+  } catch (err) {
+    return next(err);
+  }
+};

@@ -13,12 +13,10 @@ function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
     patientId: consultation.patientId,
     paymentId: consultation.paymentId,
     startTime: consultation.startTime.toISOString(),
-    roomUrl: consultation.roomUrl,
-    roomName: consultation.roomName,
-    endTime: consultation.endTime
-      ? consultation.endTime.toISOString()
-      : undefined,
+    roomId: consultation.roomId,
+    endTime: consultation.endTime.toISOString(),
     status: consultation.status,
+    fee: consultation.fee,
   };
 }
 
@@ -94,19 +92,25 @@ export const updateConsultationStatus = async (id: string, status: string) => {
   await ConsultationModel.findByIdAndUpdate(id, { status: status });
 };
 
-export const addRoom = async (
-  id: string,
-  roomUrl: string,
-  roomName: string
-) => {
+export const addRoom = async (id: string, roomId: string) => {
   await ConsultationModel.findByIdAndUpdate(id, {
-    roomUrl: roomUrl,
-    roomName: roomName,
+    roomId: roomId,
   });
 };
 
 export const deleteRoom = async (id: string) => {
   await ConsultationModel.findByIdAndUpdate(id, {
     $unset: { roomUrl: 1, roomName: 1 },
+  });
+};
+
+export const updateSlot = async (
+  id: string,
+  startTime: Date,
+  endTime: Date
+) => {
+  await ConsultationModel.findByIdAndUpdate(id, {
+    startTime: startTime,
+    endTime: endTime,
   });
 };

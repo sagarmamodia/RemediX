@@ -6,9 +6,9 @@ export interface IConsultation extends Document {
   patientId: string;
   paymentId: string;
   startTime: Date;
-  endTime: Date | undefined;
-  roomUrl: string | undefined;
-  roomName: string | undefined;
+  endTime: Date;
+  fee: number;
+  roomId: string | undefined;
   status: string;
 }
 
@@ -17,17 +17,16 @@ const consultationSchema = new Schema<IConsultation>({
   patientId: { type: String, required: true },
   startTime: {
     type: Date,
-    default: () => new Date(Date.now() + 5 * 60 * 1000),
+    // default: () => new Date(Date.now() + 5 * 60 * 1000),
+    required: true,
   }, // after 5 minutes from the current time
   endTime: {
     type: Date,
-    default: () => new Date(Date.now() + 35 * 60 * 1000),
+    // default: () => new Date(Date.now() + 35 * 60 * 1000),
+    required: true,
   },
-  roomUrl: {
-    type: String,
-    required: false,
-  },
-  roomName: {
+  fee: { type: Number, required: true },
+  roomId: {
     type: String,
     required: false,
   },

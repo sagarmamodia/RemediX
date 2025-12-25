@@ -25,10 +25,13 @@ const config = {
     access_token: process.env.SQUARE_ACCESS_TOKEN,
   },
 
-  daily: {
-    DAILY_ACCESS_TOKEN: process.env.DAILY_ACCESS_TOKEN,
-    DAILY_ROOM_API:
-      process.env.DAILY_ROOM_API ?? " https://api.daily.co/v1/rooms/",
+  // daily: {
+  //   DAILY_ACCESS_TOKEN: process.env.DAILY_ACCESS_TOKEN,
+  // },
+
+  videosdk: {
+    API_KEY: process.env.VIDEOSDK_API_KEY,
+    SECRET: process.env.VIDEOSDK_SECRET,
   },
 } as const;
 

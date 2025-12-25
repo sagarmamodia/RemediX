@@ -1,4 +1,5 @@
 import { Router } from "express";
+import * as BookingController from "../controllers/booking.controller";
 import * as ConsultationController from "../controllers/consultation.controller";
 import { protect } from "../middleware/auth.middleware";
 
@@ -7,7 +8,7 @@ const consultationRoutes = Router();
 consultationRoutes.post(
   "/book",
   protect,
-  ConsultationController.paymentAndConsultationBookingHandler
+  BookingController.instantPaymentAndConsultationBookingHandler
 );
 consultationRoutes.get(
   "/id/:id",
@@ -26,6 +27,10 @@ consultationRoutes.get(
 consultationRoutes.post(
   "/join/id/:id",
   ConsultationController.joinConsultationHandler
+);
+consultationRoutes.post(
+  "/booking/checkSlot",
+  BookingController.checkSlotAvailabilityHandler
 );
 
 export default consultationRoutes;

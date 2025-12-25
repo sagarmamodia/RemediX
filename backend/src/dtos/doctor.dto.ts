@@ -1,3 +1,10 @@
+interface ShiftDTO {
+  dayOfWeek: string;
+  startTime: number; // minutes since midnight
+  endTime: number; // minutes since midnight
+  slotDuration: number; // in minutes
+}
+
 export interface DoctorDTO {
   id: string;
   name: string;
@@ -9,4 +16,5 @@ export interface DoctorDTO {
   specialty: string;
   available: boolean;
   profileUrl: string;
+  shifts: ShiftDTO[];
 }

@@ -17,6 +17,7 @@ function toDoctorDTO(doctor: IDoctor): DoctorDTO {
     specialty: doctor.specialty,
     available: doctor.available,
     profileUrl: doctor.profileUrl,
+    shifts: doctor.shifts,
   };
 }
 
@@ -35,9 +36,21 @@ export const registerDoctor = async (
   data: CreateDoctorDTO
 ): Promise<string> => {
   const doc = new DoctorModel(data);
+
+  // add default shifts
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+  for (const day of days) {
+    doc.shifts.push({
+      dayOfWeek: day,
+      startTime: 9 * 60,
+      endTime: 13 * 60,
+      slotDuration: 30,
+    });
+  }
+
+  // save doc to db
   const createdDoc = await doc.save();
 
-  logger.info("[DoctorRepository][registerDoctor] Doctor Registered.");
   return createdDoc._id.toHexString();
 };
 
