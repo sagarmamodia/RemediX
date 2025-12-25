@@ -177,6 +177,16 @@ export const joinConsultationHandler = async (
     }
     logger.info("Consultation exists");
 
+    // if the time to start the consultation is greater than 10 minutes then reject the request
+    const startTime = new Date(consultation.startTime);
+    const diff = (startTime.getTime() - Date.now()) / (1000 * 60);
+    if (diff > 10) {
+      throw new AppError(
+        "You can only join 10 minutes before consultation starts",
+        400
+      );
+    }
+
     // get url from consultation
     const roomId = consultation.roomId;
     const token = getVideoSDKToken();

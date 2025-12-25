@@ -32,5 +32,15 @@ consultationRoutes.post(
   "/booking/checkSlot",
   BookingController.checkSlotAvailabilityHandler
 );
+consultationRoutes.post(
+  "/booking/bookSlot",
+  protect,
+  BookingController.paymentAndSlotBookingHandler
+);
+consultationRoutes.patch(
+  "/booking/reschedule",
+  protect,
+  BookingController.rescheduleConsultationHandler
+);
 
 export default consultationRoutes;

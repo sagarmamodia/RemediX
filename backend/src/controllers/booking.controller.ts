@@ -13,17 +13,24 @@ import { BookConsultationSchema } from "../validators/consultation.validator";
 import { RescheduleSchema } from "../validators/reschedule.validator";
 
 // =============================== HELPER ARRAY ===========================
-const DAYS: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DAYS: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const checkSlotAvailability = async (
   doctorId: string,
   startTime: Date,
   endTime: Date
 ): Promise<boolean> => {
+  logger.info("fetching doctor details from db");
   const doctor = await DoctorRepository.getDoctorById(doctorId);
-  if (!doctor) return false;
+  if (!doctor) {
+    logger.info("doctor not found");
+    return false;
+  }
+  logger.info("fetched doctor successfully");
   const dayOfWeek = DAYS[startTime.getDay()];
   let validShift = false;
+
+  logger.info("checking shift conflicts");
   const doctorShifts = doctor.shifts;
   for (const shift of doctorShifts) {
     // match day
@@ -44,13 +51,18 @@ const checkSlotAvailability = async (
   }
 
   if (!validShift) {
+    logger.info("found shift conflict");
     return false;
   }
+  logger.info("not shift conflict found");
 
   // Check if the doctor have no other consultations booked at this time.
+  logger.info("fetching consultation");
   const consultations =
     await ConsultationRepository.getPendingConsultationsByDoctorId(doctorId);
+  logger.info("fetched consultation");
 
+  logger.info("checking slot conflict");
   let noOtherShift = true;
   for (const consultation of consultations) {
     const consultationStartTime = new Date(consultation.startTime);
@@ -61,9 +73,12 @@ const checkSlotAvailability = async (
     }
   }
 
+  logger.info("slot conflict detected");
   if (!noOtherShift) {
+    logger.info("slot conflict detected");
     return false;
   }
+  logger.info("no slot conflict found");
 
   return true;
 };
