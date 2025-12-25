@@ -71,7 +71,7 @@ export interface Consultation {
   doctor: {
     _id: string;
     name: string;
-    specialization: string;
+    specialty: string;
     image: string;
   };
   patient?: {

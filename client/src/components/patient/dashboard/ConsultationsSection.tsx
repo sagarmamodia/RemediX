@@ -77,7 +77,7 @@ const ConsultationsSection = () => {
                       {consultation.doctor.name}
                     </h3>
                     <p className="text-text-muted text-sm mb-2">
-                      {consultation.doctor.specialization}
+                      {consultation.doctor.specialty}
                     </p>
                     <div className="flex items-center gap-4 text-sm text-text-muted">
                       <div className="flex items-center gap-1">

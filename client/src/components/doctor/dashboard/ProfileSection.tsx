@@ -59,7 +59,7 @@ const ProfileSection = () => {
             />
           </div>
           <h2 className="text-2xl font-bold text-text-main">{profile.name}</h2>
-          <p className="text-text-muted">{profile.speciality}</p>
+          <p className="text-text-muted">{profile.specialty}</p>
         </div>
 
         <div className="p-8">
@@ -69,9 +69,9 @@ const ProfileSection = () => {
             <div className="space-y-1">
               <label className="text-sm font-medium text-text-muted flex items-center gap-2">
                 <Stethoscope size={16} />
-                Speciality
+                Specialty
               </label>
-              <p className="text-text-main font-medium">{profile.speciality}</p>
+              <p className="text-text-main font-medium">{profile.specialty}</p>
             </div>
 
             <div className="space-y-1">

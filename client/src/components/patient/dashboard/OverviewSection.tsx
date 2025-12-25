@@ -70,7 +70,7 @@ const OverviewSection = () => {
                 <span className="text-sm font-medium text-blue-100">Upcoming Consultation</span>
               </div>
               <h3 className="text-xl font-bold mb-1">Consultation with {nextConsultation.doctor.name}</h3>
-              <p className="text-blue-100 text-sm">{nextConsultation.doctor.specialization} • Video Call</p>
+            <p className="text-blue-100 text-sm">{nextConsultation.doctor.specialty} • Video Call</p>
               <div className="mt-4 flex items-center gap-4 text-blue-50 text-sm">
                  <span className="flex items-center gap-1"><Calendar size={16}/> {new Date(nextConsultation.date).toLocaleDateString()}</span>
                  <span className="flex items-center gap-1"><Clock size={16}/> {nextConsultation.timeSlot}</span>

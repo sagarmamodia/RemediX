@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Users, Video, Power } from 'lucide-react';
 import { doctorService } from '../../../services/doctor.service';
+import { consultationService } from '../../../services/consultation.service';
+import type { Consultation } from '../../../types';
 
 const OverviewSection = () => {
   const [available, setAvailable] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [consultations, setConsultations] = useState<Consultation[]>([]);
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       try {
-        const response = await doctorService.getProfile();
-        if (response.success) {
-          setAvailable(response.data.available);
+        const [profileRes, consultationsData] = await Promise.all([
+          doctorService.getProfile(),
+          consultationService.getConsultations()
+        ]);
+
+        if (profileRes.success) {
+          setAvailable(profileRes.data.available);
         }
+        setConsultations(consultationsData);
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    fetchProfile();
+    fetchData();
   }, []);
 
   const toggleAvailability = async () => {
@@ -32,6 +40,17 @@ const OverviewSection = () => {
       alert('Failed to update availability. You may have pending consultations.');
     }
   };
+
+  // Calculate Stats
+  const today = new Date().toDateString();
+  const todaysAppointments = consultations.filter(c => new Date(c.date).toDateString() === today).length;
+  const pendingRequests = consultations.filter(c => c.status === 'pending').length;
+  const uniquePatients = new Set(consultations.filter(c => c.patient).map(c => c.patient?.name)).size;
+
+  // Find next consultation
+  const nextConsultation = consultations
+    .filter(c => c.status === 'pending' || c.status === 'scheduled')
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
 
   return (
   <div className="space-y-6">
@@ -65,7 +84,7 @@ const OverviewSection = () => {
           </div>
           <div>
             <p className="text-sm text-text-muted">Today's Appointments</p>
-            <h3 className="text-2xl font-bold text-text-main">4</h3>
+            <h3 className="text-2xl font-bold text-text-main">{todaysAppointments}</h3>
           </div>
         </div>
       </div>
@@ -76,7 +95,7 @@ const OverviewSection = () => {
           </div>
           <div>
             <p className="text-sm text-text-muted">Total Patients</p>
-            <h3 className="text-2xl font-bold text-text-main">128</h3>
+            <h3 className="text-2xl font-bold text-text-main">{uniquePatients}</h3>
           </div>
         </div>
       </div>
@@ -87,29 +106,39 @@ const OverviewSection = () => {
           </div>
           <div>
             <p className="text-sm text-text-muted">Pending Requests</p>
-            <h3 className="text-2xl font-bold text-text-main">1</h3>
+            <h3 className="text-2xl font-bold text-text-main">{pendingRequests}</h3>
           </div>
         </div>
       </div>
     </div>
 
     {/* Ongoing Appointment Card (Conditional) */}
-    <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-primary/20">
-      <div className="flex justify-between items-start">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            <span className="text-sm font-medium text-blue-100">Happening Now</span>
+    {nextConsultation ? (
+      <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-primary/20">
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+              <span className="text-sm font-medium text-blue-100">Next Consultation</span>
+            </div>
+            <h3 className="text-xl font-bold mb-1">Consultation with {nextConsultation.patient?.name || 'Patient'}</h3>
+            <p className="text-blue-100 text-sm">General Consultation • Video Call</p>
+            <div className="mt-4 flex items-center gap-4 text-blue-50 text-sm">
+               <span className="flex items-center gap-1"><Calendar size={16}/> {new Date(nextConsultation.date).toLocaleDateString()}</span>
+               <span className="flex items-center gap-1"><Clock size={16}/> {nextConsultation.timeSlot}</span>
+            </div>
           </div>
-          <h3 className="text-xl font-bold mb-1">Consultation with Sagar</h3>
-          <p className="text-blue-100 text-sm">Follow-up • Video Call</p>
+          <button className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2">
+            <Video size={18} />
+            Join Room
+          </button>
         </div>
-        <button className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2">
-          <Video size={18} />
-          Join Room
-        </button>
       </div>
-    </div>
+    ) : (
+      <div className="bg-white p-6 rounded-xl border border-slate-200 text-center">
+          <p className="text-text-muted">No upcoming consultations.</p>
+      </div>
+    )}
   </div>
 );
 };

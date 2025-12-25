@@ -21,7 +21,7 @@ export const consultationService = {
       doctor: {
         _id: '', 
         name: item.doctorName || 'Unknown Doctor',
-        specialization: item.doctorSpecialty || 'General Physician',
+        specialty: item.doctorSpecialty || 'General Physician',
         image: item.doctorProfileUrl || ''
       },
       patient: item.patientName ? {
