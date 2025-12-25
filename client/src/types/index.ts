@@ -66,6 +66,14 @@ export interface BookConsultationResponse {
   };
 }
 
+export interface JoinConsultationResponse {
+  success: boolean;
+  data: {
+    roomId: string;
+    token: string;
+  };
+}
+
 export interface Consultation {
   _id: string;
   doctor: {

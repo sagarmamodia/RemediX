@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import PatientDashboard from './pages/Dashboard/PatientDashboard';
 import DoctorDashboard from './pages/Dashboard/DoctorDashboard';
 import BookingPage from './pages/BookingPage';
+import Room from './pages/Room';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -50,6 +51,16 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['Patient']}>
                 <BookingPage />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Video Consultation Room */}
+          <Route 
+            path="/room/:id" 
+            element={
+              <ProtectedRoute>
+                <Room />
               </ProtectedRoute>
             } 
           />

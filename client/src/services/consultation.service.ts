@@ -3,12 +3,18 @@ import type {
   BookConsultationPayload, 
   BookConsultationResponse, 
   Consultation, 
-  ConsultationListResponse 
+  ConsultationListResponse,
+  JoinConsultationResponse
 } from '../types';
 
 export const consultationService = {
   bookConsultation: async (payload: BookConsultationPayload) => {
     const response = await api.post<BookConsultationResponse>('/consultation/book', payload);
+    return response.data;
+  },
+
+  joinConsultation: async (consultationId: string) => {
+    const response = await api.post<JoinConsultationResponse>(`/consultation/join/id/${consultationId}`);
     return response.data;
   },
 

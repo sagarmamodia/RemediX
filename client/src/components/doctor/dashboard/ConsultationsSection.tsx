@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar, Video, Clock, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { consultationService } from '../../../services/consultation.service';
 import type { Consultation } from '../../../types';
 
 const ConsultationsSection = () => {
+  const navigate = useNavigate();
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -23,6 +25,10 @@ const ConsultationsSection = () => {
 
     fetchConsultations();
   }, []);
+
+  const handleJoinCall = (consultationId: string) => {
+    navigate(`/room/${consultationId}`);
+  };
 
   if (loading) return <div className="p-8 text-center">Loading consultations...</div>;
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
@@ -100,7 +106,10 @@ const ConsultationsSection = () => {
                     {consultation.status.charAt(0).toUpperCase() + consultation.status.slice(1)}
                   </span>
                   {consultation.status === 'pending' && (
-                     <button className="flex items-center gap-2 text-primary hover:text-blue-700 font-medium text-sm">
+                     <button 
+                        onClick={() => handleJoinCall(consultation._id)}
+                        className="flex items-center gap-2 text-primary hover:text-blue-700 font-medium text-sm"
+                     >
                         <Video size={16} />
                         Join Call
                      </button>

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar, Clock, Video } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { consultationService } from '../../../services/consultation.service';
 import type { Consultation } from '../../../types';
 
 const OverviewSection = () => {
+  const navigate = useNavigate();
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -76,7 +78,10 @@ const OverviewSection = () => {
                  <span className="flex items-center gap-1"><Clock size={16}/> {nextConsultation.timeSlot}</span>
               </div>
             </div>
-            <button className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2">
+            <button 
+              onClick={() => navigate(`/room/${nextConsultation._id}`)}
+              className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2"
+            >
               <Video size={18} />
               Join Call
             </button>
