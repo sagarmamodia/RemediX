@@ -2,10 +2,11 @@ import api from './api';
 import type { DoctorProfile, DoctorListResponse } from '../types';
 
 export const doctorService = {
-  getDoctors: async (filters?: { name?: string; specialty?: string }) => {
+  getDoctors: async (filters?: { name?: string; specialty?: string; available?: boolean }) => {
     const params = new URLSearchParams();
     if (filters?.name) params.append('name', filters.name);
     if (filters?.specialty) params.append('specialty', filters.specialty);
+    if (filters?.available !== undefined) params.append('available', String(filters.available));
     
     const response = await api.get<DoctorListResponse>(`/doctor/list?${params.toString()}`);
     return response.data;

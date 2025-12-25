@@ -25,14 +25,16 @@ const FindDoctorsSection = () => {
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpeciality, setSelectedSpeciality] = useState('All');
+  const [availableOnly, setAvailableOnly] = useState(false);
 
   const fetchDoctors = async () => {
     try {
       setLoading(true);
-      const filters: { name?: string; specialty?: string } = {};
+      const filters: { name?: string; specialty?: string; available?: boolean } = {};
       
       if (searchQuery) filters.name = searchQuery;
       if (selectedSpeciality !== 'All') filters.specialty = selectedSpeciality;
+      if (availableOnly) filters.available = true;
 
       const response = await doctorService.getDoctors(filters);
       if (response.success) {
@@ -53,13 +55,13 @@ const FindDoctorsSection = () => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, selectedSpeciality]);
+  }, [searchQuery, selectedSpeciality, availableOnly]);
 
   return (
     <div className="space-y-6">
       {/* Search and Filter Bar */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-4">
-        <div className="flex-1 relative">
+      <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row gap-4 items-center">
+        <div className="flex-1 relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted h-5 w-5" />
           <input
             type="text"
@@ -70,7 +72,7 @@ const FindDoctorsSection = () => {
           />
         </div>
         
-        <div className="relative min-w-[200px]">
+        <div className="relative min-w-[200px] w-full md:w-auto">
           <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted h-5 w-5" />
           <select
             value={selectedSpeciality}
@@ -87,6 +89,16 @@ const FindDoctorsSection = () => {
             </svg>
           </div>
         </div>
+
+        <label className="flex items-center gap-2 cursor-pointer select-none whitespace-nowrap">
+          <input 
+            type="checkbox" 
+            checked={availableOnly}
+            onChange={(e) => setAvailableOnly(e.target.checked)}
+            className="w-4 h-4 text-primary rounded border-slate-300 focus:ring-primary"
+          />
+          <span className="text-sm font-medium text-text-main">Available Only</span>
+        </label>
       </div>
 
       {/* Content Area */}
@@ -107,12 +119,13 @@ const FindDoctorsSection = () => {
           {doctors.map((doctor) => (
             <div key={doctor.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
               <div className="p-6 flex flex-col items-center text-center border-b border-slate-100">
-                <div className="w-24 h-24 bg-slate-100 rounded-full mb-4 overflow-hidden">
+                <div className="w-24 h-24 bg-slate-100 rounded-full mb-4 overflow-hidden relative">
                   <img 
                     src={doctor.profileUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(doctor.name)}&background=random`} 
                     alt={doctor.name}
                     className="w-full h-full object-cover"
                   />
+                  <div className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white ${doctor.available ? 'bg-green-500' : 'bg-slate-400'}`} title={doctor.available ? 'Available' : 'Unavailable'}></div>
                 </div>
                 <h3 className="text-lg font-bold text-text-main">{doctor.name}</h3>
                 <p className="text-primary font-medium text-sm">{doctor.specialty}</p>
@@ -134,9 +147,14 @@ const FindDoctorsSection = () => {
                 </div>
                 <button 
                   onClick={() => navigate(`/booking/${doctor.id}`)}
-                  className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:bg-primary-dark transition-colors"
+                  disabled={!doctor.available}
+                  className={`w-full py-2 rounded-lg font-medium transition-colors ${
+                    doctor.available 
+                      ? 'bg-primary text-white hover:bg-primary-dark' 
+                      : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                  }`}
                 >
-                  Book Consultation
+                  {doctor.available ? 'Book Consultation' : 'Unavailable'}
                 </button>
               </div>
             </div>
