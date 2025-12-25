@@ -293,6 +293,13 @@ export const checkSlotAvailabilityHandler = async (
 ) => {
   try {
     const user = res.locals.user;
+    if (user.role != "Patient") {
+      throw new AppError(
+        "Only patients are authorized to use this endpoint",
+        401
+      );
+    }
+
     const parsed = CheckSlotSchema.safeParse(req.body);
     if (!parsed.success) {
       throw new AppError("Invalid data format", 400);
