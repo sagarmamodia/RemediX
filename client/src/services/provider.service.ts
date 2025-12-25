@@ -21,5 +21,10 @@ export const providerService = {
   getProviderDetails: async (id: string) => {
     const response = await api.get<{ success: boolean; data: ProviderProfile }>(`/provider/details/id/${id}`);
     return response.data;
+  },
+
+  getProfile: async () => {
+    const response = await api.get<{ success: boolean; data: ProviderProfile }>('/profile');
+    return response.data;
   }
 };
