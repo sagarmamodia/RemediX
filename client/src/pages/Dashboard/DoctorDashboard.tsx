@@ -9,7 +9,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import ProfileSection from '../../components/doctor/dashboard/ProfileSection';
 import OverviewSection from '../../components/doctor/dashboard/OverviewSection';
-import AppointmentsSection from '../../components/doctor/dashboard/AppointmentsSection';
+import ConsultationsSection from '../../components/doctor/dashboard/ConsultationsSection';
 
 const DoctorDashboard = () => {
   const { logout } = useAuth();
@@ -19,8 +19,8 @@ const DoctorDashboard = () => {
     switch (activeTab) {
       case 'overview':
         return <OverviewSection />;
-      case 'appointments':
-        return <AppointmentsSection />;
+      case 'consultations':
+        return <ConsultationsSection />;
       case 'profile':
         return <ProfileSection />;
       default:
@@ -53,9 +53,9 @@ const DoctorDashboard = () => {
           />
           <SidebarItem 
             icon={<Calendar size={20} />} 
-            label="Appointments" 
-            active={activeTab === 'appointments'} 
-            onClick={() => setActiveTab('appointments')} 
+            label="Consultations" 
+            active={activeTab === 'consultations'} 
+            onClick={() => setActiveTab('consultations')} 
           />
           <SidebarItem 
             icon={<User size={20} />} 

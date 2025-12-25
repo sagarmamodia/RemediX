@@ -43,7 +43,7 @@ const OverviewSection = () => {
 
   // Calculate Stats
   const today = new Date().toDateString();
-  const todaysAppointments = consultations.filter(c => new Date(c.date).toDateString() === today).length;
+  const todaysConsultations = consultations.filter(c => new Date(c.date).toDateString() === today).length;
   const pendingRequests = consultations.filter(c => c.status === 'pending').length;
   const uniquePatients = new Set(consultations.filter(c => c.patient).map(c => c.patient?.name)).size;
 
@@ -83,8 +83,8 @@ const OverviewSection = () => {
             <Calendar size={24} />
           </div>
           <div>
-            <p className="text-sm text-text-muted">Today's Appointments</p>
-            <h3 className="text-2xl font-bold text-text-main">{todaysAppointments}</h3>
+            <p className="text-sm text-text-muted">Today's Consultations</p>
+            <h3 className="text-2xl font-bold text-text-main">{todaysConsultations}</h3>
           </div>
         </div>
       </div>
