@@ -13,9 +13,37 @@ function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
     patientId: consultation.patientId,
     paymentId: consultation.paymentId,
     startTime: consultation.startTime.toISOString(),
+    roomUrl: consultation.roomUrl,
+    endTime: consultation.endTime
+      ? consultation.endTime.toISOString()
+      : undefined,
     status: consultation.status,
   };
 }
+
+export const getAllConsultationsByProviderId = async (
+  id: string
+): Promise<ConsultationDTO[]> => {
+  const consultations = await ConsultationModel.find({ providerId: id });
+  const consultationDtos: ConsultationDTO[] = [];
+  consultations.forEach((consultation) => {
+    consultationDtos.push(toConsultationDTO(consultation));
+  });
+
+  return consultationDtos;
+};
+
+export const getAllConsultationsByPatientId = async (
+  id: string
+): Promise<ConsultationDTO[]> => {
+  const consultations = await ConsultationModel.find({ patientId: id });
+  const consultationDtos: ConsultationDTO[] = [];
+  consultations.forEach((consultation) => {
+    consultationDtos.push(toConsultationDTO(consultation));
+  });
+
+  return consultationDtos;
+};
 
 export const createConsultationRecord = async (
   data: CreateConsultationDTO
@@ -63,4 +91,8 @@ export const nextConsultationStartTimeByProviderId = async (
 
 export const updateConsultationStatus = async (id: string, status: string) => {
   await ConsultationModel.findByIdAndUpdate(id, { status: status });
+};
+
+export const updateRoomUrl = async (id: string, roomUrl: string) => {
+  await ConsultationModel.findByIdAndUpdate(id, { roomUrl: roomUrl });
 };

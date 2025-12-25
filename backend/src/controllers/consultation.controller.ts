@@ -7,6 +7,7 @@ import * as PaymentRepository from "../repositories/payment.repository";
 import * as ProviderRepository from "../repositories/provider.repository";
 import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
+import { createRoomAPI } from "../utils/room";
 import { BookConsultationSchema } from "../validators/consultation.validator";
 
 export const paymentAndConsultationBookingHandler = async (
@@ -104,13 +105,42 @@ export const getConsultationByIdHandler = async (
 
     const consultation = await ConsultationRepository.getConsultationById(id);
     if (!consultation) {
-      throw new AppError("Consultation now found", 400);
+      throw new AppError("Consultation does not exist", 404);
     }
 
     return res.status(200).json({
       success: true,
       data: consultation,
     });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// GET ALL CONSULTATIONS (PENDING AND COMPLETED)
+export const getAllConsultationsHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+
+    if (user.role == "Provider") {
+      const consultations =
+        await ConsultationRepository.getAllConsultationsByProviderId(user.id);
+
+      return res
+        .status(200)
+        .json({ success: true, data: { list: consultations } });
+    } else {
+      const consultations =
+        await ConsultationRepository.getAllConsultationsByPatientId(user.id);
+
+      return res
+        .status(200)
+        .json({ success: true, data: { list: consultations } });
+    }
   } catch (err) {
     return next(err);
   }
@@ -135,16 +165,57 @@ export const updateConsultationStatusHandler = async (
     // Check if provider is has the permission to update this consultation
     const consultation = await ConsultationRepository.getConsultationById(id);
     if (!consultation) {
-      throw new AppError("Consultation does not exist", 400);
+      throw new AppError("Consultation does not exist", 404);
     }
 
     if (consultation.providerId != user.id) {
       throw new AppError("You are unauthorized", 401);
     }
 
-    // Update the status to fulfilled
+    // Update the status to completed
     await ConsultationRepository.updateConsultationStatus(id, "completed");
     return res.status(200).json({ success: true, data: {} });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const joinConsultationHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    const consultationId = req.params.id;
+    if (!consultationId) {
+      throw new AppError("ConsultationId not found in the url", 400);
+    }
+
+    // fetch consultation
+    const consultation = await ConsultationRepository.getConsultationById(
+      consultationId
+    );
+    if (!consultation) {
+      throw new AppError("Consultation does not exist", 404);
+    }
+
+    // get url from consultation
+    const roomUrl = consultation.roomUrl;
+
+    // create roomUrl if it does not exist
+    if (!roomUrl) {
+      const newRoomUrl = await createRoomAPI();
+
+      // save this roomUrl to consultation
+      await ConsultationRepository.updateRoomUrl(consultation.id, newRoomUrl);
+
+      return res
+        .status(200)
+        .json({ success: true, data: { roomUrl: newRoomUrl } });
+    }
+
+    return res.status(200).json({ success: true, data: { roomUrl: roomUrl } });
   } catch (err) {
     return next(err);
   }

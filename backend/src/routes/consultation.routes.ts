@@ -18,5 +18,14 @@ consultationRoutes.post(
   protect,
   ConsultationController.updateConsultationStatusHandler
 );
+consultationRoutes.get(
+  "/get",
+  protect,
+  ConsultationController.getAllConsultationsHandler
+);
+consultationRoutes.post(
+  "/join/id/:id",
+  ConsultationController.joinConsultationHandler
+);
 
 export default consultationRoutes;

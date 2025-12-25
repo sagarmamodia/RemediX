@@ -10,5 +10,7 @@ export interface ConsultationDTO {
   patientId: string;
   paymentId: string;
   startTime: string;
+  endTime?: string;
+  roomUrl?: string;
   status: string;
 }
