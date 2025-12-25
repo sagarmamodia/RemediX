@@ -112,3 +112,78 @@ export const updateDoctorAvailability = async (
   ).exec();
   logger.info("doctor availability changed}");
 };
+
+export const getAvailableDoctors = async (
+  specialty: string,
+  day: string,
+  startTime: Date,
+  endTime: Date
+): Promise<DoctorDTO[]> => {
+  // 1. Convert Date objects to Schema-compatible formats
+  const givenStartTimeMins = startTime.getHours() * 60 + startTime.getMinutes();
+  const givenEndTimeMins = endTime.getHours() * 60 + endTime.getMinutes();
+
+  /**
+   * Aggregation Pipeline to find doctors:
+   * 1. Match doctors whose numeric shift range COVERS the requested numeric range.
+   * 2. Ensure they are marked as 'available'.
+   * 3. Ensure no overlapping consultations exist for that specific time.
+   */
+  const availableDoctors = await DoctorModel.aggregate([
+    // Match Step: Find doctors on shift using numeric comparison
+    {
+      $match: {
+        available: true, // Only doctors accepting new bookings
+        specialty: specialty,
+        shifts: {
+          $elemMatch: {
+            dayOfWeek: day,
+            startTime: { $lte: givenStartTimeMins },
+            endTime: { $gte: givenEndTimeMins },
+          },
+        },
+      },
+    },
+    // Lookup Step: Check for existing consultations in the same time range
+    {
+      $lookup: {
+        from: "consultations",
+        let: { doctorId: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$doctorId", { toHexString: "$$doctorId" }] },
+                  { $ne: ["$status", "COMPLETED"] },
+                  { $lt: ["$startTime", endTime] }, // Overlap check
+                  { $gt: ["$endTime", startTime] }, // Overlap check
+                ],
+              },
+            },
+          },
+        ],
+        as: "overlappingConsultations",
+      },
+    },
+    // Filter Step: Keep only those with no overlaps
+    {
+      $match: {
+        overlappingConsultations: { $size: 0 },
+      },
+    },
+    // Cleanup results
+    {
+      $project: {
+        overlappingConsultations: 0,
+      },
+    },
+  ]);
+
+  const dtos: DoctorDTO[] = [];
+  for (const doctor of availableDoctors) {
+    dtos.push(toDoctorDTO(doctor));
+  }
+
+  return dtos;
+};

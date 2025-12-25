@@ -8,7 +8,7 @@ const consultationRoutes = Router();
 consultationRoutes.post(
   "/book",
   protect,
-  BookingController.instantPaymentAndConsultationBookingHandler
+  BookingController.paymentAndSlotBookingHandler
 );
 consultationRoutes.get(
   "/id/:id",
@@ -29,17 +29,13 @@ consultationRoutes.post(
   ConsultationController.joinConsultationHandler
 );
 consultationRoutes.post(
-  "/booking/checkSlot",
+  "/checkSlot",
   protect,
   BookingController.checkSlotAvailabilityHandler
 );
-consultationRoutes.post(
-  "/booking/bookSlot",
-  protect,
-  BookingController.paymentAndSlotBookingHandler
-);
+
 consultationRoutes.patch(
-  "/booking/reschedule",
+  "/reschedule",
   protect,
   BookingController.rescheduleConsultationHandler
 );

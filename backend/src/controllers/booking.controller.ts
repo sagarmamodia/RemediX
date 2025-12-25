@@ -9,14 +9,12 @@ import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
 import { BookSlotSchema } from "../validators/bookSlot.validator";
 import { CheckSlotSchema } from "../validators/checkSlot.validator";
-import { BookConsultationSchema } from "../validators/consultation.validator";
 import { RescheduleSchema } from "../validators/reschedule.validator";
 
 // =============================== HELPER ARRAY ===========================
-const DAYS: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+export const DAYS: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const checkSlotAvailability = async (
-  patientId: string,
+const checkDoctorSlotAvailability = async (
   doctorId: string,
   startTime: Date,
   endTime: Date
@@ -81,10 +79,18 @@ const checkSlotAvailability = async (
   }
   logger.info("no doctor slot conflict found");
 
+  return true;
+};
+
+const checkPatientSlotAvailability = async (
+  patientId: string,
+  startTime: Date,
+  endTime: Date
+): Promise<boolean> => {
   // check if the patient have other consultations booked at this time.
   logger.info("fetching consultation for the doctor");
   const patientConsultations =
-    await ConsultationRepository.getAllConsultationsByPatientId(patientId);
+    await ConsultationRepository.getPendingConsultationsByPatientId(patientId);
   logger.info("fetched consultation for the doctor");
 
   logger.info("checking slot conflict in doctor's schedule");
@@ -109,92 +115,6 @@ const checkSlotAvailability = async (
 };
 
 // ========================================================================
-
-// PROCESS PAYMENT AND CREATE INSTANT CONSULTATION IN DB
-export const instantPaymentAndConsultationBookingHandler = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const user = res.locals.user;
-    if (user.role != "Patient") {
-      throw new AppError("Only patients can book consultation", 400);
-    }
-
-    // parse json payload
-    const parsed = BookConsultationSchema.safeParse(req.body);
-    if (!parsed.success) {
-      throw new AppError("Invalid data format", 400);
-    }
-
-    // check if provided is available or not
-    const doctor = await DoctorRepository.getDoctorById(parsed.data.doctorId);
-    if (!doctor) {
-      throw new AppError("doctor not found", 400);
-    }
-    if (!doctor.available) {
-      throw new AppError("doctor not available", 400);
-    }
-
-    const fee = doctor.fee;
-    if (!fee) {
-      throw new AppError("doctor not found", 400);
-    }
-
-    // Charge payment
-    const response = await squareClient.paymentsApi.createPayment({
-      sourceId: parsed.data.sourceId,
-      idempotencyKey: randomUUID(),
-      amountMoney: {
-        amount: BigInt(fee),
-        currency: "USD",
-      },
-    });
-
-    if (!response.result.payment || !response.result.payment.id) {
-      throw new AppError("Payment failed", 400);
-    }
-    logger.info("payment charged");
-
-    // record payment in db
-    const paymentId = await PaymentRepository.createPaymentRecord(
-      response.result.payment.id,
-      fee
-    );
-
-    logger.info("payment recorded");
-
-    // create consultation
-    const startTime = new Date(Date.now() + 5 * 60 * 1000);
-    const endTime = new Date(Date.now() + 35 * 60 * 1000);
-    const data: CreateConsultationDTO = {
-      doctorId: parsed.data.doctorId,
-      patientId: user.id,
-      paymentId: paymentId,
-      startTime: startTime,
-      endTime: endTime,
-      fee: fee,
-    };
-    const consultationId =
-      await ConsultationRepository.createConsultationRecord(data);
-    logger.info("consultation created");
-
-    // set doctor availability to false
-    await DoctorRepository.updateDoctorAvailability(
-      parsed.data.doctorId,
-      false
-    );
-
-    logger.info("doctor availability set to false");
-
-    return res
-      .status(200)
-      .json({ success: true, data: { id: consultationId } });
-  } catch (err) {
-    return next(err);
-  }
-};
 
 // PROCESS PAYMENT AND BOOK THE CONSULTATION SLOT
 export const paymentAndSlotBookingHandler = async (
@@ -223,13 +143,18 @@ export const paymentAndSlotBookingHandler = async (
     }
 
     // check slot availability
-    const check = await checkSlotAvailability(
-      user.id,
+    const doctorCheck = await checkDoctorSlotAvailability(
       doctorId,
       startTime,
       endTime
     );
-    if (!check) {
+    const patientCheck = await checkPatientSlotAvailability(
+      user.id,
+      startTime,
+      endTime
+    );
+
+    if (!doctorCheck || !patientCheck) {
       return res
         .status(200)
         .json({ success: false, data: { error: "slot not avaliable" } });
@@ -319,17 +244,21 @@ export const checkSlotAvailabilityHandler = async (
     const startTime = new Date(parsed.data.slot[0]);
     const endTime = new Date(parsed.data.slot[1]);
 
-    const check = await checkSlotAvailability(
-      user.id,
+    const doctorCheck = await checkDoctorSlotAvailability(
       parsed.data.doctorId,
       startTime,
       endTime
     );
+    const patientCheck = await checkPatientSlotAvailability(
+      user.id,
+      startTime,
+      endTime
+    );
 
-    if (!check) {
+    if (!doctorCheck || !patientCheck) {
       return res
         .status(200)
-        .json({ success: true, data: { validSlot: false } });
+        .json({ success: false, data: { error: "slot not avaliable" } });
     }
 
     return res.status(200).json({ success: true, data: { validSlot: true } });
@@ -376,9 +305,21 @@ export const rescheduleConsultationHandler = async (
     }
 
     // check slot availability
-    const check = checkSlotAvailability(user.id, doctorId, startTime, endTime);
-    if (!check) {
-      throw new AppError("Slot not available", 400);
+    const doctorCheck = await checkDoctorSlotAvailability(
+      doctorId,
+      startTime,
+      endTime
+    );
+    const patientCheck = await checkPatientSlotAvailability(
+      user.id,
+      startTime,
+      endTime
+    );
+
+    if (!doctorCheck || !patientCheck) {
+      return res
+        .status(200)
+        .json({ success: false, data: { error: "slot not avaliable" } });
     }
 
     // reschdule

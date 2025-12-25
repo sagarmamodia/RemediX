@@ -75,6 +75,21 @@ export const getPendingConsultationsByDoctorId = async (
   return consultationDtos;
 };
 
+export const getPendingConsultationsByPatientId = async (
+  id: string
+): Promise<ConsultationDTO[]> => {
+  const queryFilter = { patientId: id, status: "pending" };
+  const docs = await ConsultationModel.find(queryFilter);
+  logger.info("pending consultations fetched from database");
+
+  const consultationDtos: ConsultationDTO[] = [];
+  docs.forEach((doc) => {
+    consultationDtos.push(toConsultationDTO(doc));
+  });
+
+  return consultationDtos;
+};
+
 export const nextConsultationStartTimeByDoctorId = async (
   id: string
 ): Promise<Date | null> => {

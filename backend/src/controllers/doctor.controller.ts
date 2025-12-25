@@ -4,6 +4,8 @@ import * as DoctorRepository from "../repositories/doctor.repository";
 import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
 import { DoctorFilterQuerySchema } from "../validators/doctorFilter.validator";
+import { InstantDoctorsSearchSchema } from "../validators/slot.validator";
+import { DAYS } from "./booking.controller";
 
 export const getDoctorDetailsHandler = async (
   req: Request,
@@ -84,6 +86,36 @@ export const updateDoctorAvailabilityHandler = async (
     return res.status(200).json({ success: true, data: {} });
 
     //
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// SEND ALL DOCTORS WHO ARE AVAILABLE FOR INSTANT CONSULTATION
+export const getInstantDoctors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // parse data
+    const parsed = InstantDoctorsSearchSchema.safeParse(req.body);
+    if (!parsed.success) {
+      throw new AppError("Invalid data", 400);
+    }
+    const startTime = new Date(parsed.data.slot[0]);
+    const endTime = new Date(parsed.data.slot[1]);
+    const dayOfWeek = DAYS[startTime.getDay()];
+
+    // get all available doctors
+    const doctors = await DoctorRepository.getAvailableDoctors(
+      parsed.data.specialty,
+      dayOfWeek,
+      startTime,
+      endTime
+    );
+
+    return res.status(200).json({ success: true, data: { list: doctors } });
   } catch (err) {
     return next(err);
   }

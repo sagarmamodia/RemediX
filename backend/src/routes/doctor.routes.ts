@@ -11,5 +11,6 @@ doctorRoutes.post(
   protect,
   DoctorController.updateDoctorAvailabilityHandler
 );
+doctorRoutes.post("/instant", DoctorController.getInstantDoctors);
 
 export default doctorRoutes;

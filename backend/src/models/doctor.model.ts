@@ -44,7 +44,7 @@ const doctorSchema = new Schema<IDoctor>({
   specialty: { type: String, required: true },
   profileUrl: { type: String, required: true },
   available: { type: Boolean, default: false },
-  shifts: { type: [shiftSchema], required: false },
+  shifts: { type: [shiftSchema], required: true, id: false },
 });
 
 export const DoctorModel = model<IDoctor>("Doctor", doctorSchema);
