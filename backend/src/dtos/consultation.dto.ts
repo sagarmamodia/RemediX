@@ -15,3 +15,21 @@ export interface ConsultationDTO {
   roomName?: string;
   status: string;
 }
+
+export interface DoctorConsultationsDTO {
+  id: string;
+  patientName: string;
+  patientProfileUrl: string;
+  startTime: string;
+  endTime?: string;
+  status: string;
+}
+
+export interface PatientConsultationsDTO {
+  id: string;
+  doctorName: string;
+  doctorProfileUrl: string;
+  startTime: string;
+  endTime?: string;
+  status: string;
+}

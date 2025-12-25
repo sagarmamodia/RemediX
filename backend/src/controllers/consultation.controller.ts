@@ -1,15 +1,21 @@
 import { NextFunction, Request, Response } from "express";
 import { randomUUID } from "node:crypto";
 import squareClient from "../config/square.config";
-import { CreateConsultationDTO } from "../dtos/consultation.dto";
+import {
+  CreateConsultationDTO,
+  DoctorConsultationsDTO,
+  PatientConsultationsDTO,
+} from "../dtos/consultation.dto";
 import * as ConsultationRepository from "../repositories/consultation.repository";
-import * as doctorRepository from "../repositories/doctor.repository";
+import * as DoctorRepository from "../repositories/doctor.repository";
+import * as PatientRepository from "../repositories/patient.repository";
 import * as PaymentRepository from "../repositories/payment.repository";
 import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
 import { createRoomAPI, deleteRoomAPI } from "../utils/room";
 import { BookConsultationSchema } from "../validators/consultation.validator";
 
+// PROCESS PAYMENT AND CREATE CONSULTATION IN DB
 export const paymentAndConsultationBookingHandler = async (
   req: Request,
   res: Response,
@@ -28,7 +34,7 @@ export const paymentAndConsultationBookingHandler = async (
     }
 
     // check if provided is available or not
-    const doctor = await doctorRepository.getDoctorById(parsed.data.doctorId);
+    const doctor = await DoctorRepository.getDoctorById(parsed.data.doctorId);
     if (!doctor) {
       throw new AppError("doctor not found", 400);
     }
@@ -75,7 +81,7 @@ export const paymentAndConsultationBookingHandler = async (
     logger.info("consultation created");
 
     // set doctor availability to false
-    await doctorRepository.updateDoctorAvailability(
+    await DoctorRepository.updateDoctorAvailability(
       parsed.data.doctorId,
       false
     );
@@ -90,6 +96,7 @@ export const paymentAndConsultationBookingHandler = async (
   }
 };
 
+// SEND CONSULTATION DETAILS FOR A PARTICULAR ID
 export const getConsultationByIdHandler = async (
   req: Request,
   res: Response,
@@ -115,7 +122,7 @@ export const getConsultationByIdHandler = async (
   }
 };
 
-// GET ALL CONSULTATIONS (PENDING AND COMPLETED)
+// SEND ALL CONSULTATIONS
 export const getAllConsultationsHandler = async (
   req: Request,
   res: Response,
@@ -124,20 +131,65 @@ export const getAllConsultationsHandler = async (
   try {
     const user = res.locals.user;
 
-    if (user.role == "doctor") {
+    if (user.role == "Doctor") {
       const consultations =
         await ConsultationRepository.getAllConsultationsByDoctorId(user.id);
 
-      return res
-        .status(200)
-        .json({ success: true, data: { list: consultations } });
+      logger.info(`Consultations fetched: ${consultations.length}`);
+      // get patient details corressponding to each patientId
+      const data: DoctorConsultationsDTO[] = [];
+      logger.info("Initiated patient data retrieval");
+      for (const consultation of consultations) {
+        try {
+          const patient = await PatientRepository.getPatientById(
+            consultation.patientId
+          );
+
+          const obj: any = {};
+          if (patient) {
+            logger.info("Patient found");
+            obj.consultationId = consultation.id;
+            obj.patientName = patient.name;
+            obj.patientProfileUrl = patient.profileUrl;
+            obj.startTime = consultation.startTime;
+            obj.endTime = consultation.endTime;
+            obj.status = consultation.status;
+            data.push(obj);
+          } else {
+            logger.info("patient not found");
+          }
+        } catch (err) {
+          logger.error(err);
+        }
+      }
+
+      return res.status(200).json({ success: true, data: { list: data } });
     } else {
       const consultations =
         await ConsultationRepository.getAllConsultationsByPatientId(user.id);
 
-      return res
-        .status(200)
-        .json({ success: true, data: { list: consultations } });
+      const data: PatientConsultationsDTO[] = [];
+      for (const consultation of consultations) {
+        try {
+          const doctor = await DoctorRepository.getDoctorById(
+            consultation.doctorId
+          );
+          const obj: any = {};
+          if (doctor) {
+            obj.consultationId = consultation.id;
+            obj.doctorName = doctor.name;
+            obj.doctorProfileUrl = doctor.profileUrl;
+            obj.startTime = consultation.startTime;
+            obj.endTime = consultation.endTime;
+            obj.status = consultation.status;
+            data.push(obj);
+          }
+        } catch (err) {
+          logger.error(err);
+        }
+      }
+
+      return res.status(200).json({ success: true, data: { list: data } });
     }
   } catch (err) {
     return next(err);
