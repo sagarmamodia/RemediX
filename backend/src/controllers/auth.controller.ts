@@ -1,12 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
+import * as DoctorRepository from "../repositories/doctor.repository";
 import * as PatientRepository from "../repositories/patient.repository";
-import * as ProviderRepository from "../repositories/provider.repository";
 
 import { AppError } from "../utils/AppError";
 import { generateAccessToken } from "../utils/jwt";
+import { CreateDoctorSchema } from "../validators/doctor.validator";
 import { LoginSchema } from "../validators/login.validator";
 import { CreatePatientSchema } from "../validators/patient.validator";
-import { CreateProviderSchema } from "../validators/provider.validator";
 
 export const patientRegistrationHandler = async (
   req: Request,
@@ -32,7 +32,7 @@ export const patientRegistrationHandler = async (
   }
 };
 
-export const providerRegistrationHandler = async (
+export const doctorRegistrationHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -40,13 +40,13 @@ export const providerRegistrationHandler = async (
   try {
     // Parse data from the request
     const data = req.body;
-    const parsed = CreateProviderSchema.safeParse(data);
+    const parsed = CreateDoctorSchema.safeParse(data);
     if (!parsed.success) {
       throw new AppError("Invalid data", 400);
     }
 
     // Register patient in the repository
-    const id = await ProviderRepository.registerProvider(parsed.data);
+    const id = await DoctorRepository.registerDoctor(parsed.data);
 
     // return response
     return res.json({ success: true, data: { id: id } });
@@ -69,10 +69,8 @@ export const loginHandler = async (
     const data = parsed.data;
     let account: { id: string; password: string } | null = null;
     // Authenticate user
-    if (data.role == "Provider") {
-      account = await ProviderRepository.getProviderByPhoneWithPassword(
-        data.phone
-      );
+    if (data.role == "Doctor") {
+      account = await DoctorRepository.getDoctorByPhoneWithPassword(data.phone);
     } else {
       account = await PatientRepository.getPatientByPhoneWithPassword(
         data.phone
@@ -86,7 +84,7 @@ export const loginHandler = async (
         .json({ success: false, data: { error: "user does not exist" } });
     }
 
-    // if a provider exists with this phone number then match passwords and return access token
+    // if a Doctor exists with this phone number then match passwords and return access token
     if (data.password != account.password) {
       return res
         .status(400)

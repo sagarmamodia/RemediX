@@ -3,8 +3,8 @@ import { randomUUID } from "node:crypto";
 import squareClient from "../config/square.config";
 import { CreateConsultationDTO } from "../dtos/consultation.dto";
 import * as ConsultationRepository from "../repositories/consultation.repository";
+import * as doctorRepository from "../repositories/doctor.repository";
 import * as PaymentRepository from "../repositories/payment.repository";
-import * as ProviderRepository from "../repositories/provider.repository";
 import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
 import { createRoomAPI, deleteRoomAPI } from "../utils/room";
@@ -28,19 +28,17 @@ export const paymentAndConsultationBookingHandler = async (
     }
 
     // check if provided is available or not
-    const provider = await ProviderRepository.getProviderById(
-      parsed.data.providerId
-    );
-    if (!provider) {
-      throw new AppError("Provider not found", 400);
+    const doctor = await doctorRepository.getDoctorById(parsed.data.doctorId);
+    if (!doctor) {
+      throw new AppError("doctor not found", 400);
     }
-    if (!provider.available) {
-      throw new AppError("Provider not available", 400);
+    if (!doctor.available) {
+      throw new AppError("doctor not available", 400);
     }
 
-    const fee = provider.fee;
+    const fee = doctor.fee;
     if (!fee) {
-      throw new AppError("Provider not found", 400);
+      throw new AppError("doctor not found", 400);
     }
 
     // Charge payment
@@ -68,7 +66,7 @@ export const paymentAndConsultationBookingHandler = async (
 
     // create consultation
     const data: CreateConsultationDTO = {
-      providerId: parsed.data.providerId,
+      doctorId: parsed.data.doctorId,
       patientId: user.id,
       paymentId: paymentId,
     };
@@ -76,13 +74,13 @@ export const paymentAndConsultationBookingHandler = async (
       await ConsultationRepository.createConsultationRecord(data);
     logger.info("consultation created");
 
-    // set provider availability to false
-    await ProviderRepository.updateProviderAvailability(
-      parsed.data.providerId,
+    // set doctor availability to false
+    await doctorRepository.updateDoctorAvailability(
+      parsed.data.doctorId,
       false
     );
 
-    logger.info("provider availability set to false");
+    logger.info("doctor availability set to false");
 
     return res
       .status(200)
@@ -126,9 +124,9 @@ export const getAllConsultationsHandler = async (
   try {
     const user = res.locals.user;
 
-    if (user.role == "Provider") {
+    if (user.role == "doctor") {
       const consultations =
-        await ConsultationRepository.getAllConsultationsByProviderId(user.id);
+        await ConsultationRepository.getAllConsultationsByDoctorId(user.id);
 
       return res
         .status(200)
@@ -153,8 +151,8 @@ export const updateConsultationStatusHandler = async (
 ) => {
   try {
     const user = res.locals.user;
-    if (user.role != "Provider") {
-      throw new AppError("Only providers are authorized", 401);
+    if (user.role != "doctor") {
+      throw new AppError("Only doctors are authorized", 401);
     }
 
     const id = req.body.id;
@@ -162,13 +160,13 @@ export const updateConsultationStatusHandler = async (
       throw new AppError("Invalid data", 400);
     }
 
-    // Check if provider has the permission to update this consultation
+    // Check if doctor has the permission to update this consultation
     const consultation = await ConsultationRepository.getConsultationById(id);
     if (!consultation) {
       throw new AppError("Consultation does not exist", 404);
     }
 
-    if (consultation.providerId != user.id) {
+    if (consultation.doctorId != user.id) {
       throw new AppError("You are unauthorized", 401);
     }
 

@@ -1,6 +1,6 @@
 import { Document, Schema, Types, model } from "mongoose";
 
-export interface IProvider extends Document {
+export interface IDoctor extends Document {
   _id: Types.ObjectId;
   name: string;
   email: string;
@@ -14,7 +14,7 @@ export interface IProvider extends Document {
   available: boolean; // Whether doctor is available for new consultation booking or not
 }
 
-const providerSchema = new Schema<IProvider>({
+const doctorSchema = new Schema<IDoctor>({
   name: { type: String, required: true },
   email: { type: String, required: true },
   phone: { type: String, required: true, unique: true },
@@ -27,4 +27,4 @@ const providerSchema = new Schema<IProvider>({
   available: { type: Boolean, default: false },
 });
 
-export const ProviderModel = model<IProvider>("Provider", providerSchema);
+export const DoctorModel = model<IDoctor>("Doctor", doctorSchema);

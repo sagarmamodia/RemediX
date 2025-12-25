@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
+import { DoctorDTO } from "../dtos/doctor.dto";
 import { PatientDTO } from "../dtos/patient.dto";
-import { ProviderDTO } from "../dtos/provider.dto";
+import * as DoctorRepository from "../repositories/doctor.repository";
 import * as PatientRepository from "../repositories/patient.repository";
-import * as ProviderRepository from "../repositories/provider.repository";
 import { AppError } from "../utils/AppError";
 
 export const getProfileHandler = async (
@@ -13,17 +13,18 @@ export const getProfileHandler = async (
   try {
     // Extract id and role
     const user = res.locals.user;
-    if (user.role == "Provider") {
-      const provider: ProviderDTO | null =
-        await ProviderRepository.getProviderById(user.id);
+    if (user.role == "Doctor") {
+      const doctor: DoctorDTO | null = await DoctorRepository.getDoctorById(
+        user.id
+      );
 
-      if (!provider) {
+      if (!doctor) {
         throw new AppError("User does not exist", 400);
       }
 
       return res.json({
         success: true,
-        data: { role: "Provider", ...provider },
+        data: { role: "Doctor", ...doctor },
       });
     } else {
       const patient: PatientDTO | null = await PatientRepository.getPatientById(

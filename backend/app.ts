@@ -5,9 +5,9 @@ import { globalErrorHandler } from "./src/middleware/globalErrorHandler.middlewa
 import { requestLogger } from "./src/middleware/logger.middleware";
 import authRoutes from "./src/routes/auth.routes";
 import consultationRoutes from "./src/routes/consultation.routes";
+import doctorRoutes from "./src/routes/doctor.routes";
 import patientRoutes from "./src/routes/patient.routes";
 import profileRoutes from "./src/routes/profile.routes";
-import providerRoutes from "./src/routes/provider.routes";
 
 const app = express();
 
@@ -31,7 +31,7 @@ app.get("/health", (req, res) => {
 // Routers
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
-app.use("/api/provider", providerRoutes);
+app.use("/api/doctor", doctorRoutes);
 app.use("/api/patient", patientRoutes);
 app.use("/api/consultation", consultationRoutes);
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ProviderFilterQuerySchema = z.object({
+export const DoctorFilterQuerySchema = z.object({
   speciality: z.string().optional(),
   name: z.string().optional(),
   fee: z
@@ -26,4 +26,4 @@ export const ProviderFilterQuerySchema = z.object({
     .optional(),
 });
 
-export type ProviderFilterQueryDTO = z.infer<typeof ProviderFilterQuerySchema>;
+export type DoctorFilterQueryDTO = z.infer<typeof DoctorFilterQuerySchema>;

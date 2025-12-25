@@ -2,7 +2,7 @@ import { Document, Schema, Types, model } from "mongoose";
 
 export interface IConsultation extends Document {
   _id: Types.ObjectId;
-  providerId: string;
+  doctorId: string;
   patientId: string;
   paymentId: string;
   startTime: Date;
@@ -13,7 +13,7 @@ export interface IConsultation extends Document {
 }
 
 const consultationSchema = new Schema<IConsultation>({
-  providerId: { type: String, required: true },
+  doctorId: { type: String, required: true },
   patientId: { type: String, required: true },
   startTime: {
     type: Date,

@@ -1,4 +1,4 @@
-export interface ProviderDTO {
+export interface DoctorDTO {
   id: string;
   name: string;
   email: string;

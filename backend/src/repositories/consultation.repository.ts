@@ -9,7 +9,7 @@ import logger from "../utils/logger";
 function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
   return {
     id: consultation._id.toHexString(),
-    providerId: consultation.providerId,
+    doctorId: consultation.doctorId,
     patientId: consultation.patientId,
     paymentId: consultation.paymentId,
     startTime: consultation.startTime.toISOString(),
@@ -22,10 +22,10 @@ function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
   };
 }
 
-export const getAllConsultationsByProviderId = async (
+export const getAllConsultationsByDoctorId = async (
   id: string
 ): Promise<ConsultationDTO[]> => {
-  const consultations = await ConsultationModel.find({ providerId: id });
+  const consultations = await ConsultationModel.find({ doctorId: id });
   const consultationDtos: ConsultationDTO[] = [];
   consultations.forEach((consultation) => {
     consultationDtos.push(toConsultationDTO(consultation));
@@ -62,10 +62,10 @@ export const getConsultationById = async (
   return toConsultationDTO(consultation);
 };
 
-export const getPendingConsultationsByProviderId = async (
+export const getPendingConsultationsByDoctorId = async (
   id: string
 ): Promise<ConsultationDTO[]> => {
-  const queryFilter = { providerId: id, status: "pending" };
+  const queryFilter = { doctorId: id, status: "pending" };
   const docs = await ConsultationModel.find(queryFilter);
   logger.info("pending consultations fetched from database");
 
@@ -77,10 +77,10 @@ export const getPendingConsultationsByProviderId = async (
   return consultationDtos;
 };
 
-export const nextConsultationStartTimeByProviderId = async (
+export const nextConsultationStartTimeByDoctorId = async (
   id: string
 ): Promise<Date | null> => {
-  const queryFilter = { providerId: id, startTime: { $gte: new Date() } };
+  const queryFilter = { doctorId: id, startTime: { $gte: new Date() } };
   const docs = await ConsultationModel.find(queryFilter).sort({ startTime: 1 });
   logger.info("upcoming consultations fetched from database");
 

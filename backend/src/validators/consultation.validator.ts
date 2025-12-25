@@ -1,6 +1,6 @@
 import { z } from "zod";
 
 export const BookConsultationSchema = z.object({
-  providerId: z.string(),
+  doctorId: z.string(),
   sourceId: z.string(),
 });

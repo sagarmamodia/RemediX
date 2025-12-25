@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CreateProviderSchema = z.object({
+export const CreateDoctorSchema = z.object({
   // Basic string validation
   name: z.string().min(2, "Name must be at least 2 characters"),
   profileUrl: z.string().min(2, "Url must have atleast 2 characters"),
@@ -21,4 +21,4 @@ export const CreateProviderSchema = z.object({
   fee: z.coerce.number(),
 });
 
-export type CreateProviderDTO = z.infer<typeof CreateProviderSchema>;
+export type CreateDoctorDTO = z.infer<typeof CreateDoctorSchema>;
