@@ -8,7 +8,11 @@ import * as DoctorRepository from "../repositories/doctor.repository";
 import * as PatientRepository from "../repositories/patient.repository";
 import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
-import { createRoomAPI, getVideoSDKToken } from "../utils/videosdk";
+import {
+  createRoomAPI,
+  deleteRoomAPI,
+  getVideoSDKToken,
+} from "../utils/videosdk";
 
 // SEND CONSULTATION DETAILS FOR A PARTICULAR ID
 export const getConsultationByIdHandler = async (
@@ -137,11 +141,11 @@ export const updateConsultationStatusHandler = async (
       throw new AppError("You are unauthorized", 401);
     }
 
-    // // Check if the consultation have a room associated with it
-    // if (consultation.roomName) {
-    //   await deleteRoomAPI(consultation.roomName);
-    //   await ConsultationRepository.deleteRoom(consultation.id);
-    // }
+    // Check if the consultation have a room associated with it
+    if (consultation.roomId) {
+      await deleteRoomAPI(consultation.roomId);
+      await ConsultationRepository.deleteRoom(consultation.id);
+    }
 
     // Update the status to completed
     await ConsultationRepository.updateConsultationStatus(id, "completed");

@@ -35,3 +35,21 @@ export const createRoomAPI = async (): Promise<string> => {
   const data = await response.json();
   return data.roomId;
 };
+
+export const deleteRoomAPI = async (roomId: string) => {
+  const url = "https://api.videosdk.live/v2/rooms";
+  const token = getVideoSDKToken();
+  const options = {
+    method: "POST",
+    headers: {
+      AUTHORIZATION: token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      roomId: roomId,
+    }),
+  };
+
+  const response = await fetch(url, options);
+  if (!response.ok) throw new Error("Error occured deleting the room");
+};

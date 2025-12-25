@@ -100,7 +100,7 @@ export const addRoom = async (id: string, roomId: string) => {
 
 export const deleteRoom = async (id: string) => {
   await ConsultationModel.findByIdAndUpdate(id, {
-    $unset: { roomUrl: 1, roomName: 1 },
+    $unset: { roomId: 1 },
   });
 };
 
