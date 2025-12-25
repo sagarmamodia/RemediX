@@ -16,6 +16,7 @@ import { RescheduleSchema } from "../validators/reschedule.validator";
 const DAYS: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const checkSlotAvailability = async (
+  patientId: string,
   doctorId: string,
   startTime: Date,
   endTime: Date
@@ -56,29 +57,53 @@ const checkSlotAvailability = async (
   }
   logger.info("not shift conflict found");
 
-  // Check if the doctor have no other consultations booked at this time.
-  logger.info("fetching consultation");
-  const consultations =
+  // Check if the doctor have other consultations booked at this time.
+  logger.info("fetching consultation for the doctor");
+  const doctorConsultations =
     await ConsultationRepository.getPendingConsultationsByDoctorId(doctorId);
-  logger.info("fetched consultation");
+  logger.info("fetched consultation for the doctor");
 
-  logger.info("checking slot conflict");
-  let noOtherShift = true;
-  for (const consultation of consultations) {
+  logger.info("checking slot conflict in doctor's schedule");
+  let isDoctorFree = true;
+  for (const consultation of doctorConsultations) {
     const consultationStartTime = new Date(consultation.startTime);
     const consultationEndTime = new Date(consultation.endTime);
     if (startTime >= consultationStartTime && endTime <= consultationEndTime) {
-      noOtherShift = false;
+      isDoctorFree = false;
       break;
     }
   }
 
-  logger.info("slot conflict detected");
-  if (!noOtherShift) {
-    logger.info("slot conflict detected");
+  logger.info("doctor slot conflict detected");
+  if (!isDoctorFree) {
+    logger.info("doctor slot conflict detected");
     return false;
   }
-  logger.info("no slot conflict found");
+  logger.info("no doctor slot conflict found");
+
+  // check if the patient have other consultations booked at this time.
+  logger.info("fetching consultation for the doctor");
+  const patientConsultations =
+    await ConsultationRepository.getAllConsultationsByPatientId(patientId);
+  logger.info("fetched consultation for the doctor");
+
+  logger.info("checking slot conflict in doctor's schedule");
+  let isPatientFree = true;
+  for (const consultation of patientConsultations) {
+    const consultationStartTime = new Date(consultation.startTime);
+    const consultationEndTime = new Date(consultation.endTime);
+    if (startTime >= consultationStartTime && endTime <= consultationEndTime) {
+      isPatientFree = false;
+      break;
+    }
+  }
+
+  logger.info("patient slot conflict detected");
+  if (!isPatientFree) {
+    logger.info("patient slot conflict detected");
+    return false;
+  }
+  logger.info("no patient slot conflict found");
 
   return true;
 };
@@ -198,7 +223,12 @@ export const paymentAndSlotBookingHandler = async (
     }
 
     // check slot availability
-    const check = await checkSlotAvailability(doctorId, startTime, endTime);
+    const check = await checkSlotAvailability(
+      user.id,
+      doctorId,
+      startTime,
+      endTime
+    );
     if (!check) {
       return res
         .status(200)
@@ -262,6 +292,7 @@ export const checkSlotAvailabilityHandler = async (
   next: NextFunction
 ) => {
   try {
+    const user = res.locals.user;
     const parsed = CheckSlotSchema.safeParse(req.body);
     if (!parsed.success) {
       throw new AppError("Invalid data format", 400);
@@ -277,6 +308,7 @@ export const checkSlotAvailabilityHandler = async (
     const endTime = new Date(parsed.data.slot[1]);
 
     const check = await checkSlotAvailability(
+      user.id,
       parsed.data.doctorId,
       startTime,
       endTime
@@ -332,7 +364,7 @@ export const rescheduleConsultationHandler = async (
     }
 
     // check slot availability
-    const check = checkSlotAvailability(doctorId, startTime, endTime);
+    const check = checkSlotAvailability(user.id, doctorId, startTime, endTime);
     if (!check) {
       throw new AppError("Slot not available", 400);
     }

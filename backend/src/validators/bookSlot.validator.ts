@@ -12,6 +12,9 @@ export const BookSlotSchema = z.object({
       if (start >= end) return false;
       const duration = (end.getTime() - start.getTime()) / (1000 * 60);
       if (duration != 30) return false; // the duration of the slots must be 30 minutes
+      // the startTime must not be in the past
+      const currentTime = new Date(Date.now());
+      if (start < currentTime) return false;
       return true;
     }),
   sourceId: z.string(),

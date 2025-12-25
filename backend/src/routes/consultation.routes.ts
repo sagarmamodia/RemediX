@@ -30,6 +30,7 @@ consultationRoutes.post(
 );
 consultationRoutes.post(
   "/booking/checkSlot",
+  protect,
   BookingController.checkSlotAvailabilityHandler
 );
 consultationRoutes.post(
