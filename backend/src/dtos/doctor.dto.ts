@@ -6,7 +6,7 @@ export interface DoctorDTO {
   gender: string;
   dob: string;
   fee: number;
-  speciality: string;
+  specialty: string;
   available: boolean;
   profileUrl: string;
 }

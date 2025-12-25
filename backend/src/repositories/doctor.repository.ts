@@ -14,7 +14,7 @@ function toDoctorDTO(doctor: IDoctor): DoctorDTO {
     gender: doctor.gender,
     dob: doctor.dob.toISOString(),
     fee: doctor.fee,
-    speciality: doctor.speciality,
+    specialty: doctor.specialty,
     available: doctor.available,
     profileUrl: doctor.profileUrl,
   };
@@ -54,10 +54,10 @@ export const getDoctorByPhoneWithPassword = async (
 export const getDoctorsList = async (
   filter: DoctorFilterQueryDTO
 ): Promise<DoctorDTO[]> => {
-  const { speciality, fee, name } = filter;
+  const { specialty, fee, name } = filter;
   const queryFilter: any = {};
-  if (speciality) {
-    queryFilter.speciality = speciality;
+  if (specialty) {
+    queryFilter.specialty = specialty;
   }
   if (fee) {
     queryFilter.fee = { $gte: fee[0], $lte: fee[1] };

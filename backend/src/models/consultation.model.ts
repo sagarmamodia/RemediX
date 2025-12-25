@@ -21,7 +21,7 @@ const consultationSchema = new Schema<IConsultation>({
   }, // after 5 minutes from the current time
   endTime: {
     type: Date,
-    required: false,
+    default: () => new Date(Date.now() + 35 * 60 * 1000),
   },
   roomUrl: {
     type: String,
