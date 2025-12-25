@@ -18,8 +18,8 @@ const Login = () => {
 
   useEffect(() => {
     const roleParam = searchParams.get('role');
-    if (roleParam === 'Patient' || roleParam === 'Provider') {
-      setRole(roleParam);
+    if (roleParam === 'Patient' || roleParam === 'Doctor') {
+      setRole(roleParam as Role);
     }
   }, [searchParams]);
 
@@ -81,7 +81,7 @@ const Login = () => {
                 className="block w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white appearance-none"
               >
                 <option value="Patient">Patient</option>
-                <option value="Provider">Doctor</option>
+                <option value="Doctor">Doctor</option>
               </select>
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                 <svg className="h-4 w-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">

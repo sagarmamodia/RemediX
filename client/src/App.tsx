@@ -5,7 +5,8 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import PatientDashboard from './pages/Dashboard/PatientDashboard';
-import ProviderDashboard from './pages/Dashboard/ProviderDashboard';
+import DoctorDashboard from './pages/Dashboard/DoctorDashboard';
+import BookingPage from './pages/BookingPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -16,8 +17,8 @@ const DashboardRouter = () => {
     return <PatientDashboard />;
   }
   
-  if (userRole === 'Provider') {
-    return <ProviderDashboard />;
+  if (userRole === 'Doctor') {
+    return <DoctorDashboard />;
   }
   
   return <Navigate to="/login" />;
@@ -39,6 +40,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardRouter />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Booking Route */}
+          <Route 
+            path="/booking/:doctorId" 
+            element={
+              <ProtectedRoute allowedRoles={['Patient']}>
+                <BookingPage />
               </ProtectedRoute>
             } 
           />

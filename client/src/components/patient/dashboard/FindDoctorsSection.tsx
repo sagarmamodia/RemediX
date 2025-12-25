@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Filter, MapPin, Star, IndianRupee } from 'lucide-react';
-import { providerService } from '../../../services/provider.service';
-import type { ProviderProfile } from '../../../types';
+import { doctorService } from '../../../services/doctor.service';
+import type { DoctorProfile } from '../../../types';
 
 const SPECIALITIES = [
   'All',
@@ -16,7 +17,8 @@ const SPECIALITIES = [
 ];
 
 const FindDoctorsSection = () => {
-  const [doctors, setDoctors] = useState<ProviderProfile[]>([]);
+  const navigate = useNavigate();
+  const [doctors, setDoctors] = useState<DoctorProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
@@ -32,7 +34,7 @@ const FindDoctorsSection = () => {
       if (searchQuery) filters.name = searchQuery;
       if (selectedSpeciality !== 'All') filters.speciality = selectedSpeciality;
 
-      const response = await providerService.getProviders(filters);
+      const response = await doctorService.getDoctors(filters);
       if (response.success) {
         setDoctors(response.data.list);
       }
@@ -130,7 +132,10 @@ const FindDoctorsSection = () => {
                     {doctor.fee}
                   </span>
                 </div>
-                <button className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:bg-primary-dark transition-colors">
+                <button 
+                  onClick={() => navigate(`/booking/${doctor.id}`)}
+                  className="w-full bg-primary text-white py-2 rounded-lg font-medium hover:bg-primary-dark transition-colors"
+                >
                   Book Appointment
                 </button>
               </div>

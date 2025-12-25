@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { User, Mail, Phone, Calendar, UserCircle, Stethoscope, IndianRupee } from 'lucide-react';
-import { providerService } from '../../../services/provider.service';
-import type { ProviderProfile } from '../../../types';
+import { doctorService } from '../../../services/doctor.service';
+import type { DoctorProfile } from '../../../types';
 
 const ProfileSection = () => {
-  const [profile, setProfile] = useState<ProviderProfile | null>(null);
+  const [profile, setProfile] = useState<DoctorProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -12,7 +12,7 @@ const ProfileSection = () => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        const response = await providerService.getProfile();
+        const response = await doctorService.getProfile();
         if (response.success) {
           setProfile(response.data);
         }

@@ -4,6 +4,8 @@ import { User, Stethoscope, Mail, Phone, Lock, Calendar, IndianRupee, Award, Use
 import type { Role, RegisterFormData } from '../types';
 import api from '../services/api';
 
+import { seedUsers } from '../utils/seedData';
+
 const Register = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState<Role>('Patient');
@@ -37,11 +39,11 @@ const Register = () => {
         ...formData,
         // will later user can edit profile imaage from prodile update section 
         profileUrl: defaultProfileUrl,
-        // Convert fee to number for provider
-        ...(role === 'Provider' && { fee: Number(formData.fee) })
+        // Convert fee to number for doctor
+        ...(role === 'Doctor' && { fee: Number(formData.fee) })
       };
 
-      const endpoint = role === 'Patient' ? '/auth/patient/register' : '/auth/provider/register';
+      const endpoint = role === 'Patient' ? '/auth/patient/register' : '/auth/doctor/register';
       
       const response = await api.post(endpoint, payload);
 
@@ -88,9 +90,9 @@ const Register = () => {
              {/* to register as doctor */}
           <button
             type="button"
-            onClick={() => setRole('Provider')}
+            onClick={() => setRole('Doctor')}
             className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-              role === 'Provider' 
+              role === 'Doctor' 
                 ? 'bg-white text-primary shadow-sm' 
                 : 'text-text-muted hover:text-text-main'
             }`}
@@ -272,6 +274,14 @@ const Register = () => {
                 Sign in here
               </Link>
             </p>
+            {/* Dev Tool: Seed Data */}
+            <button 
+              type="button"
+              onClick={seedUsers}
+              className="mt-4 text-xs text-slate-400 hover:text-slate-600 underline"
+            >
+              (Dev) Seed Test Users
+            </button>
           </div>
         </form>
       </div>

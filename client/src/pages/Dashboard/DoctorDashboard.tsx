@@ -11,7 +11,7 @@ import ProfileSection from '../../components/doctor/dashboard/ProfileSection';
 import OverviewSection from '../../components/doctor/dashboard/OverviewSection';
 import AppointmentsSection from '../../components/doctor/dashboard/AppointmentsSection';
 
-const ProviderDashboard = () => {
+const DoctorDashboard = () => {
   const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -112,4 +112,4 @@ const SidebarItem = ({ icon, label, active, onClick }: any) => (
   </button>
 );
 
-export default ProviderDashboard;
+export default DoctorDashboard;

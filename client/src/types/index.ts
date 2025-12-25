@@ -1,4 +1,4 @@
-export type Role = 'Patient' | 'Provider';
+export type Role = 'Patient' | 'Doctor';
 
 export interface User {
   id: string;
@@ -19,7 +19,7 @@ export interface AuthContextType {
 }
 
 export interface PatientProfile {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   phone: string;
@@ -29,7 +29,7 @@ export interface PatientProfile {
   role: 'Patient';
 }
 
-export interface ProviderProfile {
+export interface DoctorProfile {
   id: string;
   name: string;
   email: string;
@@ -39,6 +39,7 @@ export interface ProviderProfile {
   fee: number;
   speciality: string;
   profileUrl: string;
+  available: boolean;
 }
 
 export interface RegisterFormData {
