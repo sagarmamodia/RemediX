@@ -1,5 +1,4 @@
 import { PaymentModel } from "../models/payment.model";
-import logger from "../utils/logger";
 
 // CREATE THE PAYMENT RECORD IN DB
 export const createPaymentRecord = async (
@@ -12,7 +11,6 @@ export const createPaymentRecord = async (
   });
 
   const createdDoc = await doc.save();
-  logger.info("payment doc saved");
 
   return createdDoc._id.toHexString();
 };
