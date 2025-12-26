@@ -9,6 +9,7 @@ export interface IConsultation extends Document {
   endTime: Date;
   fee: number;
   roomId: string | undefined;
+  prescriptionUrl: string | undefined;
   status: string;
 }
 
@@ -19,6 +20,7 @@ const consultationSchema = new Schema<IConsultation>({
   endTime: { type: Date, required: true },
   fee: { type: Number, required: true },
   roomId: { type: String, required: false },
+  prescriptionUrl: { type: String, required: false },
   paymentId: { type: String, required: true },
   status: { type: String, enum: ["pending", "completed"], default: "pending" },
 });

@@ -27,10 +27,10 @@ const OverviewSection = () => {
   const upcomingConsultations = consultations.filter(c => c.status === 'scheduled' || c.status === 'pending');
   const completedConsultations = consultations.filter(c => c.status === 'completed');
   
-  // Find the next upcoming consultation
-  const nextConsultation = upcomingConsultations.sort((a, b) => {
+  // Sort upcoming consultations
+  const sortedUpcomingConsultations = upcomingConsultations.sort((a, b) => {
     return new Date(a.date).getTime() - new Date(b.date).getTime();
-  })[0];
+  });
 
   if (loading) return <div>Loading overview...</div>;
 
@@ -62,36 +62,41 @@ const OverviewSection = () => {
         </div>
       </div>
 
-      {/* Next Consultation Card */}
-      {nextConsultation ? (
-        <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-primary/20">
-          <div className="flex justify-between items-start">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                <span className="text-sm font-medium text-blue-100">Upcoming Consultation</span>
-              </div>
-              <h3 className="text-xl font-bold mb-1">Consultation with {nextConsultation.doctor.name}</h3>
-            <p className="text-blue-100 text-sm">{nextConsultation.doctor.specialty} • Video Call</p>
-              <div className="mt-4 flex items-center gap-4 text-blue-50 text-sm">
-                 <span className="flex items-center gap-1"><Calendar size={16}/> {new Date(nextConsultation.date).toLocaleDateString()}</span>
-                 <span className="flex items-center gap-1"><Clock size={16}/> {nextConsultation.timeSlot}</span>
+      {/* Upcoming Consultations List */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-text-main">Upcoming Consultations</h3>
+        {sortedUpcomingConsultations.length > 0 ? (
+          sortedUpcomingConsultations.map((consultation) => (
+            <div key={consultation._id} className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-primary/20">
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span className="text-sm font-medium text-blue-100">Upcoming</span>
+                  </div>
+                  <h3 className="text-xl font-bold mb-1">Consultation with {consultation.doctor.name}</h3>
+                  <p className="text-blue-100 text-sm">{consultation.doctor.specialty} • Video Call</p>
+                  <div className="mt-4 flex items-center gap-4 text-blue-50 text-sm">
+                     <span className="flex items-center gap-1"><Calendar size={16}/> {new Date(consultation.date).toLocaleDateString()}</span>
+                     <span className="flex items-center gap-1"><Clock size={16}/> {consultation.timeSlot}</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => navigate(`/room/${consultation._id}`)}
+                  className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2"
+                >
+                  <Video size={18} />
+                  Join Call
+                </button>
               </div>
             </div>
-            <button 
-              onClick={() => navigate(`/room/${nextConsultation._id}`)}
-              className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2"
-            >
-              <Video size={18} />
-              Join Call
-            </button>
+          ))
+        ) : (
+          <div className="bg-white p-6 rounded-xl border border-slate-200 text-center">
+              <p className="text-text-muted">No upcoming consultations.</p>
           </div>
-        </div>
-      ) : (
-        <div className="bg-white p-6 rounded-xl border border-slate-200 text-center">
-            <p className="text-text-muted">No upcoming consultations.</p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

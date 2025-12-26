@@ -63,10 +63,10 @@ const OverviewSection = () => {
   const pendingRequests = consultations.filter(c => c.status === 'pending').length;
   const uniquePatients = new Set(consultations.filter(c => c.patient).map(c => c.patient?.name)).size;
 
-  // Find next consultation
-  const nextConsultation = consultations
+  // Find upcoming consultations
+  const upcomingConsultations = consultations
     .filter(c => c.status === 'pending' || c.status === 'scheduled')
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return (
   <div className="space-y-6">
@@ -128,45 +128,50 @@ const OverviewSection = () => {
       </div>
     </div>
 
-    {/* Ongoing Appointment Card (Conditional) */}
-    {nextConsultation ? (
-      <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-primary/20">
-        <div className="flex justify-between items-start">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-              <span className="text-sm font-medium text-blue-100">Next Consultation</span>
-            </div>
-            <h3 className="text-xl font-bold mb-1">Consultation with {nextConsultation.patient?.name || 'Patient'}</h3>
-            <p className="text-blue-100 text-sm">General Consultation • Video Call</p>
-            <div className="mt-4 flex items-center gap-4 text-blue-50 text-sm">
-               <span className="flex items-center gap-1"><Calendar size={16}/> {new Date(nextConsultation.date).toLocaleDateString()}</span>
-               <span className="flex items-center gap-1"><Clock size={16}/> {nextConsultation.timeSlot}</span>
+    {/* Upcoming Consultations List */}
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-text-main">Upcoming Consultations</h3>
+      {upcomingConsultations.length > 0 ? (
+        upcomingConsultations.map((consultation) => (
+          <div key={consultation._id} className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-primary/20">
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                  <span className="text-sm font-medium text-blue-100">Upcoming</span>
+                </div>
+                <h3 className="text-xl font-bold mb-1">Consultation with {consultation.patient?.name || 'Patient'}</h3>
+                <p className="text-blue-100 text-sm">General Consultation • Video Call</p>
+                <div className="mt-4 flex items-center gap-4 text-blue-50 text-sm">
+                   <span className="flex items-center gap-1"><Calendar size={16}/> {new Date(consultation.date).toLocaleDateString()}</span>
+                   <span className="flex items-center gap-1"><Clock size={16}/> {consultation.timeSlot}</span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button 
+                  onClick={() => navigate(`/room/${consultation._id}`)}
+                  className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2 w-full justify-center"
+                >
+                  <Video size={18} />
+                  Join Room
+                </button>
+                <button 
+                  onClick={() => handleMarkCompleted(consultation._id)}
+                  className="bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 w-full justify-center"
+                >
+                  <CheckCircle size={18} />
+                  Mark Completed
+                </button>
+              </div>
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <button 
-              onClick={() => navigate(`/room/${nextConsultation._id}`)}
-              className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2 w-full justify-center"
-            >
-              <Video size={18} />
-              Join Room
-            </button>
-            <button 
-              onClick={() => handleMarkCompleted(nextConsultation._id)}
-              className="bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 w-full justify-center"
-            >
-              <CheckCircle size={18} />
-              Mark Completed
-            </button>
-          </div>
+        ))
+      ) : (
+        <div className="bg-white p-6 rounded-xl border border-slate-200 text-center">
+            <p className="text-text-muted">No upcoming consultations.</p>
         </div>
-      </div>
-    ) : (
-      <div className="bg-white p-6 rounded-xl border border-slate-200 text-center">
-          <p className="text-text-muted">No upcoming consultations.</p>
-      </div>
-    )}
+      )}
+    </div>
   </div>
 );
 };

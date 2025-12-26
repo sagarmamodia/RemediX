@@ -14,6 +14,7 @@ function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
     paymentId: consultation.paymentId,
     startTime: consultation.startTime.toISOString(),
     roomId: consultation.roomId,
+    prescriptionUrl: consultation.prescriptionUrl,
     endTime: consultation.endTime.toISOString(),
     status: consultation.status,
     fee: consultation.fee,
@@ -127,4 +128,9 @@ export const updateSlot = async (
     startTime: startTime,
     endTime: endTime,
   });
+};
+
+// UPDATE PRESCRIPTION URL
+export const updatePrescriptionUrl = async (id: string, url: string) => {
+  await ConsultationModel.findByIdAndUpdate(id, { prescriptionUrl: url });
 };
