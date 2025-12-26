@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, Check, AlertCircle } from 'lucide-react';
 import { consultationService } from '../../../services/consultation.service';
 import { generateDaySlots } from '../../../utils/slotGenerator';

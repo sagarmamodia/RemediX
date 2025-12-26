@@ -57,6 +57,7 @@ export interface RegisterFormData {
 export interface BookConsultationPayload {
   doctorId: string;
   sourceId: string;
+  slot: [string, string];
 }
 
 export interface BookConsultationResponse {

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
-import { ArrowLeft, ShieldCheck, Stethoscope, IndianRupee, Calendar, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, IndianRupee, Calendar, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { doctorService } from '../services/doctor.service';
 import { consultationService } from '../services/consultation.service';
 import { generateDaySlots } from '../utils/slotGenerator';
@@ -14,7 +14,6 @@ const BookingPage = () => {
   const [doctor, setDoctor] = useState<DoctorProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [processing, setProcessing] = useState(false);
 
   // Booking State
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -47,14 +46,11 @@ const BookingPage = () => {
   useEffect(() => {
     if (instantBooking && instantSlot) {
       const startTime = new Date(instantSlot[0]);
-      const endTime = new Date(instantSlot[1]);
       
       // Update selectedDate to match the instant slot date
       setSelectedDate(startTime.toISOString().split('T')[0]);
       
       // Format for display/value: "HH:mm-HH:mm"
-      const slotString = `${startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${endTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-      // We might need to store the actual ISO strings for the backend
       // Let's store the value as a JSON string of the array to be safe and easy to parse back
       setSelectedSlot(JSON.stringify(instantSlot));
     }
@@ -238,14 +234,14 @@ const BookingPage = () => {
               <PaymentForm
                 applicationId={import.meta.env.VITE_SQUARE_APP_ID}
                 locationId={import.meta.env.VITE_SQUARE_LOCATION_ID}
-                cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
+                cardTokenizeResponseReceived={async (token) => {
                   if (token.status !== 'OK' || !token.token) {
+                    // @ts-ignore - errors property exists on ErrorTokenResult but TS doesn't infer it correctly here
                     alert('Payment failed: ' + (token.errors?.[0]?.message || 'Unknown error'));
                     return;
                   }
 
                   try {
-                    setProcessing(true);
                     const slotArray = JSON.parse(selectedSlot);
                     const response = await consultationService.bookConsultation({
                       doctorId: doctor.id,
@@ -261,7 +257,7 @@ const BookingPage = () => {
                     const errorMessage = err.response?.data?.data?.error || err.message || 'Booking failed';
                     alert(`Booking failed: ${errorMessage}`);
                   } finally {
-                    setProcessing(false);
+
                   }
                 }}
               >

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { VideoSDKMeeting } from '@videosdk.live/rtc-js-prebuilt';
 import { consultationService } from '../services/consultation.service';
@@ -76,22 +76,37 @@ const Room = () => {
 
       const config = {
         name: "RemediX User",
+        apiKey: "your_api_key_here", // Placeholder, actual key is handled by token
         meetingId: meetingId,
-        containerId: null, // Full screen
+        containerId: undefined, // Full screen
         // redirectOnLeave removed to prevent browser security blocks
         micEnabled: true,
         webcamEnabled: true,
         participantCanToggleSelfWebcam: true,
         participantCanToggleSelfMic: true,
         chatEnabled: true,
-        screenShareEnabled: true,
         realtimeTranscription: {
           enabled: true,
           visible: true,
         },
         permissions: {
           toggleRealtimeTranscription: true,
-        },
+          askToJoin: false,
+          toggleParticipantWebcam: false,
+          toggleParticipantMic: false,
+          toggleParticipantScreenshare: false,
+          toggleParticipantMode: false,
+          canCreatePoll: false,
+          canEndMeeting: false,
+          drawOnWhiteboard: false,
+          toggleWhiteboard: false,
+          toggleRecording: false,
+          removeParticipant: false,
+          endMeeting: false,
+          changeLayout: false,
+          toggleHLS: false,
+          pin: false,
+        } as any,
         token: token,
         joinWithoutUserInteraction: true,
         joinScreen: {
@@ -104,6 +119,7 @@ const Room = () => {
             label: "Back to Dashboard",
             href: window.location.origin + '/dashboard',
           },
+          rejoinButtonEnabled: true,
         },
       };
 

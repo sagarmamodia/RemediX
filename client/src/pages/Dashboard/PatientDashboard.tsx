@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   User, 
   Calendar, 
@@ -16,7 +16,7 @@ import OverviewSection from '../../components/patient/dashboard/OverviewSection'
 import ConsultationsSection from '../../components/patient/dashboard/ConsultationsSection';
 
 const PatientDashboard = () => {
-  const { logout, userRole } = useAuth();
+  const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 

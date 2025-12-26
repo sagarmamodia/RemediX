@@ -1,6 +1,5 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Stethoscope, ArrowRight, ShieldCheck, Clock } from 'lucide-react';
+import { User, ArrowRight, Stethoscope, Clock, ShieldCheck } from 'lucide-react';
 
 const Landing = () => {
   const navigate = useNavigate();

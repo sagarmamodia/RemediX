@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { User, Mail, Phone, Calendar, UserCircle, Stethoscope, IndianRupee, Edit2, Save, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Mail, Phone, Calendar, UserCircle, Stethoscope, IndianRupee, Edit2, Save, X } from 'lucide-react';
 import { doctorService } from '../../../services/doctor.service';
 import type { DoctorProfile } from '../../../types';
 
