@@ -17,7 +17,10 @@ doctorRoutes.post(
   DoctorController.updateDoctorAvailabilityHandler
 );
 
+// UPDATE DOCTOR PROFILE
+doctorRoutes.patch("/update", protect, DoctorController.updateDoctorHandler);
+
 // CHECK WHETHER THE DOCTOR IS AVAILABLE FOR INSTANT BOOKING FOR A PARTICULAR SLOT
-doctorRoutes.post("/instant", DoctorController.getInstantDoctors);
+doctorRoutes.post("/instant", DoctorController.getInstantDoctorsHandler);
 
 export default doctorRoutes;

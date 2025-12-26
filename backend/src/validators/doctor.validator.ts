@@ -21,4 +21,18 @@ export const CreateDoctorSchema = z.object({
   fee: z.coerce.number(),
 });
 
+export const UpdateDoctorSchema = z.object({
+  name: z.string().optional(),
+  profileUrl: z
+    .string()
+    .min(2, "Url must have atleast 2 characters")
+    .optional(),
+  email: z.email("Invalid email address").optional(),
+  gender: z.enum(["Male", "Female", "Other"]).optional(),
+  dob: z.coerce.date().optional(),
+  specialty: z.string().optional(),
+  fee: z.number().optional(),
+});
+
 export type CreateDoctorDTO = z.infer<typeof CreateDoctorSchema>;
+export type UpdateDoctorDTO = z.infer<typeof UpdateDoctorSchema>;
