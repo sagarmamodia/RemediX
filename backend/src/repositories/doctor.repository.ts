@@ -1,6 +1,5 @@
 import { DoctorDTO } from "../dtos/doctor.dto";
 import { DoctorModel, IDoctor } from "../models/doctor.model";
-import logger from "../utils/logger";
 import {
   CreateDoctorDTO,
   UpdateDoctorDTO,
@@ -94,15 +93,12 @@ export const getDoctorsList = async (
     queryFilter.available = available;
   }
 
-  logger.info("query filter created");
   const doctors: IDoctor[] = await DoctorModel.find(queryFilter);
-  logger.info("doctors retrieved from db");
 
   const doctorsAsDTO: DoctorDTO[] = [];
   doctors.forEach((doctor) => {
     doctorsAsDTO.push(toDoctorDTO(doctor));
   });
-  logger.info("doctors converted to DTOs");
 
   return doctorsAsDTO;
 };
@@ -124,7 +120,6 @@ export const updateDoctorAvailability = async (
     { available: availability },
     { new: false, runValidators: true }
   ).exec();
-  logger.info("doctor availability changed}");
 };
 
 // UPDATE DOCTOR

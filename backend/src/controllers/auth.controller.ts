@@ -27,7 +27,7 @@ export const patientRegistrationHandler = async (
     console.log(id);
 
     // return response
-    return res.json({ success: true, data: { id: id } });
+    return res.status(201).json({ success: true, data: { id: id } });
   } catch (error) {
     return next(error);
   }
@@ -51,7 +51,7 @@ export const doctorRegistrationHandler = async (
     const id = await DoctorRepository.registerDoctor(parsed.data);
 
     // return response
-    return res.json({ success: true, data: { id: id } });
+    return res.status(201).json({ success: true, data: { id: id } });
   } catch (error) {
     return next(error);
   }
@@ -83,7 +83,7 @@ export const loginHandler = async (
     // if no account exists with this phone number
     if (!account) {
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, data: { error: "user does not exist" } });
     }
 

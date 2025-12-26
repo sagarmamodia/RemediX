@@ -18,7 +18,7 @@ export const getPatientDetailsHandler = async (
 
     const patient = await PatientRepository.getPatientById(id);
     if (!patient) {
-      throw new AppError("Patient does not exist", 400);
+      throw new AppError("Patient does not exist", 404);
     }
 
     return res
@@ -38,7 +38,7 @@ export const updatePatientHandler = async (
   try {
     const user = res.locals.user;
     if (user.role !== "Patient") {
-      throw new AppError("Only patients are allowed to use this endpoint", 400);
+      throw new AppError("Only patients are allowed to use this endpoint", 403);
     }
 
     // parse data

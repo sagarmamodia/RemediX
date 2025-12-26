@@ -20,7 +20,7 @@ export const getProfileHandler = async (
       );
 
       if (!doctor) {
-        throw new AppError("User does not exist", 400);
+        throw new AppError("User does not exist", 404);
       }
 
       return res.json({
@@ -33,10 +33,10 @@ export const getProfileHandler = async (
       );
 
       if (!patient) {
-        throw new AppError("User does not exist", 400);
+        throw new AppError("User does not exist", 404);
       }
 
-      return res.json({
+      return res.status(200).json({
         success: true,
         data: { role: "Patient", ...patient },
       });

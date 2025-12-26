@@ -59,9 +59,15 @@ export const uploadPrescriptionHandler = async (
       result.secure_url
     );
 
-    return res.status(200).json({ success: true, data: {} });
+    return res
+      .status(200)
+      .json({ success: true, data: { prescriptionUrl: result.secure_url } });
   } catch (err) {
-    return next(err);
+    if (err instanceof AppError)
+      return new AppError(`[REPOSITORY] ${err.message}`, err.statusCode);
+
+    if (err instanceof Error)
+      return next(new Error(`[CONTROLLER] ${err.message}`));
   }
 };
 
