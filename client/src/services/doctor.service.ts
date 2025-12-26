@@ -35,5 +35,10 @@ export const doctorService = {
       slot
     });
     return response.data;
+  },
+
+  updateProfile: async (data: Partial<DoctorProfile>) => {
+    const response = await api.patch<{ success: boolean; data: DoctorProfile }>('/doctor/update', data);
+    return response.data;
   }
 };
