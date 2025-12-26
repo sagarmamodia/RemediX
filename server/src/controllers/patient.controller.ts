@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import * as PatientRepository from "../repositories/patient.repository";
 import { AppError } from "../utils/AppError";
-import { UpdatePatientSchema } from "../validators/patient.validator";
+import { uploadToCloudinary } from "../utils/cloudinary";
+import {
+  UpdatePatientDTO,
+  UpdatePatientSchema,
+} from "../validators/patient.validator";
 
 // SEND DETAILS OF THE PATIENT MATCHING THE ID GIVEN IN URL PARAMS
 export const getPatientDetailsHandler = async (
@@ -47,8 +51,21 @@ export const updatePatientHandler = async (
       throw new AppError("Invalid data format", 400);
     }
 
+    let updates: { profileUrl?: string; otherData: UpdatePatientDTO } = {
+      otherData: parsed.data,
+    };
+    if (req.file) {
+      // upload the file to cloudinary
+      const result = await uploadToCloudinary(req.file.buffer);
+      if (!result.secure_url) {
+        throw new AppError("Error uploading file", 500);
+      }
+
+      updates.profileUrl = result.secure_url;
+    }
+
     // update db
-    const updated = await PatientRepository.updatePatient(user.id, parsed.data);
+    const updated = await PatientRepository.updatePatient(user.id, updates);
     return res
       .status(200)
       .json({ success: true, data: { id: user.id, ...updated } });

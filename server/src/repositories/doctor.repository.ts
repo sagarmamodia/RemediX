@@ -126,9 +126,11 @@ export const updateDoctorAvailability = async (
 // UPDATE PATIENT PROFILE
 export const updateDoctor = async (
   id: string,
-  data: UpdateDoctorDTO
+  updates: { profileUrl?: string; otherData: UpdateDoctorDTO }
 ): Promise<DoctorDTO | null> => {
-  const newDoc = await DoctorModel.findByIdAndUpdate(id, data, {
+  const updatedData: any = { ...updates.otherData };
+  if (updates.profileUrl) updatedData.profileUrl = updates.profileUrl;
+  const newDoc = await DoctorModel.findByIdAndUpdate(id, updatedData, {
     new: true,
     runValidators: true,
   });
