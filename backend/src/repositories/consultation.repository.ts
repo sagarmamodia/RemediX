@@ -3,7 +3,6 @@ import {
   CreateConsultationDTO,
 } from "../dtos/consultation.dto";
 import { ConsultationModel, IConsultation } from "../models/consultation.model";
-import logger from "../utils/logger";
 
 // ================== HELPER FUNCTIONS =======================
 function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
@@ -73,7 +72,6 @@ export const getPendingConsultationsByDoctorId = async (
 ): Promise<ConsultationDTO[]> => {
   const queryFilter = { doctorId: id, status: "pending" };
   const docs = await ConsultationModel.find(queryFilter);
-  logger.info("pending consultations fetched from database");
 
   const consultationDtos: ConsultationDTO[] = [];
   docs.forEach((doc) => {
@@ -89,7 +87,6 @@ export const getPendingConsultationsByPatientId = async (
 ): Promise<ConsultationDTO[]> => {
   const queryFilter = { patientId: id, status: "pending" };
   const docs = await ConsultationModel.find(queryFilter);
-  logger.info("pending consultations fetched from database");
 
   const consultationDtos: ConsultationDTO[] = [];
   docs.forEach((doc) => {

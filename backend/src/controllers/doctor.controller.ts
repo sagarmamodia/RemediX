@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import * as DoctorRepository from "../repositories/doctor.repository";
 import { AppError } from "../utils/AppError";
-import logger from "../utils/logger";
 import { UpdateDoctorSchema } from "../validators/doctor.validator";
 import { DoctorFilterQuerySchema } from "../validators/doctorFilter.validator";
 import { InstantDoctorsSearchSchema } from "../validators/slot.validator";
@@ -22,7 +21,7 @@ export const getDoctorDetailsHandler = async (
 
     const doctor = await DoctorRepository.getDoctorById(id);
     if (!doctor) {
-      throw new AppError("Doctor does not exist", 400);
+      throw new AppError("Doctor does not exist", 404);
     }
 
     return res
@@ -62,18 +61,16 @@ export const updateDoctorAvailabilityHandler = async (
   try {
     const user = res.locals.user;
     if (user.role != "Doctor") {
-      return new AppError("Only doctors are authorized", 401);
+      return new AppError("Only doctors are authorized", 403);
     }
 
     const data = req.body.available;
     if (!data || (data != "false" && data != "true")) {
       throw new AppError("Invalid data format", 400);
     }
-    logger.info("request data parsed");
 
     const availability = data == "true" ? true : false;
     await DoctorRepository.updateDoctorAvailability(user.id, availability);
-    logger.info("request availability updated");
     return res.status(200).json({ success: true, data: {} });
 
     //
@@ -91,7 +88,7 @@ export const updateDoctorHandler = async (
   try {
     const user = res.locals.user;
     if (user.role !== "Doctor") {
-      throw new AppError("Only patients are allowed to use this endpoint", 400);
+      throw new AppError("Only patients are allowed to use this endpoint", 403);
     }
 
     // parse data

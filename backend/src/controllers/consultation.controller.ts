@@ -7,7 +7,6 @@ import * as ConsultationRepository from "../repositories/consultation.repository
 import * as DoctorRepository from "../repositories/doctor.repository";
 import * as PatientRepository from "../repositories/patient.repository";
 import { AppError } from "../utils/AppError";
-import logger from "../utils/logger";
 import {
   createRoomAPI,
   deleteRoomAPI,
@@ -53,10 +52,8 @@ export const getAllConsultationsHandler = async (
       const consultations =
         await ConsultationRepository.getAllConsultationsByDoctorId(user.id);
 
-      logger.info(`Consultations fetched: ${consultations.length}`);
       // get patient details corressponding to each patientId
       const data: DoctorConsultationsDTO[] = [];
-      logger.info("Initiated patient data retrieval");
       for (const consultation of consultations) {
         try {
           const patient = await PatientRepository.getPatientById(
@@ -65,7 +62,6 @@ export const getAllConsultationsHandler = async (
 
           const obj: any = {};
           if (patient) {
-            logger.info("Patient found");
             obj.consultationId = consultation.id;
             obj.patientName = patient.name;
             obj.patientProfileUrl = patient.profileUrl;
@@ -74,12 +70,8 @@ export const getAllConsultationsHandler = async (
             obj.prescriptionUrl = consultation.prescriptionUrl;
             obj.status = consultation.status;
             data.push(obj);
-          } else {
-            logger.info("patient not found");
           }
-        } catch (err) {
-          logger.error(err);
-        }
+        } catch (err) {}
       }
 
       return res.status(200).json({ success: true, data: { list: data } });
@@ -105,9 +97,7 @@ export const getAllConsultationsHandler = async (
             obj.doctorSpecialty = doctor.specialty;
             data.push(obj);
           }
-        } catch (err) {
-          logger.error(err);
-        }
+        } catch (err) {}
       }
 
       return res.status(200).json({ success: true, data: { list: data } });
@@ -126,7 +116,7 @@ export const updateConsultationStatusHandler = async (
   try {
     const user = res.locals.user;
     if (user.role != "Doctor") {
-      throw new AppError("Only doctors are authorized", 401);
+      throw new AppError("Only doctors are authorized", 403);
     }
 
     const id = req.body.id;
@@ -141,7 +131,7 @@ export const updateConsultationStatusHandler = async (
     }
 
     if (consultation.doctorId != user.id) {
-      throw new AppError("You are unauthorized", 401);
+      throw new AppError("You are unauthorized", 403);
     }
 
     // Check if the consultation have a room associated with it
@@ -165,21 +155,18 @@ export const joinConsultationHandler = async (
   next: NextFunction
 ) => {
   try {
-    logger.info("Parsing request params");
     const consultationId = req.params.id;
     if (!consultationId) {
-      throw new AppError("ConsultationId not found in the url", 400);
+      throw new AppError("ConsultationId missing", 400);
     }
 
     // fetch consultation
-    logger.info("Checking the existence of consultation");
     const consultation = await ConsultationRepository.getConsultationById(
       consultationId
     );
     if (!consultation) {
       throw new AppError("Consultation does not exist", 404);
     }
-    logger.info("Consultation exists");
 
     // if the time to start the consultation is greater than 10 minutes then reject the request
     const startTime = new Date(consultation.startTime);
@@ -187,7 +174,7 @@ export const joinConsultationHandler = async (
     if (diff > 10) {
       throw new AppError(
         "You can only join 10 minutes before consultation starts",
-        400
+        403
       );
     }
 
@@ -196,18 +183,13 @@ export const joinConsultationHandler = async (
     const token = getVideoSDKToken();
     // create room if it does not exist
     if (!roomId) {
-      logger.info("creating room");
       const newRoomId = await createRoomAPI();
       if (!newRoomId) {
-        logger.info("error in creating room");
         throw new AppError("Error in creating room", 500);
       }
-      logger.info(`room created with id: ${newRoomId}`);
 
       // save this roomUrl to consultation
-      logger.info("saving roomId to db");
       await ConsultationRepository.addRoom(consultation.id, newRoomId);
-      logger.info("roomId saved to db");
 
       return res
         .status(200)

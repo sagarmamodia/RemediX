@@ -6,7 +6,6 @@ import * as ConsultationRepository from "../repositories/consultation.repository
 import * as DoctorRepository from "../repositories/doctor.repository";
 import * as PaymentRepository from "../repositories/payment.repository";
 import { AppError } from "../utils/AppError";
-import logger from "../utils/logger";
 import { BookSlotSchema } from "../validators/bookSlot.validator";
 import { CheckSlotSchema } from "../validators/checkSlot.validator";
 import { RescheduleSchema } from "../validators/reschedule.validator";
@@ -19,17 +18,13 @@ const checkDoctorSlotAvailability = async (
   startTime: Date,
   endTime: Date
 ): Promise<boolean> => {
-  logger.info("fetching doctor details from db");
   const doctor = await DoctorRepository.getDoctorById(doctorId);
   if (!doctor) {
-    logger.info("doctor not found");
     return false;
   }
-  logger.info("fetched doctor successfully");
   const dayOfWeek = DAYS[startTime.getDay()];
   let validShift = false;
 
-  logger.info("checking shift conflicts");
   const doctorShifts = doctor.shifts;
   for (const shift of doctorShifts) {
     // match day
@@ -50,18 +45,13 @@ const checkDoctorSlotAvailability = async (
   }
 
   if (!validShift) {
-    logger.info("found shift conflict");
     return false;
   }
-  logger.info("not shift conflict found");
 
   // Check if the doctor have other consultations booked at this time.
-  logger.info("fetching consultation for the doctor");
   const doctorConsultations =
     await ConsultationRepository.getPendingConsultationsByDoctorId(doctorId);
-  logger.info("fetched consultation for the doctor");
 
-  logger.info("checking slot conflict in doctor's schedule");
   let isDoctorFree = true;
   for (const consultation of doctorConsultations) {
     const consultationStartTime = new Date(consultation.startTime);
@@ -75,10 +65,8 @@ const checkDoctorSlotAvailability = async (
   }
 
   if (!isDoctorFree) {
-    logger.info("doctor slot conflict detected");
     return false;
   }
-  logger.info("no doctor slot conflict found");
 
   return true;
 };
@@ -89,12 +77,9 @@ const checkPatientSlotAvailability = async (
   endTime: Date
 ): Promise<boolean> => {
   // check if the patient have other consultations booked at this time.
-  logger.info("fetching consultation for the doctor");
   const patientConsultations =
     await ConsultationRepository.getPendingConsultationsByPatientId(patientId);
-  logger.info("fetched consultation for the doctor");
 
-  logger.info("checking slot conflict in doctor's schedule");
   let isPatientFree = true;
   for (const consultation of patientConsultations) {
     const consultationStartTime = new Date(consultation.startTime);
@@ -108,10 +93,8 @@ const checkPatientSlotAvailability = async (
   }
 
   if (!isPatientFree) {
-    logger.info("patient slot conflict detected");
     return false;
   }
-  logger.info("no patient slot conflict found");
 
   return true;
 };
@@ -127,7 +110,7 @@ export const paymentAndSlotBookingHandler = async (
   try {
     const user = res.locals.user;
     if (user.role != "Patient") {
-      throw new AppError("Only patients are authorized", 401);
+      throw new AppError("Only patients are authorized", 403);
     }
 
     const parsed = BookSlotSchema.safeParse(req.body);
@@ -158,7 +141,7 @@ export const paymentAndSlotBookingHandler = async (
 
     if (!doctorCheck || !patientCheck) {
       return res
-        .status(200)
+        .status(403)
         .json({ success: false, data: { error: "slot not avaliable" } });
     }
 
@@ -181,15 +164,12 @@ export const paymentAndSlotBookingHandler = async (
     if (!response.result.payment || !response.result.payment.id) {
       throw new AppError("Payment failed", 400);
     }
-    logger.info("payment charged");
 
     // record payment in db
     const paymentId = await PaymentRepository.createPaymentRecord(
       response.result.payment.id,
       fee
     );
-
-    logger.info("payment recorded");
 
     // create consultation
     const data: CreateConsultationDTO = {
@@ -204,7 +184,7 @@ export const paymentAndSlotBookingHandler = async (
       await ConsultationRepository.createConsultationRecord(data);
 
     return res
-      .status(200)
+      .status(201)
       .json({ success: true, data: { consultationId: consultationId } });
     //
   } catch (err) {
@@ -223,7 +203,7 @@ export const checkSlotAvailabilityHandler = async (
     if (user.role != "Patient") {
       throw new AppError(
         "Only patients are authorized to use this endpoint",
-        401
+        403
       );
     }
 
@@ -259,7 +239,7 @@ export const checkSlotAvailabilityHandler = async (
 
     if (!doctorCheck || !patientCheck) {
       return res
-        .status(200)
+        .status(409)
         .json({ success: false, data: { error: "slot not avaliable" } });
     }
 
@@ -278,7 +258,7 @@ export const rescheduleConsultationHandler = async (
   try {
     const user = res.locals.user;
     if (user.role != "Patient") {
-      throw new AppError("Only patients are authorized", 401);
+      throw new AppError("Only patients are authorized", 403);
     }
 
     // parse json data
@@ -303,7 +283,7 @@ export const rescheduleConsultationHandler = async (
     const diff = sT.getTime() - Date.now(); // in millisecond
     const hour = 60 * 60 * 1000;
     if (diff < hour) {
-      throw new AppError("You have exceeded the time to reschedule", 400);
+      throw new AppError("You have exceeded the time to reschedule", 409);
     }
 
     // check slot availability
@@ -320,7 +300,7 @@ export const rescheduleConsultationHandler = async (
 
     if (!doctorCheck || !patientCheck) {
       return res
-        .status(200)
+        .status(409)
         .json({ success: false, data: { error: "slot not avaliable" } });
     }
 
