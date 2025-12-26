@@ -23,6 +23,21 @@ export const consultationService = {
     return response.data;
   },
 
+  checkSlotAvailability: async (doctorId: string, slot: [string, string]) => {
+    const response = await api.post<{ success: boolean; data: { validSlot?: boolean } }>('/consultation/checkSlot', {
+      doctorId,
+      slot
+    });
+    
+    // Backend returns { validSlot: true } but frontend expects { available: true }
+    return {
+      success: response.data.success,
+      data: {
+        available: response.data.data?.validSlot || false
+      }
+    };
+  },
+
   getConsultations: async (): Promise<Consultation[]> => {
     const response = await api.get<ConsultationListResponse>('/consultation/get');
     const list = response.data.data.list || [];

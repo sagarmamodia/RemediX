@@ -27,5 +27,13 @@ export const doctorService = {
       available: String(available)
     });
     return response.data;
+  },
+
+  getInstantDoctors: async (specialty: string, slot: [string, string]) => {
+    const response = await api.post<DoctorListResponse>('/doctor/instant', {
+      specialty,
+      slot
+    });
+    return response.data;
   }
 };
