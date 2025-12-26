@@ -64,6 +64,7 @@ consultationRoutes.patch(
 consultationRoutes.patch(
   "/prescription/upload",
   protect,
+  upload.single("image"),
   PrescriptionController.uploadPrescriptionHandler
 );
 
@@ -71,7 +72,6 @@ consultationRoutes.patch(
 consultationRoutes.get(
   "/id/:id/prescription",
   protect,
-  upload.single("image"),
   PrescriptionController.getPrescriptionHandler
 );
 
