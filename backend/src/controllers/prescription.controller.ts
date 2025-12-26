@@ -38,9 +38,9 @@ export const uploadPrescriptionHandler = async (
     }
 
     // check if the consultation has started
-    const eT = new Date(consultation.endTime);
+    const sT = new Date(consultation.startTime);
     const currentTime = new Date(Date.now());
-    if (eT < currentTime) {
+    if (sT > currentTime) {
       throw new AppError(
         "Consultation has not yet started - you can't upload prescription",
         400
