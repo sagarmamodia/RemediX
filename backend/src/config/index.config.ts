@@ -30,8 +30,14 @@ const config = {
   // },
 
   videosdk: {
-    API_KEY: process.env.VIDEOSDK_API_KEY,
-    SECRET: process.env.VIDEOSDK_SECRET,
+    api_key: process.env.VIDEOSDK_API_KEY,
+    secret: process.env.VIDEOSDK_SECRET,
+  },
+
+  cloudinary: {
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
   },
 } as const;
 

@@ -1,9 +1,17 @@
 import { Router } from "express";
+import multer from "multer";
 import * as BookingController from "../controllers/booking.controller";
 import * as ConsultationController from "../controllers/consultation.controller";
+import * as PrescriptionController from "../controllers/prescription.controller";
 import { protect } from "../middleware/auth.middleware";
 
 const consultationRoutes = Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Limit: 5MB
+});
 
 // BOOK A CONSULTATION SLOT
 consultationRoutes.post(
@@ -56,14 +64,15 @@ consultationRoutes.patch(
 consultationRoutes.patch(
   "/prescription/upload",
   protect,
-  ConsultationController.uploadPrescriptionHandler
+  PrescriptionController.uploadPrescriptionHandler
 );
 
 // GET PRESCRIPTION
 consultationRoutes.get(
   "/id/:id/prescription",
   protect,
-  ConsultationController.getPrescriptionHandler
+  upload.single("image"),
+  PrescriptionController.getPrescriptionHandler
 );
 
 export default consultationRoutes;
