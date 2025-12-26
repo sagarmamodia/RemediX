@@ -1,5 +1,5 @@
 import cors from "cors";
-import express from "express";
+import express, { Request, Response } from "express";
 import { config } from "./src/config/index.config";
 import { globalErrorHandler } from "./src/middleware/globalErrorHandler.middleware";
 import { requestLogger } from "./src/middleware/logger.middleware";
@@ -29,6 +29,11 @@ app.get("/health", (req, res) => {
 });
 
 // Routers
+app.get("/api/health", async (req: Request, res: Response) => {
+  return res
+    .status(200)
+    .json({ success: true, data: { message: "health OK!" } });
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/doctor", doctorRoutes);
