@@ -2,19 +2,19 @@ import jwt, { SignOptions } from "jsonwebtoken";
 import { config } from "../config/index.config";
 
 export const getVideoSDKToken = (): string => {
-  if (!config.videosdk.API_KEY || !config.videosdk.SECRET) {
+  if (!config.videosdk.api_key || !config.videosdk.secret) {
     throw new Error("API_KEY and SECRET are missing");
   }
   const options = { expiresIn: "120m", algorithm: "HS256" };
   const payload = {
-    apikey: config.videosdk.API_KEY,
+    apikey: config.videosdk.api_key,
     permissions: ["allow_join"],
     version: 2,
   };
 
   const token = jwt.sign(
     payload,
-    config.videosdk.SECRET,
+    config.videosdk.secret,
     options as SignOptions
   );
   return token;
