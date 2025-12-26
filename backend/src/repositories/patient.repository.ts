@@ -1,6 +1,9 @@
 import { PatientDTO } from "../dtos/patient.dto";
 import { IPatient, PatientModel } from "../models/patient.model";
-import { CreatePatientDTO } from "../validators/patient.validator";
+import {
+  CreatePatientDTO,
+  UpdatePatientDTO,
+} from "../validators/patient.validator";
 
 // =================== HELPER FUNCTIONS ================================
 function toPatientDTO(patient: IPatient): PatientDTO {
@@ -42,4 +45,18 @@ export const getPatientByPhoneWithPassword = async (
   const patient: IPatient | null = await PatientModel.findOne({ phone: phone });
   if (!patient) return null;
   return { id: patient._id.toHexString(), password: patient.password };
+};
+
+// UPDATE PATIENT PROFILE
+export const updatePatient = async (
+  id: string,
+  data: UpdatePatientDTO
+): Promise<PatientDTO | null> => {
+  const newDoc = await PatientModel.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!newDoc) return null;
+  return toPatientDTO(newDoc);
 };

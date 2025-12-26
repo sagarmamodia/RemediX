@@ -1,7 +1,10 @@
 import { DoctorDTO } from "../dtos/doctor.dto";
 import { DoctorModel, IDoctor } from "../models/doctor.model";
 import logger from "../utils/logger";
-import { CreateDoctorDTO } from "../validators/doctor.validator";
+import {
+  CreateDoctorDTO,
+  UpdateDoctorDTO,
+} from "../validators/doctor.validator";
 import { DoctorFilterQueryDTO } from "../validators/doctorFilter.validator";
 
 // =================== HELPER FUNCTIONS ================================
@@ -122,6 +125,21 @@ export const updateDoctorAvailability = async (
     { new: false, runValidators: true }
   ).exec();
   logger.info("doctor availability changed}");
+};
+
+// UPDATE DOCTOR
+// UPDATE PATIENT PROFILE
+export const updateDoctor = async (
+  id: string,
+  data: UpdateDoctorDTO
+): Promise<DoctorDTO | null> => {
+  const newDoc = await DoctorModel.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!newDoc) return null;
+  return toDoctorDTO(newDoc);
 };
 
 // RETURN ALL DOCTORS MATCHING A SPECIALTY AND AVAILABLE FOR THE GIVEN SLOT (USES LOOKUP IN CONSULTATION COLLECTION AS WELL)

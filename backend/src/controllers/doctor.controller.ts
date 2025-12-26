@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import * as DoctorRepository from "../repositories/doctor.repository";
 import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
+import { UpdateDoctorSchema } from "../validators/doctor.validator";
 import { DoctorFilterQuerySchema } from "../validators/doctorFilter.validator";
 import { InstantDoctorsSearchSchema } from "../validators/slot.validator";
 import { DAYS } from "./booking.controller";
@@ -81,8 +82,36 @@ export const updateDoctorAvailabilityHandler = async (
   }
 };
 
+// UPDATE DOCTOR PROFILE
+export const updateDoctorHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    if (user.role !== "Doctor") {
+      throw new AppError("Only patients are allowed to use this endpoint", 400);
+    }
+
+    // parse data
+    const parsed = UpdateDoctorSchema.safeParse(req.body);
+    if (!parsed.success) {
+      throw new AppError("Invalid data format", 400);
+    }
+
+    // update db
+    const updated = await DoctorRepository.updateDoctor(user.id, parsed.data);
+    return res
+      .status(200)
+      .json({ success: true, data: { id: user.id, ...updated } });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 // SEND ALL DOCTORS WHO ARE AVAILABLE FOR INSTANT CONSULTATION
-export const getInstantDoctors = async (
+export const getInstantDoctorsHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
