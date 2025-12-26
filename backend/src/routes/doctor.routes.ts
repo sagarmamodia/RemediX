@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as DoctorController from "../controllers/doctor.controller";
 import { protect } from "../middleware/auth.middleware";
+import { bufferFileMiddleware } from "../middleware/fileBuffer.middleware";
 
 const doctorRoutes = Router();
 
@@ -18,7 +19,12 @@ doctorRoutes.post(
 );
 
 // UPDATE DOCTOR PROFILE
-doctorRoutes.patch("/update", protect, DoctorController.updateDoctorHandler);
+doctorRoutes.patch(
+  "/update",
+  bufferFileMiddleware.single("image"),
+  protect,
+  DoctorController.updateDoctorHandler
+);
 
 // CHECK WHETHER THE DOCTOR IS AVAILABLE FOR INSTANT BOOKING FOR A PARTICULAR SLOT
 doctorRoutes.post("/instant", DoctorController.getInstantDoctorsHandler);

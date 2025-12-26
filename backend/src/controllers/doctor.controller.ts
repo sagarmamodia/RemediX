@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import * as DoctorRepository from "../repositories/doctor.repository";
 import { AppError } from "../utils/AppError";
-import { UpdateDoctorSchema } from "../validators/doctor.validator";
+import { uploadToCloudinary } from "../utils/cloudinary";
+import {
+  UpdateDoctorDTO,
+  UpdateDoctorSchema,
+} from "../validators/doctor.validator";
 import { DoctorFilterQuerySchema } from "../validators/doctorFilter.validator";
 import { InstantDoctorsSearchSchema } from "../validators/slot.validator";
 import { DAYS } from "./booking.controller";
@@ -97,8 +101,21 @@ export const updateDoctorHandler = async (
       throw new AppError("Invalid data format", 400);
     }
 
+    let updates: { profileUrl?: string; otherData: UpdateDoctorDTO } = {
+      otherData: parsed.data,
+    };
+    if (req.file) {
+      // upload the file to cloudinary
+      const result = await uploadToCloudinary(req.file.buffer);
+      if (!result.secure_url) {
+        throw new AppError("Error uploading file", 500);
+      }
+
+      updates.profileUrl = result.secure_url;
+    }
+
     // update db
-    const updated = await DoctorRepository.updateDoctor(user.id, parsed.data);
+    const updated = await DoctorRepository.updateDoctor(user.id, updates);
     return res
       .status(200)
       .json({ success: true, data: { id: user.id, ...updated } });

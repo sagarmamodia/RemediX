@@ -50,9 +50,11 @@ export const getPatientByPhoneWithPassword = async (
 // UPDATE PATIENT PROFILE
 export const updatePatient = async (
   id: string,
-  data: UpdatePatientDTO
+  updates: { profileUrl?: string; otherData: UpdatePatientDTO }
 ): Promise<PatientDTO | null> => {
-  const newDoc = await PatientModel.findByIdAndUpdate(id, data, {
+  const updatedData: any = { ...updates.otherData };
+  if (updates.profileUrl) updatedData.profileUrl = updates.profileUrl;
+  const newDoc = await PatientModel.findByIdAndUpdate(id, updatedData, {
     new: true,
     runValidators: true,
   });

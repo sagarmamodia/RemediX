@@ -50,7 +50,7 @@ export const uploadPrescriptionHandler = async (
     // upload file to cloudinary
     const result = await uploadToCloudinary(req.file.buffer);
     if (!result.secure_url) {
-      throw new AppError("Error uploading file", 400);
+      throw new AppError("Error uploading file", 500);
     }
 
     // update prescription Url
