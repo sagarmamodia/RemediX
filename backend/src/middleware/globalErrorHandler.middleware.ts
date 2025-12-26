@@ -18,6 +18,5 @@ export const globalErrorHandler = (
     },
     // stack: err.stack // Optional: Only show stack in development
   });
-
-  // logger.error(err.stack)
+  console.error(`[ERROR] ${err.message}`);
 };
