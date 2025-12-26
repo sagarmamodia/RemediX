@@ -85,6 +85,13 @@ const Room = () => {
         participantCanToggleSelfMic: true,
         chatEnabled: true,
         screenShareEnabled: true,
+        realtimeTranscription: {
+          enabled: true,
+          visible: true,
+        },
+        permissions: {
+          toggleRealtimeTranscription: true,
+        },
         token: token,
         joinWithoutUserInteraction: true,
         joinScreen: {
