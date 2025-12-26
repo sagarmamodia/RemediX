@@ -33,6 +33,7 @@ const FindDoctorsSection = () => {
   const fetchDoctors = async () => {
     try {
       setLoading(true);
+      setError('');
       
       if (instantConsultation) {
         // Calculate instant slot using smart logic
