@@ -10,6 +10,7 @@ const OverviewSection = () => {
   const [available, setAvailable] = useState(false);
   const [loading, setLoading] = useState(true);
   const [consultations, setConsultations] = useState<Consultation[]>([]);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,12 +62,27 @@ const OverviewSection = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setUploadingId(consultationId);
     try {
-      await consultationService.uploadPrescription(consultationId, file);
-      alert('Prescription uploaded successfully!');
+      const response = await consultationService.uploadPrescription(consultationId, file);
+      
+      // Update local state to show the new prescription immediately
+      setConsultations(prev => prev.map(c => {
+        if (c._id === consultationId) {
+          return { ...c, prescriptionUrl: response.data.url || response.url }; // Adjust based on actual API response structure
+        }
+        return c;
+      }));
+      
+      // Re-fetch to be sure (optional, but good for consistency)
+      const updatedConsultations = await consultationService.getConsultations();
+      setConsultations(updatedConsultations);
+
     } catch (err) {
       console.error('Failed to upload prescription:', err);
       alert('Failed to upload prescription');
+    } finally {
+      setUploadingId(null);
     }
   };
 
@@ -188,13 +204,23 @@ const OverviewSection = () => {
                     </a>
                   )}
                   <label className={`cursor-pointer bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 ${consultation.prescriptionUrl ? 'flex-1' : 'w-full'} justify-center`}>
-                    <Upload size={18} />
-                    Upload Rx
+                    {uploadingId === consultation._id ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload size={18} />
+                        Upload Rx
+                      </>
+                    )}
                     <input 
                       type="file" 
                       className="hidden" 
                       accept="image/*,application/pdf"
                       onChange={(e) => handleFileUpload(e, consultation._id)}
+                      disabled={uploadingId === consultation._id}
                     />
                   </label>
                 </div>
