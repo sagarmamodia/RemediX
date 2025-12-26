@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Video, Clock, User } from 'lucide-react';
+import { Calendar, Video, Clock, User, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { consultationService } from '../../../services/consultation.service';
 import type { Consultation } from '../../../types';
@@ -28,6 +28,20 @@ const ConsultationsSection = () => {
 
   const handleJoinCall = (consultationId: string) => {
     navigate(`/room/${consultationId}`);
+  };
+
+  const handleMarkCompleted = async (consultationId: string) => {
+    if (window.confirm('Are you sure you want to mark this consultation as completed?')) {
+      try {
+        await consultationService.markAsCompleted(consultationId);
+        setConsultations(prev => prev.map(c => 
+          c._id === consultationId ? { ...c, status: 'completed' } : c
+        ));
+      } catch (err) {
+        console.error('Failed to mark as completed:', err);
+        alert('Failed to update status');
+      }
+    }
   };
 
   if (loading) return <div className="p-8 text-center">Loading consultations...</div>;
@@ -106,6 +120,7 @@ const ConsultationsSection = () => {
                     {consultation.status.charAt(0).toUpperCase() + consultation.status.slice(1)}
                   </span>
                   {consultation.status === 'pending' && (
+                    <>
                      <button 
                         onClick={() => handleJoinCall(consultation._id)}
                         className="flex items-center gap-2 text-primary hover:text-blue-700 font-medium text-sm"
@@ -113,6 +128,14 @@ const ConsultationsSection = () => {
                         <Video size={16} />
                         Join Call
                      </button>
+                     <button 
+                        onClick={() => handleMarkCompleted(consultation._id)}
+                        className="flex items-center gap-2 text-green-600 hover:text-green-700 font-medium text-sm"
+                     >
+                        <CheckCircle size={16} />
+                        Mark Completed
+                     </button>
+                    </>
                   )}
                 </div>
               </div>

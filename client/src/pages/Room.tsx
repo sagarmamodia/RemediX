@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-// import { VideoSDKMeeting } from '@videosdk.live/rtc-js-prebuilt';
+import { VideoSDKMeeting } from '@videosdk.live/rtc-js-prebuilt';
 import { consultationService } from '../services/consultation.service';
 import { Loader2 } from 'lucide-react';
 
@@ -46,14 +46,39 @@ const Room = () => {
   }, [id, location.state]);
 
   useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        
+        // Handle various meeting end/leave events
+        if (
+          data?.type === 'meeting-left' || 
+          data?.event === 'meeting-left' ||
+          data?.type === 'meeting-ended' ||
+          data?.event === 'meeting-ended' ||
+          data?.action === 'leave' ||
+          (data?.type === 'participant-left' && data?.data?.isLocal)
+        ) {
+          navigate('/dashboard');
+        }
+      } catch (e) {
+        // Ignore non-JSON messages
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [navigate]);
+
+  useEffect(() => {
     if (token && meetingId && !meetingInitialized.current) {
       meetingInitialized.current = true;
 
       const config = {
-        name: "QwikConsult User",
+        name: "RemediX User",
         meetingId: meetingId,
         containerId: null, // Full screen
-        redirectOnLeave: window.location.origin,
+        // redirectOnLeave removed to prevent browser security blocks
         micEnabled: true,
         webcamEnabled: true,
         participantCanToggleSelfWebcam: true,
@@ -61,10 +86,21 @@ const Room = () => {
         chatEnabled: true,
         screenShareEnabled: true,
         token: token,
+        joinWithoutUserInteraction: true,
+        joinScreen: {
+          visible: false,
+          title: "Consultation Room",
+          meetingUrl: window.location.href,
+        },
+        leftScreen: {
+          actionButton: {
+            label: "Back to Dashboard",
+            href: window.location.origin + '/dashboard',
+          },
+        },
       };
 
-      // @ts-ignore
-      const meeting = new window.VideoSDKMeeting();
+      const meeting = new VideoSDKMeeting();
       meeting.init(config);
     }
   }, [token, meetingId]);

@@ -18,6 +18,11 @@ export const consultationService = {
     return response.data;
   },
 
+  markAsCompleted: async (consultationId: string) => {
+    const response = await api.post('/consultation/update/complete', { id: consultationId });
+    return response.data;
+  },
+
   getConsultations: async (): Promise<Consultation[]> => {
     const response = await api.get<ConsultationListResponse>('/consultation/get');
     const list = response.data.data.list || [];

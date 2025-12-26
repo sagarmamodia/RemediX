@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, Video, Power } from 'lucide-react';
+import { Calendar, Clock, Users, Video, Power, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { doctorService } from '../../../services/doctor.service';
 import { consultationService } from '../../../services/consultation.service';
@@ -40,6 +40,20 @@ const OverviewSection = () => {
     } catch (err) {
       console.error('Failed to update availability', err);
       alert('Failed to update availability. You may have pending consultations.');
+    }
+  };
+
+  const handleMarkCompleted = async (consultationId: string) => {
+    if (window.confirm('Are you sure you want to mark this consultation as completed?')) {
+      try {
+        await consultationService.markAsCompleted(consultationId);
+        setConsultations(prev => prev.map(c => 
+          c._id === consultationId ? { ...c, status: 'completed' } : c
+        ));
+      } catch (err) {
+        console.error('Failed to mark as completed:', err);
+        alert('Failed to update status');
+      }
     }
   };
 
@@ -130,13 +144,22 @@ const OverviewSection = () => {
                <span className="flex items-center gap-1"><Clock size={16}/> {nextConsultation.timeSlot}</span>
             </div>
           </div>
-          <button 
-            onClick={() => navigate(`/room/${nextConsultation._id}`)}
-            className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2"
-          >
-            <Video size={18} />
-            Join Room
-          </button>
+          <div className="flex flex-col gap-2">
+            <button 
+              onClick={() => navigate(`/room/${nextConsultation._id}`)}
+              className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2 w-full justify-center"
+            >
+              <Video size={18} />
+              Join Room
+            </button>
+            <button 
+              onClick={() => handleMarkCompleted(nextConsultation._id)}
+              className="bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 w-full justify-center"
+            >
+              <CheckCircle size={18} />
+              Mark Completed
+            </button>
+          </div>
         </div>
       </div>
     ) : (
