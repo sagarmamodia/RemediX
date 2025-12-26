@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Video, Clock } from 'lucide-react';
+import { Calendar, Video, Clock, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { consultationService } from '../../../services/consultation.service';
 import type { Consultation } from '../../../types';
@@ -109,6 +109,17 @@ const ConsultationsSection = () => {
                       <Video size={16} />
                       Join Call
                     </button>
+                  )}
+                  {consultation.prescriptionUrl && (
+                    <a 
+                      href={consultation.prescriptionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                    >
+                      <FileText size={16} />
+                      View Prescription
+                    </a>
                   )}
                 </div>
               </div>

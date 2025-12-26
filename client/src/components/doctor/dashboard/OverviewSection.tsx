@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, Video, Power, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, Users, Video, Power, CheckCircle, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { doctorService } from '../../../services/doctor.service';
 import { consultationService } from '../../../services/consultation.service';
@@ -54,6 +54,19 @@ const OverviewSection = () => {
         console.error('Failed to mark as completed:', err);
         alert('Failed to update status');
       }
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, consultationId: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      await consultationService.uploadPrescription(consultationId, file);
+      alert('Prescription uploaded successfully!');
+    } catch (err) {
+      console.error('Failed to upload prescription:', err);
+      alert('Failed to upload prescription');
     }
   };
 
@@ -162,6 +175,16 @@ const OverviewSection = () => {
                   <CheckCircle size={18} />
                   Mark Completed
                 </button>
+                <label className="cursor-pointer bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 w-full justify-center">
+                  <Upload size={18} />
+                  Upload Rx
+                  <input 
+                    type="file" 
+                    className="hidden" 
+                    accept="image/*,application/pdf"
+                    onChange={(e) => handleFileUpload(e, consultation._id)}
+                  />
+                </label>
               </div>
             </div>
           </div>

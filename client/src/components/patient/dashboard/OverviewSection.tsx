@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Clock, Video } from 'lucide-react';
+import { Calendar, Clock, Video, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { consultationService } from '../../../services/consultation.service';
 import type { Consultation } from '../../../types';
@@ -81,13 +81,26 @@ const OverviewSection = () => {
                      <span className="flex items-center gap-1"><Clock size={16}/> {consultation.timeSlot}</span>
                   </div>
                 </div>
-                <button 
-                  onClick={() => navigate(`/room/${consultation._id}`)}
-                  className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2"
-                >
-                  <Video size={18} />
-                  Join Call
-                </button>
+                <div className="flex flex-col gap-2">
+                  <button 
+                    onClick={() => navigate(`/room/${consultation._id}`)}
+                    className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2 w-full justify-center"
+                  >
+                    <Video size={18} />
+                    Join Call
+                  </button>
+                  {consultation.prescriptionUrl && (
+                    <a 
+                      href={consultation.prescriptionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 w-full justify-center"
+                    >
+                      <FileText size={18} />
+                      View Rx
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           ))
