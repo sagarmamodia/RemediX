@@ -15,6 +15,7 @@ export interface ConsultationDTO {
   startTime: string;
   endTime: string;
   roomId?: string;
+  prescriptionUrl?: string;
   fee: number;
   status: string;
 }
@@ -23,6 +24,7 @@ export interface DoctorConsultationsDTO {
   id: string;
   patientName: string;
   patientProfileUrl: string;
+  prescriptionUrl?: string;
   startTime: string;
   endTime: string;
   status: string;
@@ -33,6 +35,7 @@ export interface PatientConsultationsDTO {
   doctorName: string;
   doctorProfileUrl: string;
   doctorSpecialty: string;
+  prescriptionUrl?: string;
   startTime: string;
   endTime: string;
   status: string;

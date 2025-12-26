@@ -52,4 +52,18 @@ consultationRoutes.patch(
   BookingController.rescheduleConsultationHandler
 );
 
+// UPLOAD PRESCRIPTION
+consultationRoutes.patch(
+  "/prescription/upload",
+  protect,
+  ConsultationController.uploadPrescriptionHandler
+);
+
+// GET PRESCRIPTION
+consultationRoutes.get(
+  "/id/:id/prescription",
+  protect,
+  ConsultationController.getPrescriptionHandler
+);
+
 export default consultationRoutes;

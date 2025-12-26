@@ -66,7 +66,15 @@ const checkDoctorSlotAvailability = async (
   for (const consultation of doctorConsultations) {
     const consultationStartTime = new Date(consultation.startTime);
     const consultationEndTime = new Date(consultation.endTime);
-    if (startTime >= consultationStartTime && endTime <= consultationEndTime) {
+
+    // check given slot and consultation slot overlap
+    if (startTime < consultationStartTime && endTime > consultationStartTime) {
+      isDoctorFree = false;
+      break;
+    } else if (
+      startTime < consultationEndTime &&
+      endTime > consultationEndTime
+    ) {
       isDoctorFree = false;
       break;
     }
@@ -98,7 +106,15 @@ const checkPatientSlotAvailability = async (
   for (const consultation of patientConsultations) {
     const consultationStartTime = new Date(consultation.startTime);
     const consultationEndTime = new Date(consultation.endTime);
-    if (startTime >= consultationStartTime && endTime <= consultationEndTime) {
+
+    // check given slot and consultation slot overlap
+    if (startTime < consultationStartTime && endTime > consultationStartTime) {
+      isPatientFree = false;
+      break;
+    } else if (
+      startTime < consultationEndTime &&
+      endTime > consultationEndTime
+    ) {
       isPatientFree = false;
       break;
     }

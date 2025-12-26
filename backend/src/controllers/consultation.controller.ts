@@ -13,6 +13,7 @@ import {
   deleteRoomAPI,
   getVideoSDKToken,
 } from "../utils/videosdk";
+import { UploadPrescriptionSchema } from "../validators/prescription.validator";
 
 // SEND CONSULTATION DETAILS FOR A PARTICULAR ID
 export const getConsultationByIdHandler = async (
@@ -109,6 +110,83 @@ export const getAllConsultationsHandler = async (
       }
 
       return res.status(200).json({ success: true, data: { list: data } });
+    }
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// UPLOAD PRESCRIPTION FOR A CONSULTATION
+export const uploadPrescriptionHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    if (user.role !== "Doctor") {
+      throw new AppError(
+        "Only doctors are authorized to use this endpoint",
+        400
+      );
+    }
+
+    // parse data
+    const parsed = UploadPrescriptionSchema.safeParse(req.body);
+    if (!parsed.success) {
+      throw new AppError("Invalid data format", 400);
+    }
+    const { consultationId, prescriptionUrl } = parsed.data;
+
+    // check if the consultation exists
+    const consultation = await ConsultationRepository.getConsultationById(
+      consultationId
+    );
+    if (!consultation) {
+      throw new AppError("Consultation does not exist", 400);
+    }
+
+    // check if the consultation has started
+    const sT = new Date(consultation.startTime);
+    const currentTime = new Date(Date.now());
+    if (sT < currentTime) {
+      throw new AppError(
+        "Consultation has not yet started - you can't upload prescription",
+        400
+      );
+    }
+
+    // update prescription Url
+    await ConsultationRepository.updatePrescriptionUrl(
+      consultationId,
+      prescriptionUrl
+    );
+
+    return res.status(200).json({ success: true, data: {} });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// SEND PRESCRIPTION ASSOCIATED WITH A CONSULTATION
+export const getPrescriptionHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    const consultationId = req.params.id;
+    if (!consultationId) {
+      throw new AppError("Consultation id missing", 400);
+    }
+
+    // check if the consultation exists
+    const consultation =
+      ConsultationRepository.getConsultationById(consultationId);
+
+    if (user.role === "Doctor") {
+      // check if doctor have this consultation associated with him/her
     }
   } catch (err) {
     return next(err);

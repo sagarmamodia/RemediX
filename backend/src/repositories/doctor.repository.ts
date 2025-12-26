@@ -165,7 +165,7 @@ export const getAvailableDoctors = async (
             $match: {
               $expr: {
                 $and: [
-                  { $eq: ["$doctorId", { toHexString: "$$doctorId" }] },
+                  { $eq: ["$doctorId", { $toString: "$$doctorId" }] },
                   { $ne: ["$status", "COMPLETED"] },
                   { $lt: ["$startTime", endTime] }, // Overlap check
                   { $gt: ["$endTime", startTime] }, // Overlap check
