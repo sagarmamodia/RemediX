@@ -68,19 +68,12 @@ const checkDoctorSlotAvailability = async (
     const consultationEndTime = new Date(consultation.endTime);
 
     // check given slot and consultation slot overlap
-    if (startTime < consultationStartTime && endTime > consultationStartTime) {
-      isDoctorFree = false;
-      break;
-    } else if (
-      startTime < consultationEndTime &&
-      endTime > consultationEndTime
-    ) {
+    if (startTime < consultationEndTime && endTime > consultationStartTime) {
       isDoctorFree = false;
       break;
     }
   }
 
-  logger.info("doctor slot conflict detected");
   if (!isDoctorFree) {
     logger.info("doctor slot conflict detected");
     return false;
@@ -108,19 +101,12 @@ const checkPatientSlotAvailability = async (
     const consultationEndTime = new Date(consultation.endTime);
 
     // check given slot and consultation slot overlap
-    if (startTime < consultationStartTime && endTime > consultationStartTime) {
-      isPatientFree = false;
-      break;
-    } else if (
-      startTime < consultationEndTime &&
-      endTime > consultationEndTime
-    ) {
+    if (startTime < consultationEndTime && endTime > consultationStartTime) {
       isPatientFree = false;
       break;
     }
   }
 
-  logger.info("patient slot conflict detected");
   if (!isPatientFree) {
     logger.info("patient slot conflict detected");
     return false;
