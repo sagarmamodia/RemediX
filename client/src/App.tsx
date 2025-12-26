@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Landing from './pages/Landing';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import PatientDashboard from './pages/Dashboard/PatientDashboard';
@@ -32,6 +34,8 @@ function App() {
         <Routes>
           {/* Public Routes wrapped in Layout */}
           <Route element={<Layout><Landing /></Layout>} path="/" />
+          <Route element={<Layout><About /></Layout>} path="/about" />
+          <Route element={<Layout><Contact /></Layout>} path="/contact" />
           <Route element={<Layout><Login /></Layout>} path="/login" />
           <Route element={<Layout><Register /></Layout>} path="/register" />
           
