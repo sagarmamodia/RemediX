@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Video, Clock, FileText } from 'lucide-react';
+import { Calendar, Video, Clock, FileText, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { consultationService } from '../../../services/consultation.service';
 import type { Consultation } from '../../../types';
+import RescheduleModal from './RescheduleModal';
 
 const ConsultationsSection = () => {
   const navigate = useNavigate();
@@ -10,6 +11,10 @@ const ConsultationsSection = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all');
+
+  // Reschedule State
+  const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false);
+  const [selectedConsultation, setSelectedConsultation] = useState<Consultation | null>(null);
 
   useEffect(() => {
     const fetchConsultations = async () => {
@@ -25,6 +30,37 @@ const ConsultationsSection = () => {
 
     fetchConsultations();
   }, []);
+
+  const handleRescheduleClick = (consultation: Consultation) => {
+    const consultationTime = new Date(consultation.date).getTime();
+    const now = Date.now();
+    const oneHour = 60 * 60 * 1000;
+
+    if (consultationTime - now < oneHour) {
+      alert('Consultations starting in less than 1 hour cannot be rescheduled.');
+      return;
+    }
+
+    setSelectedConsultation(consultation);
+    setRescheduleModalOpen(true);
+  };
+
+  const handleRescheduleSuccess = (newDate: string, newTimeSlot: string) => {
+    if (!selectedConsultation) return;
+    
+    setConsultations(prev => prev.map(c => {
+      if (c._id === selectedConsultation._id) {
+        return {
+          ...c,
+          date: newDate,
+          timeSlot: newTimeSlot
+        };
+      }
+      return c;
+    }));
+    
+    alert('Consultation rescheduled successfully!');
+  };
 
   if (loading) return <div className="p-8 text-center">Loading consultations...</div>;
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
@@ -102,13 +138,22 @@ const ConsultationsSection = () => {
                     {consultation.status.charAt(0).toUpperCase() + consultation.status.slice(1)}
                   </span>
                   {consultation.status === 'pending' && (
-                    <button 
-                      onClick={() => navigate(`/room/${consultation._id}`)}
-                      className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                    >
-                      <Video size={16} />
-                      Join Call
-                    </button>
+                    <>
+                      <button 
+                        onClick={() => navigate(`/room/${consultation._id}`)}
+                        className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                      >
+                        <Video size={16} />
+                        Join Call
+                      </button>
+                      <button 
+                        onClick={() => handleRescheduleClick(consultation)}
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-text-main rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium"
+                      >
+                        <RefreshCw size={16} />
+                        Reschedule
+                      </button>
+                    </>
                   )}
                   {consultation.prescriptionUrl && (
                     <a 
@@ -126,6 +171,16 @@ const ConsultationsSection = () => {
             </div>
           ))}
         </div>
+      )}
+
+      {/* Reschedule Modal */}
+      {rescheduleModalOpen && selectedConsultation && (
+        <RescheduleModal
+          isOpen={rescheduleModalOpen}
+          onClose={() => setRescheduleModalOpen(false)}
+          consultation={selectedConsultation}
+          onSuccess={handleRescheduleSuccess}
+        />
       )}
     </div>
   );

@@ -45,7 +45,7 @@ export const consultationService = {
     return list.map(item => ({
       _id: item.consultationId,
       doctor: {
-        _id: '', 
+        _id: item.doctorId || '', 
         name: item.doctorName || 'Unknown Doctor',
         specialty: item.doctorSpecialty || 'General Physician',
         image: item.doctorProfileUrl || ''
@@ -71,6 +71,14 @@ export const consultationService = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+    });
+    return response.data;
+  },
+
+  rescheduleConsultation: async (consultationId: string, slot: [string, string]) => {
+    const response = await api.patch('/consultation/reschedule', {
+      consultationId,
+      slot
     });
     return response.data;
   }

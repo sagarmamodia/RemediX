@@ -95,6 +95,7 @@ export interface Consultation {
 
 export interface BackendConsultationDTO {
   consultationId: string;
+  doctorId?: string;
   doctorName?: string;
   patientName?: string;
   doctorProfileUrl?: string;

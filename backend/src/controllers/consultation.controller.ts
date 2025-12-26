@@ -96,6 +96,7 @@ export const getAllConsultationsHandler = async (
           const obj: any = {};
           if (doctor) {
             obj.consultationId = consultation.id;
+            obj.doctorId = doctor.id;
             obj.doctorName = doctor.name;
             obj.doctorProfileUrl = doctor.profileUrl;
             obj.startTime = consultation.startTime;
