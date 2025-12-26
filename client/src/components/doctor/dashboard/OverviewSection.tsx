@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, Video, Power, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, Users, Video, Power, CheckCircle, Upload, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { doctorService } from '../../../services/doctor.service';
 import { consultationService } from '../../../services/consultation.service';
@@ -10,6 +10,7 @@ const OverviewSection = () => {
   const [available, setAvailable] = useState(false);
   const [loading, setLoading] = useState(true);
   const [consultations, setConsultations] = useState<Consultation[]>([]);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,6 +55,34 @@ const OverviewSection = () => {
         console.error('Failed to mark as completed:', err);
         alert('Failed to update status');
       }
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, consultationId: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingId(consultationId);
+    try {
+      const response = await consultationService.uploadPrescription(consultationId, file);
+      
+      // Update local state to show the new prescription immediately
+      setConsultations(prev => prev.map(c => {
+        if (c._id === consultationId) {
+          return { ...c, prescriptionUrl: response.data.url || response.url }; // Adjust based on actual API response structure
+        }
+        return c;
+      }));
+      
+      // Re-fetch to be sure (optional, but good for consistency)
+      const updatedConsultations = await consultationService.getConsultations();
+      setConsultations(updatedConsultations);
+
+    } catch (err) {
+      console.error('Failed to upload prescription:', err);
+      alert('Failed to upload prescription');
+    } finally {
+      setUploadingId(null);
     }
   };
 
@@ -162,6 +191,39 @@ const OverviewSection = () => {
                   <CheckCircle size={18} />
                   Mark Completed
                 </button>
+                <div className="flex gap-2 w-full">
+                  {consultation.prescriptionUrl && (
+                    <a 
+                      href={consultation.prescriptionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 flex-1 justify-center"
+                    >
+                      <FileText size={18} />
+                      View Rx
+                    </a>
+                  )}
+                  <label className={`cursor-pointer bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 ${consultation.prescriptionUrl ? 'flex-1' : 'w-full'} justify-center`}>
+                    {uploadingId === consultation._id ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload size={18} />
+                        Upload Rx
+                      </>
+                    )}
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*,application/pdf"
+                      onChange={(e) => handleFileUpload(e, consultation._id)}
+                      disabled={uploadingId === consultation._id}
+                    />
+                  </label>
+                </div>
               </div>
             </div>
           </div>

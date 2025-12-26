@@ -4,6 +4,7 @@ import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
 import { ArrowLeft, ShieldCheck, Stethoscope, IndianRupee, Calendar, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { doctorService } from '../services/doctor.service';
 import { consultationService } from '../services/consultation.service';
+import { generateDaySlots } from '../utils/slotGenerator';
 import type { DoctorProfile } from '../types';
 
 const BookingPage = () => {
@@ -67,43 +68,7 @@ const BookingPage = () => {
        return [{ value: JSON.stringify(instantSlot), label }];
     }
 
-    const slots = [];
-    const date = new Date(selectedDate);
-    
-    // Helper to create slot
-    const addSlots = (startHour: number, endHour: number) => {
-      for (let hour = startHour; hour < endHour; hour++) {
-        // Slot 1: hour:00 - hour:30
-        const start1 = new Date(date); start1.setHours(hour, 0, 0, 0);
-        const end1 = new Date(date); end1.setHours(hour, 30, 0, 0);
-        
-        // Slot 2: hour:30 - (hour+1):00
-        const start2 = new Date(date); start2.setHours(hour, 30, 0, 0);
-        const end2 = new Date(date); end2.setHours(hour + 1, 0, 0, 0);
-
-        // Filter past slots if today
-        const now = new Date();
-        if (date.toDateString() !== now.toDateString() || start1 > now) {
-           slots.push({
-             value: JSON.stringify([start1.toISOString(), end1.toISOString()]),
-             label: `${start1.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${end1.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
-           });
-        }
-        if (date.toDateString() !== now.toDateString() || start2 > now) {
-           slots.push({
-             value: JSON.stringify([start2.toISOString(), end2.toISOString()]),
-             label: `${start2.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${end2.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
-           });
-        }
-      }
-    };
-
-    // 9:00 AM to 1:00 PM
-    addSlots(9, 13);
-    // 2:00 PM to 6:00 PM
-    addSlots(14, 18);
-
-    return slots;
+    return generateDaySlots(selectedDate);
   };
 
   const handleCheckAvailability = async () => {
@@ -113,14 +78,7 @@ const BookingPage = () => {
       setCheckingAvailability(true);
       setIsAvailable(null);
       const slotArray = JSON.parse(selectedSlot);
-      
-      // If instant booking, we might assume it's available since we just filtered for it?
-      // But good to double check or just use the standard check endpoint.
-      // The standard check endpoint checks doctor shifts and existing bookings.
-      // For instant booking, the doctor might not have a "shift" defined for "now" if it's outside 9-6?
-      // The prompt says "if doctor is available then the payment component is enabled".
-      // Let's use the checkSlot endpoint.
-      
+   
       const response = await consultationService.checkSlotAvailability(doctor.id, slotArray);
       if (response.success) {
         setIsAvailable(response.data.available);

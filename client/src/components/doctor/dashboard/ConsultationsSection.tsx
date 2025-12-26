@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Video, Clock, User, CheckCircle } from 'lucide-react';
+import { Calendar, Video, Clock, User, CheckCircle, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { consultationService } from '../../../services/consultation.service';
 import type { Consultation } from '../../../types';
@@ -119,6 +119,17 @@ const ConsultationsSection = () => {
                   }`}>
                     {consultation.status.charAt(0).toUpperCase() + consultation.status.slice(1)}
                   </span>
+                  {consultation.prescriptionUrl && (
+                    <a 
+                      href={consultation.prescriptionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium text-sm"
+                    >
+                      <FileText size={16} />
+                      View Rx
+                    </a>
+                  )}
                   {consultation.status === 'pending' && (
                     <>
                      <button 

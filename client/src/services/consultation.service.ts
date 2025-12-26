@@ -45,7 +45,7 @@ export const consultationService = {
     return list.map(item => ({
       _id: item.consultationId,
       doctor: {
-        _id: '', 
+        _id: item.doctorId || '', 
         name: item.doctorName || 'Unknown Doctor',
         specialty: item.doctorSpecialty || 'General Physician',
         image: item.doctorProfileUrl || ''
@@ -57,7 +57,29 @@ export const consultationService = {
       date: item.startTime,
       timeSlot: new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       status: item.status as any,
-      amount: 0
+      amount: 0,
+      prescriptionUrl: item.prescriptionUrl
     }));
+  },
+
+  uploadPrescription: async (consultationId: string, file: File) => {
+    const formData = new FormData();
+    formData.append('consultationId', consultationId);
+    formData.append('image', file);
+
+    const response = await api.patch('/consultation/prescription/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  rescheduleConsultation: async (consultationId: string, slot: [string, string]) => {
+    const response = await api.patch('/consultation/reschedule', {
+      consultationId,
+      slot
+    });
+    return response.data;
   }
 };

@@ -90,10 +90,12 @@ export interface Consultation {
   timeSlot: string;
   status: 'scheduled' | 'completed' | 'cancelled' | 'pending';
   amount: number;
+  prescriptionUrl?: string;
 }
 
 export interface BackendConsultationDTO {
   consultationId: string;
+  doctorId?: string;
   doctorName?: string;
   patientName?: string;
   doctorProfileUrl?: string;
@@ -102,6 +104,7 @@ export interface BackendConsultationDTO {
   startTime: string;
   endTime: string;
   status: string;
+  prescriptionUrl?: string;
 }
 
 export interface ConsultationListResponse {

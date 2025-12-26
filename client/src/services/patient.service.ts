@@ -6,6 +6,9 @@ export const patientService = {
     const response = await api.get<{ success: boolean; data: PatientProfile }>('/profile');
     return response.data;
   },
-  
-  // Add other patient-related API calls here
+
+  updateProfile: async (data: Partial<PatientProfile>) => {
+    const response = await api.patch<{ success: boolean; data: PatientProfile }>('/patient/update', data);
+    return response.data;
+  }
 };
