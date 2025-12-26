@@ -87,19 +87,19 @@ const ConsultationsSection = () => {
         <div className="grid gap-4">
           {filteredConsultations.map((consultation) => (
             <div key={consultation._id} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start">
-                <div className="flex gap-4">
-                  <div className="p-3 bg-primary/10 text-primary rounded-lg h-fit">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                <div className="flex gap-4 w-full">
+                  <div className="p-3 bg-primary/10 text-primary rounded-lg h-fit shrink-0">
                     <User size={24} />
                   </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-text-main">
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-bold text-text-main truncate">
                       {consultation.patient?.name || 'Unknown Patient'}
                     </h3>
                     <p className="text-text-muted text-sm mb-2">
                       Patient
                     </p>
-                    <div className="flex items-center gap-4 text-sm text-text-muted">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
                       <div className="flex items-center gap-1">
                         <Calendar size={16} />
                         {new Date(consultation.date).toLocaleDateString()}
@@ -111,8 +111,8 @@ const ConsultationsSection = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                <div className="flex flex-col items-start md:items-end gap-2 w-full md:w-auto">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium self-start md:self-end ${
                     consultation.status === 'completed' ? 'bg-green-100 text-green-700' :
                     consultation.status === 'cancelled' ? 'bg-red-100 text-red-700' :
                     'bg-blue-100 text-blue-700'
@@ -131,22 +131,22 @@ const ConsultationsSection = () => {
                     </a>
                   )}
                   {consultation.status === 'pending' && (
-                    <>
+                    <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                      <button 
                         onClick={() => handleJoinCall(consultation._id)}
-                        className="flex items-center gap-2 text-primary hover:text-blue-700 font-medium text-sm"
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors text-sm font-medium w-full sm:w-auto"
                      >
                         <Video size={16} />
                         Join Call
                      </button>
                      <button 
                         onClick={() => handleMarkCompleted(consultation._id)}
-                        className="flex items-center gap-2 text-green-600 hover:text-green-700 font-medium text-sm"
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium w-full sm:w-auto"
                      >
                         <CheckCircle size={16} />
                         Mark Completed
                      </button>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>

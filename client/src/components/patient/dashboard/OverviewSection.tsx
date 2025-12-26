@@ -68,7 +68,7 @@ const OverviewSection = () => {
         {sortedUpcomingConsultations.length > 0 ? (
           sortedUpcomingConsultations.map((consultation) => (
             <div key={consultation._id} className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-primary/20">
-              <div className="flex justify-between items-start">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
@@ -81,7 +81,7 @@ const OverviewSection = () => {
                      <span className="flex items-center gap-1"><Clock size={16}/> {consultation.timeSlot}</span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 w-full md:w-auto">
                   <button 
                     onClick={() => navigate(`/room/${consultation._id}`)}
                     className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2 w-full justify-center"

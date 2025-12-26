@@ -105,19 +105,19 @@ const ConsultationsSection = () => {
         <div className="grid gap-4">
           {filteredConsultations.map((consultation) => (
             <div key={consultation._id} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start">
-                <div className="flex gap-4">
-                  <div className="p-3 bg-primary/10 text-primary rounded-lg h-fit">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                <div className="flex gap-4 w-full">
+                  <div className="p-3 bg-primary/10 text-primary rounded-lg h-fit shrink-0">
                     <Video size={24} />
                   </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-text-main">
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-bold text-text-main truncate">
                       {consultation.doctor.name}
                     </h3>
-                    <p className="text-text-muted text-sm mb-2">
+                    <p className="text-text-muted text-sm mb-2 truncate">
                       {consultation.doctor.specialty}
                     </p>
-                    <div className="flex items-center gap-4 text-sm text-text-muted">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
                       <div className="flex items-center gap-1">
                         <Calendar size={16} />
                         {new Date(consultation.date).toLocaleDateString()}
@@ -129,8 +129,8 @@ const ConsultationsSection = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                <div className="flex flex-col items-start md:items-end gap-2 w-full md:w-auto">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium self-start md:self-end ${
                     consultation.status === 'completed' ? 'bg-green-100 text-green-700' :
                     consultation.status === 'cancelled' ? 'bg-red-100 text-red-700' :
                     'bg-blue-100 text-blue-700'
@@ -138,29 +138,29 @@ const ConsultationsSection = () => {
                     {consultation.status.charAt(0).toUpperCase() + consultation.status.slice(1)}
                   </span>
                   {consultation.status === 'pending' && (
-                    <>
+                    <div className="flex flex-col sm:flex-row gap-2 w-full">
                       <button 
                         onClick={() => navigate(`/room/${consultation._id}`)}
-                        className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium w-full sm:w-auto"
                       >
                         <Video size={16} />
                         Join Call
                       </button>
                       <button 
                         onClick={() => handleRescheduleClick(consultation)}
-                        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-text-main rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium"
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 text-text-main rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium w-full sm:w-auto"
                       >
                         <RefreshCw size={16} />
                         Reschedule
                       </button>
-                    </>
+                    </div>
                   )}
                   {consultation.prescriptionUrl && (
                     <a 
                       href={consultation.prescriptionUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium w-full sm:w-auto"
                     >
                       <FileText size={16} />
                       View Prescription

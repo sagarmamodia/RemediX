@@ -100,7 +100,7 @@ const OverviewSection = () => {
   return (
   <div className="space-y-6">
     {/* Availability Toggle Header */}
-    <div className="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
       <div>
         <h2 className="text-xl font-bold text-text-main">Overview</h2>
         <p className="text-text-muted text-sm">Welcome back, Doctor</p>
@@ -108,7 +108,7 @@ const OverviewSection = () => {
       <button
         onClick={toggleAvailability}
         disabled={loading}
-        className={`flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all ${
+        className={`w-full md:w-auto flex items-center justify-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all ${
           available 
             ? 'bg-green-100 text-green-700 hover:bg-green-200' 
             : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -163,20 +163,20 @@ const OverviewSection = () => {
       {upcomingConsultations.length > 0 ? (
         upcomingConsultations.map((consultation) => (
           <div key={consultation._id} className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-primary/20">
-            <div className="flex justify-between items-start">
-              <div>
+            <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+              <div className="w-full md:w-auto">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   <span className="text-sm font-medium text-blue-100">Upcoming</span>
                 </div>
-                <h3 className="text-xl font-bold mb-1">Consultation with {consultation.patient?.name || 'Patient'}</h3>
+                <h3 className="text-xl font-bold mb-1 truncate max-w-[250px] md:max-w-none">Consultation with {consultation.patient?.name || 'Patient'}</h3>
                 <p className="text-blue-100 text-sm">General Consultation • Video Call</p>
-                <div className="mt-4 flex items-center gap-4 text-blue-50 text-sm">
+                <div className="mt-4 flex flex-wrap items-center gap-4 text-blue-50 text-sm">
                    <span className="flex items-center gap-1"><Calendar size={16}/> {new Date(consultation.date).toLocaleDateString()}</span>
                    <span className="flex items-center gap-1"><Clock size={16}/> {consultation.timeSlot}</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 w-full md:w-auto min-w-[200px]">
                 <button 
                   onClick={() => navigate(`/room/${consultation._id}`)}
                   className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2 w-full justify-center"
@@ -191,19 +191,19 @@ const OverviewSection = () => {
                   <CheckCircle size={18} />
                   Mark Completed
                 </button>
-                <div className="flex gap-2 w-full">
+                <div className="flex flex-col sm:flex-row gap-2 w-full">
                   {consultation.prescriptionUrl && (
                     <a 
                       href={consultation.prescriptionUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 flex-1 justify-center"
+                      className="bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 w-full sm:flex-1 justify-center"
                     >
                       <FileText size={18} />
                       View Rx
                     </a>
                   )}
-                  <label className={`cursor-pointer bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 ${consultation.prescriptionUrl ? 'flex-1' : 'w-full'} justify-center`}>
+                  <label className={`cursor-pointer bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 w-full ${consultation.prescriptionUrl ? 'sm:flex-1' : ''} justify-center`}>
                     {uploadingId === consultation._id ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
