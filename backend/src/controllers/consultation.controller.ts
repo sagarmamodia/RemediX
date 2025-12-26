@@ -71,6 +71,7 @@ export const getAllConsultationsHandler = async (
             obj.patientProfileUrl = patient.profileUrl;
             obj.startTime = consultation.startTime;
             obj.endTime = consultation.endTime;
+            obj.prescriptionUrl = consultation.prescriptionUrl;
             obj.status = consultation.status;
             data.push(obj);
           } else {
@@ -99,6 +100,7 @@ export const getAllConsultationsHandler = async (
             obj.doctorProfileUrl = doctor.profileUrl;
             obj.startTime = consultation.startTime;
             obj.endTime = consultation.endTime;
+            obj.prescriptionUrl = consultation.prescriptionUrl;
             obj.status = consultation.status;
             obj.doctorSpecialty = doctor.specialty;
             data.push(obj);
