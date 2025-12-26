@@ -14,7 +14,8 @@ const SPECIALITIES = [
   'Neurologist',
   'Orthopedist',
   'Psychiatrist',
-  'Dentist'
+  'Dentist',
+  'Other'
 ];
 
 const FindDoctorsSection = () => {

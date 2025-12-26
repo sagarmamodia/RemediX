@@ -6,6 +6,18 @@ import api from '../services/api';
 
 import { seedUsers } from '../utils/seedData';
 
+const SPECIALITIES = [
+  'General Physician',
+  'Cardiologist',
+  'Dermatologist',
+  'Pediatrician',
+  'Neurologist',
+  'Orthopedist',
+  'Psychiatrist',
+  'Dentist',
+  'Other'
+];
+
 const Register = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState<Role>('Patient');
@@ -228,15 +240,20 @@ const Register = () => {
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Award className="h-5 w-5 text-text-muted" />
                   </div>
-                  <input
-                    type="text"
+                  <select
                     name="speciality"
                     required={role === 'Doctor'}
-                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white"
-                    placeholder="e.g. Cardiologist"
+                    className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white appearance-none"
                     value={formData.speciality}
                     onChange={handleChange}
-                  />
+                  >
+                    <option value="">Select Speciality</option>
+                    {SPECIALITIES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
