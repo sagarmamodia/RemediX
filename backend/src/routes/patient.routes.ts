@@ -3,6 +3,7 @@ import * as PatientController from "../controllers/patient.controller";
 
 const patientRoutes = Router();
 
+// GET THE DETAILS OF A PARTICULAR PATIENT
 patientRoutes.get(
   "/details/id/:id",
   PatientController.getPatientDetailsHandler

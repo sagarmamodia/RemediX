@@ -5,6 +5,7 @@ import * as DoctorRepository from "../repositories/doctor.repository";
 import * as PatientRepository from "../repositories/patient.repository";
 import { AppError } from "../utils/AppError";
 
+// SEND THE PROFILE OF LOGGED IN USER
 export const getProfileHandler = async (
   req: Request,
   res: Response,

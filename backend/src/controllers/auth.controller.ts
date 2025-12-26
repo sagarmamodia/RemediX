@@ -8,6 +8,7 @@ import { CreateDoctorSchema } from "../validators/doctor.validator";
 import { LoginSchema } from "../validators/login.validator";
 import { CreatePatientSchema } from "../validators/patient.validator";
 
+// REGISTER A NEW PATIENT
 export const patientRegistrationHandler = async (
   req: Request,
   res: Response,
@@ -32,6 +33,7 @@ export const patientRegistrationHandler = async (
   }
 };
 
+// REGISTER A NEW DOCTOR
 export const doctorRegistrationHandler = async (
   req: Request,
   res: Response,
@@ -55,6 +57,7 @@ export const doctorRegistrationHandler = async (
   }
 };
 
+// LOGIN AS AN EXISTING USER AND RECEIVES A JWT TOKEN
 export const loginHandler = async (
   req: Request,
   res: Response,

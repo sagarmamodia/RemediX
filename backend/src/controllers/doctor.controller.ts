@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import * as ConsultationRepository from "../repositories/consultation.repository";
 import * as DoctorRepository from "../repositories/doctor.repository";
 import { AppError } from "../utils/AppError";
 import logger from "../utils/logger";
@@ -7,6 +6,7 @@ import { DoctorFilterQuerySchema } from "../validators/doctorFilter.validator";
 import { InstantDoctorsSearchSchema } from "../validators/slot.validator";
 import { DAYS } from "./booking.controller";
 
+// SEND DETAILS OF THE DOCTOR MATCHING THE ID GIVE IN URL PARAMS
 export const getDoctorDetailsHandler = async (
   req: Request,
   res: Response,
@@ -32,6 +32,7 @@ export const getDoctorDetailsHandler = async (
   }
 };
 
+// SEND A LIST OF DOCTORS FILTERED
 export const getDoctorsListHandler = async (
   req: Request,
   res: Response,
@@ -51,6 +52,7 @@ export const getDoctorsListHandler = async (
   }
 };
 
+// UPDATE DOCTOR AVAILABILITY
 export const updateDoctorAvailabilityHandler = async (
   req: Request,
   res: Response,
@@ -67,18 +69,6 @@ export const updateDoctorAvailabilityHandler = async (
       throw new AppError("Invalid data format", 400);
     }
     logger.info("request data parsed");
-
-    // check if doctor is allowed to change its availability
-    // if doctor has a consultation then its availability must be set to false he must not be allowed to change it
-    const pendingConsultations =
-      await ConsultationRepository.getPendingConsultationsByDoctorId(user.id);
-
-    if (pendingConsultations.length > 0) {
-      throw new AppError(
-        "Doctor have a consultation scheduled - availability can't be changed",
-        400
-      );
-    }
 
     const availability = data == "true" ? true : false;
     await DoctorRepository.updateDoctorAvailability(user.id, availability);

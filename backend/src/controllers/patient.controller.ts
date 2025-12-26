@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import * as PatientRepository from "../repositories/patient.repository";
 import { AppError } from "../utils/AppError";
 
+// SEND DETAILS OF THE PATIENT MATCHING THE ID GIVEN IN URL PARAMS
 export const getPatientDetailsHandler = async (
   req: Request,
   res: Response,

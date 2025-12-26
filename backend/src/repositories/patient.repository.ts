@@ -2,8 +2,8 @@ import { PatientDTO } from "../dtos/patient.dto";
 import { IPatient, PatientModel } from "../models/patient.model";
 import { CreatePatientDTO } from "../validators/patient.validator";
 
-// =================== IPatient to dtoPatient Mapper ================================
-function toDtoPatient(patient: IPatient): PatientDTO {
+// =================== HELPER FUNCTIONS ================================
+function toPatientDTO(patient: IPatient): PatientDTO {
   return {
     id: patient._id.toHexString(),
     name: patient.name,
@@ -15,19 +15,18 @@ function toDtoPatient(patient: IPatient): PatientDTO {
   };
 }
 
-// =====================================================================================
+// =====================================================================
 
+// RETURN THE PATIENT MATCHING THE GIVEN ID
 export const getPatientById = async (
   id: string
 ): Promise<PatientDTO | null> => {
-  // Mongoose automatically converts id to ObjectId
-  // If id is of invalid format it will throw an error
-
   const patient: IPatient | null = await PatientModel.findById(id);
   if (!patient) return null;
-  else return toDtoPatient(patient);
+  else return toPatientDTO(patient);
 };
 
+// CREATE A NEW PATIENT IN DB
 export const registerPatient = async (
   data: CreatePatientDTO
 ): Promise<string> => {
@@ -36,6 +35,7 @@ export const registerPatient = async (
   return createdDoc._id.toHexString();
 };
 
+// RETURN A PATIENT'S ID AND PASSWORD HAVING THE GIVEN PHONE NUMBER
 export const getPatientByPhoneWithPassword = async (
   phone: string
 ): Promise<{ id: string; password: string } | null> => {

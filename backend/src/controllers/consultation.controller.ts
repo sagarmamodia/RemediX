@@ -40,7 +40,7 @@ export const getConsultationByIdHandler = async (
   }
 };
 
-// SEND ALL CONSULTATIONS
+// RETRIEVE ALL CONSULTATIONS OF THE LOGGED IN USER
 export const getAllConsultationsHandler = async (
   req: Request,
   res: Response,
@@ -115,6 +115,7 @@ export const getAllConsultationsHandler = async (
   }
 };
 
+// MARK A CONSULTATION AS COMPLETE
 export const updateConsultationStatusHandler = async (
   req: Request,
   res: Response,
@@ -155,6 +156,7 @@ export const updateConsultationStatusHandler = async (
   }
 };
 
+// JOIN A CONSULTATION (SEND ROOMID TO FRONTEND) - THIS GENERATES A NEW ROOM IF NO ROOM HAS BEEN GENERATED SO FAR
 export const joinConsultationHandler = async (
   req: Request,
   res: Response,

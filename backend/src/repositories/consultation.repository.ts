@@ -5,7 +5,7 @@ import {
 import { ConsultationModel, IConsultation } from "../models/consultation.model";
 import logger from "../utils/logger";
 
-// ================== Convert IConsultation to ConsultationDTO =======================
+// ================== HELPER FUNCTIONS =======================
 function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
   return {
     id: consultation._id.toHexString(),
@@ -20,6 +20,9 @@ function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
   };
 }
 
+// ===========================================================
+
+// RETURN ALL CONSULTATIONS MATCHING A DOCTORID
 export const getAllConsultationsByDoctorId = async (
   id: string
 ): Promise<ConsultationDTO[]> => {
@@ -32,6 +35,7 @@ export const getAllConsultationsByDoctorId = async (
   return consultationDtos;
 };
 
+// RETURN ALL CONSULTATIONS MATCHING A PATIENTID
 export const getAllConsultationsByPatientId = async (
   id: string
 ): Promise<ConsultationDTO[]> => {
@@ -44,6 +48,7 @@ export const getAllConsultationsByPatientId = async (
   return consultationDtos;
 };
 
+// CREATE CONSULTATION IN DB
 export const createConsultationRecord = async (
   data: CreateConsultationDTO
 ): Promise<string> => {
@@ -52,6 +57,7 @@ export const createConsultationRecord = async (
   return createdDoc._id.toHexString();
 };
 
+// RETURN CONSULTATION MATCHING AN ID
 export const getConsultationById = async (
   id: string
 ): Promise<ConsultationDTO | null> => {
@@ -60,6 +66,7 @@ export const getConsultationById = async (
   return toConsultationDTO(consultation);
 };
 
+// RETURN ALL CONSULTATIONS HAVING STATUS="pending" AND MATCHING A DOCTORID
 export const getPendingConsultationsByDoctorId = async (
   id: string
 ): Promise<ConsultationDTO[]> => {
@@ -75,6 +82,7 @@ export const getPendingConsultationsByDoctorId = async (
   return consultationDtos;
 };
 
+// RETURN ALL CONSULTATIONS HAVING STATUS="pending" AND MATCHING A PATIENTID
 export const getPendingConsultationsByPatientId = async (
   id: string
 ): Promise<ConsultationDTO[]> => {
@@ -90,35 +98,26 @@ export const getPendingConsultationsByPatientId = async (
   return consultationDtos;
 };
 
-export const nextConsultationStartTimeByDoctorId = async (
-  id: string
-): Promise<Date | null> => {
-  const queryFilter = { doctorId: id, startTime: { $gte: new Date() } };
-  const docs = await ConsultationModel.find(queryFilter).sort({ startTime: 1 });
-  logger.info("upcoming consultations fetched from database");
-
-  if (docs.length == 0) return null;
-  const mostRecentDoc = docs[0];
-
-  return mostRecentDoc.startTime;
-};
-
+// UPDATE CONSULTATION STATUS IN DB
 export const updateConsultationStatus = async (id: string, status: string) => {
   await ConsultationModel.findByIdAndUpdate(id, { status: status });
 };
 
+// ADD ROOMID FIELD IN A CONSULTATION THAT MATCHES THE GIVEN ID
 export const addRoom = async (id: string, roomId: string) => {
   await ConsultationModel.findByIdAndUpdate(id, {
     roomId: roomId,
   });
 };
 
+// REMOVE ROOMID FIELD FROM A CONSULTATION MATCHING THE GIVEN ID
 export const deleteRoom = async (id: string) => {
   await ConsultationModel.findByIdAndUpdate(id, {
     $unset: { roomId: 1 },
   });
 };
 
+// UPDATE THE STARTTIME AND ENDTIME FIELDS OF A CONSULTATION
 export const updateSlot = async (
   id: string,
   startTime: Date,

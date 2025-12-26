@@ -1,6 +1,7 @@
 import { PaymentModel } from "../models/payment.model";
 import logger from "../utils/logger";
 
+// CREATE THE PAYMENT RECORD IN DB
 export const createPaymentRecord = async (
   squarePaymentId: string,
   amount: number

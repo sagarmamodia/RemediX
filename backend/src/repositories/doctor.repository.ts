@@ -4,7 +4,7 @@ import logger from "../utils/logger";
 import { CreateDoctorDTO } from "../validators/doctor.validator";
 import { DoctorFilterQueryDTO } from "../validators/doctorFilter.validator";
 
-// =================== IPatient to toDoctorDTO Mapper ================================
+// =================== HELPER FUNCTIONS ================================
 function toDoctorDTO(doctor: IDoctor): DoctorDTO {
   return {
     id: doctor._id.toHexString(),
@@ -21,17 +21,16 @@ function toDoctorDTO(doctor: IDoctor): DoctorDTO {
   };
 }
 
-// =====================================================================================
+// ======================================================================
 
+// RETURN A DOCTOR MATCHING THE GIVENID
 export const getDoctorById = async (id: string): Promise<DoctorDTO | null> => {
-  // Mongoose automatically converts id to ObjectId
-  // If id is of invalid format it will throw an error
-
   const patient: IDoctor | null = await DoctorModel.findById(id);
   if (!patient) return null;
   else return toDoctorDTO(patient);
 };
 
+// CREATE A NEW DOCTOR IN DB
 export const registerDoctor = async (
   data: CreateDoctorDTO
 ): Promise<string> => {
@@ -41,9 +40,17 @@ export const registerDoctor = async (
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
   for (const day of days) {
     doc.shifts.push({
+      // morning shift
       dayOfWeek: day,
       startTime: 9 * 60,
       endTime: 13 * 60,
+      slotDuration: 30,
+    });
+    // evening shift
+    doc.shifts.push({
+      dayOfWeek: day,
+      startTime: 14 * 60,
+      endTime: 18 * 60,
       slotDuration: 30,
     });
   }
@@ -54,6 +61,7 @@ export const registerDoctor = async (
   return createdDoc._id.toHexString();
 };
 
+// RETURN THE DOCTORID AND PASSWORD OF THE DOCTOR MATCHING A PHONE NUMBER (UNIQUE)
 export const getDoctorByPhoneWithPassword = async (
   phone: string
 ): Promise<{ id: string; password: string } | null> => {
@@ -64,6 +72,7 @@ export const getDoctorByPhoneWithPassword = async (
   return { id: doctor._id.toHexString(), password: doctor.password };
 };
 
+// RETURN THE FILTERED LIST OF DOCTOR
 export const getDoctorsList = async (
   filter: DoctorFilterQueryDTO
 ): Promise<DoctorDTO[]> => {
@@ -95,12 +104,14 @@ export const getDoctorsList = async (
   return doctorsAsDTO;
 };
 
+// RETURN THE FEE OF A DOCTOR MATCHING THE GIVEN ID
 export const getDoctorFee = async (id: string): Promise<number | null> => {
   const doctor = await DoctorModel.findById(id);
   if (!doctor) return null;
   else return doctor.fee;
 };
 
+// UPDATE A DOCTOR'S AVAILABLE FIELD
 export const updateDoctorAvailability = async (
   id: string,
   availability: boolean
@@ -113,22 +124,22 @@ export const updateDoctorAvailability = async (
   logger.info("doctor availability changed}");
 };
 
+// RETURN ALL DOCTORS MATCHING A SPECIALTY AND AVAILABLE FOR THE GIVEN SLOT (USES LOOKUP IN CONSULTATION COLLECTION AS WELL)
 export const getAvailableDoctors = async (
   specialty: string,
   day: string,
   startTime: Date,
   endTime: Date
 ): Promise<DoctorDTO[]> => {
-  // 1. Convert Date objects to Schema-compatible formats
+  // Convert Date objects to Minuts Since Midnight
   const givenStartTimeMins = startTime.getHours() * 60 + startTime.getMinutes();
   const givenEndTimeMins = endTime.getHours() * 60 + endTime.getMinutes();
 
-  /**
-   * Aggregation Pipeline to find doctors:
-   * 1. Match doctors whose numeric shift range COVERS the requested numeric range.
-   * 2. Ensure they are marked as 'available'.
-   * 3. Ensure no overlapping consultations exist for that specific time.
-   */
+  // Aggregation Pipeline to find doctors:
+  // 1. Match doctors who shift covers the slot completely
+  // 2. Ensure they are marked as 'available'.
+  // 3. Ensure no overlapping consultations exist for that specific time.
+
   const availableDoctors = await DoctorModel.aggregate([
     // Match Step: Find doctors on shift using numeric comparison
     {
