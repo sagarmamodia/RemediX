@@ -123,7 +123,7 @@ export const updateConsultationStatusHandler = async (
 ) => {
   try {
     const user = res.locals.user;
-    if (user.role != "doctor") {
+    if (user.role != "Doctor") {
       throw new AppError("Only doctors are authorized", 401);
     }
 
