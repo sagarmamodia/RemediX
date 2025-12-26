@@ -1,5 +1,6 @@
 import { DoctorDTO } from "../dtos/doctor.dto";
 import { DoctorModel, IDoctor } from "../models/doctor.model";
+import { getISTDetails } from "../utils/date";
 import {
   CreateDoctorDTO,
   UpdateDoctorDTO,
@@ -147,8 +148,10 @@ export const getAvailableDoctors = async (
   endTime: Date
 ): Promise<DoctorDTO[]> => {
   // Convert Date objects to Minuts Since Midnight
-  const givenStartTimeMins = startTime.getHours() * 60 + startTime.getMinutes();
-  const givenEndTimeMins = endTime.getHours() * 60 + endTime.getMinutes();
+  const startTimeIST = getISTDetails(startTime);
+  const endTimeIST = getISTDetails(endTime);
+  const givenStartTimeMins = startTimeIST.hour * 60 + startTimeIST.minute;
+  const givenEndTimeMins = endTimeIST.hour * 60 + endTimeIST.minute;
 
   // Aggregation Pipeline to find doctors:
   // 1. Match doctors who shift covers the slot completely

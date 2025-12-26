@@ -6,6 +6,7 @@ import * as ConsultationRepository from "../repositories/consultation.repository
 import * as DoctorRepository from "../repositories/doctor.repository";
 import * as PaymentRepository from "../repositories/payment.repository";
 import { AppError } from "../utils/AppError";
+import { getISTDetails } from "../utils/date";
 import { BookSlotSchema } from "../validators/bookSlot.validator";
 import { CheckSlotSchema } from "../validators/checkSlot.validator";
 import { RescheduleSchema } from "../validators/reschedule.validator";
@@ -22,20 +23,22 @@ const checkDoctorSlotAvailability = async (
   if (!doctor) {
     return false;
   }
-  const dayOfWeek = DAYS[startTime.getDay()];
+
+  const startTimeIST = getISTDetails(startTime);
+  const endTimeIST = getISTDetails(endTime);
+  const dayOfWeek = startTimeIST.weekday;
   let validShift = false;
 
   const doctorShifts = doctor.shifts;
   for (const shift of doctorShifts) {
     // match day
-    const dayOfWeek = DAYS[startTime.getDay()];
     if (dayOfWeek != shift.dayOfWeek) {
       continue;
     }
 
     // match time
-    const startTimeMSM = startTime.getHours() * 60 + startTime.getMinutes();
-    const endTimeMSM = endTime.getHours() * 60 + endTime.getMinutes();
+    const startTimeMSM = startTimeIST.hour * 60 + startTimeIST.minute;
+    const endTimeMSM = endTimeIST.hour * 60 + endTimeIST.minute;
     if (startTimeMSM < shift.startTime || endTimeMSM > shift.endTime) {
       continue;
     }
