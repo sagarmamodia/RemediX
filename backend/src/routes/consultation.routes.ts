@@ -58,7 +58,7 @@ consultationRoutes.patch(
 consultationRoutes.patch(
   "/prescription/upload",
   protect,
-  bufferFileMiddleware.single("file"),
+  bufferFileMiddleware.single("image"),
   PrescriptionController.uploadPrescriptionHandler
 );
 

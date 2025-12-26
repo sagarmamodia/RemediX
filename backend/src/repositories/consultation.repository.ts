@@ -129,5 +129,10 @@ export const updateSlot = async (
 
 // UPDATE PRESCRIPTION URL
 export const updatePrescriptionUrl = async (id: string, url: string) => {
-  await ConsultationModel.findByIdAndUpdate(id, { prescriptionUrl: url });
+  try {
+    await ConsultationModel.findByIdAndUpdate(id, { prescriptionUrl: url });
+  } catch (err) {
+    const error = err as Error;
+    throw new Error(`[REPOSITORY] ${error.message}`);
+  }
 };
