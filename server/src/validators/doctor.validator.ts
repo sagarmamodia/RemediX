@@ -27,7 +27,7 @@ export const UpdateDoctorSchema = z.object({
   gender: z.enum(["Male", "Female", "Other"]).optional(),
   dob: z.coerce.date().optional(),
   specialty: z.string().optional(),
-  fee: z.number().optional(),
+  fee: z.coerce.number().optional(),
 });
 
 export type CreateDoctorDTO = z.infer<typeof CreateDoctorSchema>;
