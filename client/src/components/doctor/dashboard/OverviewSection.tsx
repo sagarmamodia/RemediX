@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, Video, Power, CheckCircle, Upload } from 'lucide-react';
+import { Calendar, Clock, Users, Video, Power, CheckCircle, Upload, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { doctorService } from '../../../services/doctor.service';
 import { consultationService } from '../../../services/consultation.service';
@@ -175,16 +175,29 @@ const OverviewSection = () => {
                   <CheckCircle size={18} />
                   Mark Completed
                 </button>
-                <label className="cursor-pointer bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 w-full justify-center">
-                  <Upload size={18} />
-                  Upload Rx
-                  <input 
-                    type="file" 
-                    className="hidden" 
-                    accept="image/*,application/pdf"
-                    onChange={(e) => handleFileUpload(e, consultation._id)}
-                  />
-                </label>
+                <div className="flex gap-2 w-full">
+                  {consultation.prescriptionUrl && (
+                    <a 
+                      href={consultation.prescriptionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 flex-1 justify-center"
+                    >
+                      <FileText size={18} />
+                      View Rx
+                    </a>
+                  )}
+                  <label className={`cursor-pointer bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2 ${consultation.prescriptionUrl ? 'flex-1' : 'w-full'} justify-center`}>
+                    <Upload size={18} />
+                    Upload Rx
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*,application/pdf"
+                      onChange={(e) => handleFileUpload(e, consultation._id)}
+                    />
+                  </label>
+                </div>
               </div>
             </div>
           </div>
