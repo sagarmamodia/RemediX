@@ -45,12 +45,25 @@ const FindDoctorsSection = () => {
 
         const [startTime, endTime] = slot;
         
-        const response = await doctorService.getInstantDoctors(
-          selectedSpeciality === 'All' ? 'General Physician' : selectedSpeciality, 
-          [startTime.toISOString(), endTime.toISOString()]
-        );
-        if (response.success) {
-          setDoctors(response.data.list);
+        if (selectedSpeciality === 'All') {
+          // Backend doesn't support "All" for instant search, so we must query all specialties
+          const promises = SPECIALITIES.filter(s => s !== 'All').map(spec => 
+            doctorService.getInstantDoctors(spec, [startTime.toISOString(), endTime.toISOString()])
+          );
+          
+          const results = await Promise.all(promises);
+          const allDoctors = results.flatMap(r => r.success ? r.data.list : []);
+          // Remove duplicates just in case
+          const uniqueDoctors = Array.from(new Map(allDoctors.map(d => [d.id, d])).values());
+          setDoctors(uniqueDoctors);
+        } else {
+          const response = await doctorService.getInstantDoctors(
+            selectedSpeciality, 
+            [startTime.toISOString(), endTime.toISOString()]
+          );
+          if (response.success) {
+            setDoctors(response.data.list);
+          }
         }
       } else {
         const filters: { name?: string; specialty?: string; available?: boolean } = {};
