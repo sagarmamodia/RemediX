@@ -11,7 +11,7 @@ export const sendMail = async (
 ) => {
   try {
     const { data, error } = await resend.emails.send({
-      from: "onboarding@resend.dev",
+      from: config.resend.domain,
       to: recepient,
       subject: subject,
       html: html,
