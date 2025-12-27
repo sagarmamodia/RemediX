@@ -2,7 +2,7 @@ import { z } from "zod";
 import { availableSpecialties } from "./doctor.validator";
 
 export const DoctorFilterQuerySchema = z.object({
-  specialty: z.enum(availableSpecialties),
+  specialty: z.enum(availableSpecialties).optional(),
   name: z.string().optional(),
   fee: z
     .preprocess(
