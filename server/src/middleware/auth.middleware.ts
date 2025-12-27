@@ -15,13 +15,12 @@ export const protect = async (
   next: NextFunction
 ) => {
   try {
-    // 1. Get the token from the header
+    // Get the token from the header
     let token;
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
     ) {
-      // Format: "Bearer <token>" -> split by space and take the second part
       token = req.headers.authorization.split(" ")[1];
     }
 
@@ -32,11 +31,11 @@ export const protect = async (
       );
     }
 
-    // 3. Verify the token
+    // Verify the token
     const decoded = jwt.verify(token, config.jwt.secret) as JwtPayload;
 
-    // 4. Attach user data to the request object
-    // Now you can access req.user.id and req.user.role in your controllers!
+    // Attach user data to the request object
+    // Now we can access req.user.id and req.user.role in the controllers
     res.locals.user = decoded as {
       id: string;
       role: string;
