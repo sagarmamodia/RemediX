@@ -46,6 +46,7 @@ const config = {
 
   resend: {
     api_key: process.env.RESEND_API_KEY ?? "resend-key",
+    domain: process.env.RESEND_DOMAIN ?? "outboarding@resend.dev",
   },
 } as const;
 
