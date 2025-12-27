@@ -65,7 +65,7 @@ app.post("/api/testMail/:mailId", async (req: Request, res: Response) => {
     sendMail(
       mailId,
       "This is a test mail to verify that mail service is working",
-      { html: "<h1>Mail service is working</h1>" }
+      "<h1>Mail service is working</h1>"
     );
     console.log(`[INFO] Request queued to send email`);
 

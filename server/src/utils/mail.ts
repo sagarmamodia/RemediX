@@ -1,33 +1,27 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { config } from "../config/index.config";
 import { getISTDetails } from "./date";
+
+const resend = new Resend(config.resend.api_key);
 
 export const sendMail = async (
   recepient: string,
   subject: string,
-  message: { text?: string; html?: string }
+  html: string
 ) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    port: 465,
-    auth: {
-      user: config.gmail.user,
-      pass: config.gmail.password,
-    },
-  });
-
-  const mailOptions = {
-    from: `"RemediX" ${config.gmail.user}`,
-    to: recepient,
-    subject: subject,
-    text: message.text,
-    html: message.html,
-  };
-
-  // 3. Send the Email
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`[INFO] Email sent successfully`);
+    const { data, error } = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: recepient,
+      subject: subject,
+      html: html,
+    });
+    if (error) {
+      console.log("[ERROR] Resend failed to send email");
+      console.log(error);
+    } else {
+      console.log(`[INFO] Email sent successfully`);
+    }
   } catch (error) {
     console.log(error);
     console.log(`[ERROR] Email not sent`);
@@ -99,7 +93,7 @@ export const sendConsultationMailToPatient = async (
 
     // send the mail
     const subject = "Consultation confirmed";
-    await sendMail(recepient, subject, { html: message });
+    await sendMail(recepient, subject, message);
   } catch (err) {
     console.log("[ERROR] Email not sent");
   }
@@ -170,7 +164,7 @@ export const sendConsultationMailToDoctor = async (
 
     // send the mail
     const subject = "Consultation confirmed";
-    await sendMail(recepient, subject, { html: message });
+    await sendMail(recepient, subject, message);
   } catch (err) {
     console.log("[ERROR] Email not sent");
   }
@@ -242,7 +236,7 @@ export const sendRescheduleEmailToPatient = async (
 
     // send the mail
     const subject = "Consultation confirmed";
-    await sendMail(recepient, subject, { html: message });
+    await sendMail(recepient, subject, message);
   } catch (err) {
     console.log("[ERROR] Email not sent");
   }
@@ -314,7 +308,7 @@ export const sendRescheduleEmailToDoctor = async (
 
     // send the mail
     const subject = "Consultation confirmed";
-    await sendMail(recepient, subject, { html: message });
+    await sendMail(recepient, subject, message);
   } catch (err) {
     console.log("[ERROR] Email not sent");
   }
