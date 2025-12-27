@@ -1,4 +1,4 @@
-interface ShiftDTO {
+export interface ShiftDTO {
   dayOfWeek: string;
   startTime: number; // minutes since midnight
   endTime: number; // minutes since midnight
