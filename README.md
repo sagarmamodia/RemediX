@@ -1,3 +1,8 @@
+#]Dummy details : 
+ 1. patient details : { email : testpatient@gmail.com , password : testpatient123 } password length : min 8 chars
+ 2. Doctor details : { email : testdoctor@gmail.com , password : testdoctor123 }
+ 3. payment card details : { card no : 4111 1111 1111 1111 , expiry date : 01/26(+) , cvv : xxx , zip code :  xxxx }
+
 # RemediX
 
 RemediX is a full‑stack health/consultation web application that provides patient and doctor workflows including authentication, booking, dashboards and consultation management. The project is split into two main parts:
