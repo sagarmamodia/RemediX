@@ -153,11 +153,6 @@ export const getAvailableDoctors = async (
   // const givenStartTimeMins = startTimeIST.hour * 60 + startTimeIST.minute;
   // const givenEndTimeMins = endTimeIST.hour * 60 + endTimeIST.minute;
 
-  // Aggregation Pipeline to find doctors:
-  // 1. Match doctors who shift covers the slot completely
-  // 2. Ensure they are marked as 'available'.
-  // 3. Ensure no overlapping consultations exist for that specific time.
-
   const availableDoctors = await DoctorModel.aggregate([
     // Match Step: Find doctors on shift using numeric comparison
     {
