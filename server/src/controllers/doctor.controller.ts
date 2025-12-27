@@ -140,6 +140,10 @@ export const getInstantDoctorsHandler = async (
     const endTime = new Date(parsed.data.slot[1]);
     const dayOfWeek = DAYS[startTime.getDay()];
 
+    console.log(
+      `[INFO] Request received to get doctors(${parsed.data.specialty}) available for slot: ${startTime} to ${endTime}`
+    );
+
     // get all available doctors
     const doctors = await DoctorRepository.getAvailableDoctors(
       parsed.data.specialty,

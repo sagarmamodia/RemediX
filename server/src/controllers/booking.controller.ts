@@ -260,7 +260,7 @@ export const checkSlotAvailabilityHandler = async (
       return false;
     }
 
-    // check if the slot is in the shift of the doctor
+    // check if the slot is in available or not
     const doctorCheck = await checkDoctorSlotAvailability(
       parsed.data.doctorId,
       startTime,

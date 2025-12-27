@@ -150,8 +150,8 @@ export const getAvailableDoctors = async (
   // Convert Date objects to Minuts Since Midnight
   const startTimeIST = getISTDetails(startTime);
   const endTimeIST = getISTDetails(endTime);
-  const givenStartTimeMins = startTimeIST.hour * 60 + startTimeIST.minute;
-  const givenEndTimeMins = endTimeIST.hour * 60 + endTimeIST.minute;
+  // const givenStartTimeMins = startTimeIST.hour * 60 + startTimeIST.minute;
+  // const givenEndTimeMins = endTimeIST.hour * 60 + endTimeIST.minute;
 
   // Aggregation Pipeline to find doctors:
   // 1. Match doctors who shift covers the slot completely
@@ -164,13 +164,13 @@ export const getAvailableDoctors = async (
       $match: {
         available: true, // Only doctors accepting new bookings
         specialty: specialty,
-        shifts: {
-          $elemMatch: {
-            dayOfWeek: day,
-            startTime: { $lte: givenStartTimeMins },
-            endTime: { $gte: givenEndTimeMins },
-          },
-        },
+        // shifts: {
+        //   $elemMatch: {
+        //     dayOfWeek: day,
+        //     startTime: { $lte: givenStartTimeMins },
+        //     endTime: { $gte: givenEndTimeMins },
+        //   },
+        // },
       },
     },
     // Lookup Step: Check for existing consultations in the same time range
