@@ -14,8 +14,7 @@ export const sendMail = async (
       pass: config.gmail.password,
     },
   });
-  console.log(config.gmail.user);
-  console.log(config.gmail.password);
+
   const mailOptions = {
     from: `"RemediX" ${config.gmail.user}`,
     to: recepient,
@@ -28,8 +27,7 @@ export const sendMail = async (
   try {
     const info = await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.log(error);
-    throw new Error("Email not sent");
+    console.log(`[ERROR] Email not sent`);
   }
 };
 

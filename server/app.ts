@@ -61,11 +61,14 @@ app.post("/api/testMail/:mailId", async (req: Request, res: Response) => {
       return res
         .status(400)
         .json({ success: false, data: { error: "mail id missing" } });
+    console.log(`[INFO] Request received to sent a test email`);
     await sendMail(
       mailId,
       "This is a test mail to verify that mail service is working",
       { html: "<h1>Mail service is working</h1>" }
     );
+    console.log(`[INFO] Request received to sent a test email`);
+
     return res
       .status(200)
       .json({ success: true, data: { error: "Email sent" } });
