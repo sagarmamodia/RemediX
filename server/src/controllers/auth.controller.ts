@@ -93,7 +93,7 @@ export const loginHandler = async (
     }
 
     const data = parsed.data;
-    let account: { id: string; passwordHash: string } | null = null;
+    let account: { id: string; passwordHash: string } | undefined = undefined;
     // Authenticate user
     if (data.role == "Doctor") {
       account = await DoctorRepository.getDoctorByEmailWithPassword(data.email);

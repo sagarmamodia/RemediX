@@ -67,11 +67,11 @@ export const registerDoctor = async (
 // RETURN THE DOCTORID AND PASSWORD OF THE DOCTOR MATCHING A EMAIL (UNIQUE)
 export const getDoctorByEmailWithPassword = async (
   email: string
-): Promise<{ id: string; passwordHash: string } | null> => {
+): Promise<{ id: string; passwordHash: string } | undefined> => {
   const doctor: IDoctor | null = await DoctorModel.findOne({
     email: email,
   });
-  if (!doctor) return null;
+  if (!doctor) return undefined;
   return { id: doctor._id.toHexString(), passwordHash: doctor.password };
 };
 
