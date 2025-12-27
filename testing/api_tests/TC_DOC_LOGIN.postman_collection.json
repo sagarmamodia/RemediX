@@ -1,0 +1,32 @@
+{
+	"info": {
+		"_postman_id": "3567b423-402a-42da-8302-f9d7bda58bd1",
+		"name": "TC_DOC_LOGIN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-3567b423-402a-42da-8302-f9d7bda58bd1?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "Doctor Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
