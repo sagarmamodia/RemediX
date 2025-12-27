@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
-import { ArrowLeft, ShieldCheck, Stethoscope, IndianRupee, Calendar, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, IndianRupee, Calendar, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { doctorService } from '../services/doctor.service';
 import { consultationService } from '../services/consultation.service';
 import { generateDaySlots } from '../utils/slotGenerator';
@@ -14,11 +14,11 @@ const BookingPage = () => {
   const [doctor, setDoctor] = useState<DoctorProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [processing, setProcessing] = useState(false);
 
   // Booking State
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [selectedSlot, setSelectedSlot] = useState<string>('');
+  const [symptoms, setSymptoms] = useState<string>('');
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
 
@@ -47,14 +47,11 @@ const BookingPage = () => {
   useEffect(() => {
     if (instantBooking && instantSlot) {
       const startTime = new Date(instantSlot[0]);
-      const endTime = new Date(instantSlot[1]);
       
       // Update selectedDate to match the instant slot date
       setSelectedDate(startTime.toISOString().split('T')[0]);
       
       // Format for display/value: "HH:mm-HH:mm"
-      const slotString = `${startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${endTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-      // We might need to store the actual ISO strings for the backend
       // Let's store the value as a JSON string of the array to be safe and easy to parse back
       setSelectedSlot(JSON.stringify(instantSlot));
     }
@@ -176,6 +173,17 @@ const BookingPage = () => {
                   </div>
                 </div>
 
+                {/* Symptoms Input */}
+                <div>
+                  <label className="block text-sm font-medium text-text-muted mb-1">Symptoms <span className="text-red-500">*</span></label>
+                  <textarea
+                    value={symptoms}
+                    onChange={(e) => setSymptoms(e.target.value)}
+                    placeholder="Describe your symptoms briefly..."
+                    className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none h-24"
+                  />
+                </div>
+
                 {/* Check Availability Button */}
                 <button
                   onClick={handleCheckAvailability}
@@ -212,7 +220,7 @@ const BookingPage = () => {
 
           {/* Right Column: Payment */}
           <div className="space-y-6">
-            <div className={`bg-white p-6 rounded-2xl shadow-sm border border-slate-200 transition-all ${!isAvailable ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
+            <div className={`bg-white p-6 rounded-2xl shadow-sm border border-slate-200 transition-all ${(!isAvailable || !symptoms.trim()) ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
               <div className="flex items-center gap-2 mb-6">
                 <ShieldCheck className="text-green-600" />
                 <h2 className="text-xl font-bold text-text-main">Secure Payment</h2>
@@ -238,19 +246,20 @@ const BookingPage = () => {
               <PaymentForm
                 applicationId={import.meta.env.VITE_SQUARE_APP_ID}
                 locationId={import.meta.env.VITE_SQUARE_LOCATION_ID}
-                cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
+                cardTokenizeResponseReceived={async (token) => {
                   if (token.status !== 'OK' || !token.token) {
+                    // @ts-ignore - errors property exists on ErrorTokenResult but TS doesn't infer it correctly here
                     alert('Payment failed: ' + (token.errors?.[0]?.message || 'Unknown error'));
                     return;
                   }
 
                   try {
-                    setProcessing(true);
                     const slotArray = JSON.parse(selectedSlot);
                     const response = await consultationService.bookConsultation({
                       doctorId: doctor.id,
                       slot: slotArray,
-                      sourceId: token.token
+                      sourceId: token.token,
+                      symptoms: symptoms
                     });
                     
                     if (response.success) {
@@ -261,7 +270,7 @@ const BookingPage = () => {
                     const errorMessage = err.response?.data?.data?.error || err.message || 'Booking failed';
                     alert(`Booking failed: ${errorMessage}`);
                   } finally {
-                    setProcessing(false);
+
                   }
                 }}
               >
@@ -271,6 +280,11 @@ const BookingPage = () => {
               <p className="text-xs text-text-muted mt-4 text-center">
                 Payments are processed securely by Square. We do not store your card details.
               </p>
+              {(!symptoms.trim() && isAvailable) && (
+                 <p className="text-xs text-red-500 mt-2 text-center font-medium">
+                   Please enter symptoms to enable payment.
+                 </p>
+              )}
             </div>
           </div>
         </div>

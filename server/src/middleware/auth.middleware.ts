@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { config } from "../config/index.config";
 import { AppError } from "../utils/AppError"; // Assuming you have this from previous steps
 
 // Define the shape of the decoded JWT payload
@@ -32,7 +33,7 @@ export const protect = async (
     }
 
     // 3. Verify the token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const decoded = jwt.verify(token, config.jwt.secret) as JwtPayload;
 
     // 4. Attach user data to the request object
     // Now you can access req.user.id and req.user.role in your controllers!

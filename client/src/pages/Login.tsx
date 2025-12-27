@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
-import { Phone, Lock, LogIn, User } from 'lucide-react';
+import { Mail, Lock, LogIn, User } from 'lucide-react';
 import type { Role } from '../types';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -11,7 +11,7 @@ const Login = () => {
   const { login } = useAuth();
   
   const [role, setRole] = useState<Role>('Patient');
-  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,7 +33,7 @@ const Login = () => {
      
       const response = await api.post('/auth/login', {
         role: role, 
-        phone,
+        email,
         password
       });
 
@@ -92,18 +92,18 @@ const Login = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-main">Phone Number</label>
+            <label className="text-sm font-medium text-text-main">Email Address</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Phone className="h-5 w-5 text-text-muted" />
+                <Mail className="h-5 w-5 text-text-muted" />
               </div>
               <input
-                type="tel"
+                type="email"
                 required
                 className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white"
-                placeholder="+91 98765 43210"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                placeholder="ritik@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
@@ -117,6 +117,7 @@ const Login = () => {
               <input
                 type="password"
                 required
+                minLength={8}
                 className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white"
                 placeholder="••••••••"
                 value={password}

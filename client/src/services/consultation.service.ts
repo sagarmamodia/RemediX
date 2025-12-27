@@ -58,7 +58,8 @@ export const consultationService = {
       timeSlot: new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       status: item.status as any,
       amount: 0,
-      prescriptionUrl: item.prescriptionUrl
+      prescriptionUrl: item.prescriptionUrl,
+      symptoms: item.symptoms
     }));
   },
 

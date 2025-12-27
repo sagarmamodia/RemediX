@@ -12,6 +12,7 @@ function toConsultationDTO(consultation: IConsultation): ConsultationDTO {
     patientId: consultation.patientId,
     paymentId: consultation.paymentId,
     startTime: consultation.startTime.toISOString(),
+    symptoms: consultation.symptoms,
     roomId: consultation.roomId,
     prescriptionUrl: consultation.prescriptionUrl,
     endTime: consultation.endTime.toISOString(),
@@ -129,10 +130,10 @@ export const updateSlot = async (
 
 // UPDATE PRESCRIPTION URL
 export const updatePrescriptionUrl = async (id: string, url: string) => {
-  try {
-    await ConsultationModel.findByIdAndUpdate(id, { prescriptionUrl: url });
-  } catch (err) {
-    const error = err as Error;
-    throw new Error(`[REPOSITORY] ${error.message}`);
-  }
+  await ConsultationModel.findByIdAndUpdate(id, { prescriptionUrl: url });
+};
+
+// UPDATE SYMPTOMS
+export const updateSymptoms = async (id: string, symptoms: string) => {
+  await ConsultationModel.findByIdAndUpdate(id, { symptoms: symptoms });
 };

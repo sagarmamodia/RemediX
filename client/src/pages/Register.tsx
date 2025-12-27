@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Stethoscope, Mail, Phone, Lock, Calendar, IndianRupee, Award, UserCircle } from 'lucide-react';
 import type { Role, RegisterFormData } from '../types';
@@ -21,7 +21,7 @@ const SPECIALITIES = [
 const Register = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState<Role>('Patient');
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const [formData, setFormData] = useState<RegisterFormData>({
@@ -32,7 +32,7 @@ const Register = () => {
     gender: '',
     dob: '',
     fee: '',
-    speciality: ''
+    specialty: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -42,7 +42,7 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    // setLoading(true);
 
     try {
       const defaultProfileUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`;
@@ -54,7 +54,7 @@ const Register = () => {
         // Convert fee to number for doctor
         ...(role === 'Doctor' && { 
           fee: Number(formData.fee),
-          specialty: formData.speciality
+          specialty: formData.specialty
         })
       };
 
@@ -69,7 +69,7 @@ const Register = () => {
       console.error('Registration error:', err);
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -187,6 +187,7 @@ const Register = () => {
                   type="password"
                   name="password"
                   required
+                  minLength={8}
                   className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white"
                   placeholder="••••••••"
                   value={formData.password}
@@ -241,10 +242,10 @@ const Register = () => {
                     <Award className="h-5 w-5 text-text-muted" />
                   </div>
                   <select
-                    name="speciality"
+                    name="specialty"
                     required={role === 'Doctor'}
                     className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white appearance-none"
-                    value={formData.speciality}
+                    value={formData.specialty}
                     onChange={handleChange}
                   >
                     <option value="">Select Speciality</option>

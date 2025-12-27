@@ -12,6 +12,7 @@ import {
   deleteRoomAPI,
   getVideoSDKToken,
 } from "../utils/videosdk";
+import { UpdateConsultationSchema } from "../validators/consultation.validator";
 
 // SEND CONSULTATION DETAILS FOR A PARTICULAR ID
 export const getConsultationByIdHandler = async (
@@ -67,6 +68,7 @@ export const getAllConsultationsHandler = async (
             obj.patientProfileUrl = patient.profileUrl;
             obj.startTime = consultation.startTime;
             obj.endTime = consultation.endTime;
+            obj.symptoms = consultation.symptoms;
             obj.prescriptionUrl = consultation.prescriptionUrl;
             obj.status = consultation.status;
             data.push(obj);
@@ -94,6 +96,7 @@ export const getAllConsultationsHandler = async (
             obj.startTime = consultation.startTime;
             obj.endTime = consultation.endTime;
             obj.prescriptionUrl = consultation.prescriptionUrl;
+            obj.symptoms = consultation.symptoms;
             obj.status = consultation.status;
             obj.doctorSpecialty = doctor.specialty;
             data.push(obj);
@@ -200,6 +203,39 @@ export const joinConsultationHandler = async (
     return res
       .status(200)
       .json({ success: true, data: { roomId: roomId, token: token } });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// UPDATE CONSULTATION SYMPTOMS
+export const updateSymptoms = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+    if (user.role !== "Patient") {
+      throw new AppError(
+        "Only patients are authorized to use this endpoint",
+        403
+      );
+    }
+
+    // parse data
+    const parsed = UpdateConsultationSchema.safeParse(req.body);
+    if (!parsed.success) {
+      throw new AppError("Invalid data", 400);
+    }
+
+    // update db
+    await ConsultationRepository.updateSymptoms(
+      parsed.data.consultationId,
+      parsed.data.symptoms
+    );
+
+    return res.status(200).json({ success: true, data: {} });
   } catch (err) {
     return next(err);
   }

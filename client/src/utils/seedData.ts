@@ -5,10 +5,9 @@ const patients = [
     name: 'Sahil',
     email: 'sahil@example.com',
     phone: '9876543220',
-    password: 'password123',
+    password: 'password123', // Min 8 chars required
     gender: 'Male',
     dob: '2001-01-01',
-    role: 'Patient'
   },
   {
     name: 'Sagar',
@@ -17,7 +16,6 @@ const patients = [
     password: 'password123',
     gender: 'Male',
     dob: '1995-01-01',
-    role: 'Patient'
   }
 ];
 
@@ -26,13 +24,11 @@ const doctors = [
     name: 'Dr. Ritik',
     email: 'ritik@example.com',
     phone: '9876543210',
-    password: 'password123',
+    password: 'password123', // Min 8 chars required
     gender: 'Male',
     dob: '1990-01-01',
     fee: 1000,
     specialty: 'Cardiologist',
-    role: 'Doctor',
-    available: true
   },
   {
     name: 'Dr. Anjali',
@@ -43,8 +39,6 @@ const doctors = [
     dob: '1992-05-15',
     fee: 800,
     specialty: 'Dermatologist',
-    role: 'Doctor',
-    available: true
   }
 ];
 
@@ -60,7 +54,12 @@ export const seedUsers = async () => {
         await api.post('/auth/patient/register', payload);
         console.log(`Registered patient: ${patient.name}`);
       } catch (error: any) {
-        console.error(`Failed to register patient ${patient.name}:`, error.response?.data?.message || error.message);
+        const errorMessage = error.response?.data?.data?.error || error.message;
+        if (error.response?.status === 409) {
+           console.log(`Skipping ${patient.name}: Already registered.`);
+        } else {
+           console.error(`Failed to register patient ${patient.name}:`, errorMessage);
+        }
       }
     }
 
@@ -74,7 +73,12 @@ export const seedUsers = async () => {
         await api.post('/auth/doctor/register', payload);
         console.log(`Registered doctor: ${doctor.name}`);
       } catch (error: any) {
-        console.error(`Failed to register doctor ${doctor.name}:`, error.response?.data?.message || error.message);
+        const errorMessage = error.response?.data?.data?.error || error.message;
+        if (error.response?.status === 409) {
+           console.log(`Skipping ${doctor.name}: Already registered.`);
+        } else {
+           console.error(`Failed to register doctor ${doctor.name}:`, errorMessage);
+        }
       }
     }
     

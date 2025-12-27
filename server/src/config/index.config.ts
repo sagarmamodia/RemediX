@@ -28,6 +28,10 @@ const config = {
   // daily: {
   //   DAILY_ACCESS_TOKEN: process.env.DAILY_ACCESS_TOKEN,
   // },
+  gmail: {
+    user: process.env.GMAIL_USER ?? "test-user",
+    password: process.env.GMAIL_APP_PASSOWRD ?? "test-password",
+  },
 
   videosdk: {
     api_key: process.env.VIDEOSDK_API_KEY,

@@ -39,12 +39,12 @@ export const registerPatient = async (
 };
 
 // RETURN A PATIENT'S ID AND PASSWORD HAVING THE GIVEN PHONE NUMBER
-export const getPatientByPhoneWithPassword = async (
-  phone: string
-): Promise<{ id: string; password: string } | null> => {
-  const patient: IPatient | null = await PatientModel.findOne({ phone: phone });
-  if (!patient) return null;
-  return { id: patient._id.toHexString(), password: patient.password };
+export const getPatientByEmailWithPassword = async (
+  email: string
+): Promise<{ id: string; passwordHash: string } | undefined> => {
+  const patient: IPatient | null = await PatientModel.findOne({ email: email });
+  if (!patient) return undefined;
+  return { id: patient._id.toHexString(), passwordHash: patient.password };
 };
 
 // UPDATE PATIENT PROFILE

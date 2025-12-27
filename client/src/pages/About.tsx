@@ -1,5 +1,4 @@
-import React from 'react';
-import { Shield, Heart, Clock, Users, Award, Globe } from 'lucide-react';
+import { Shield, Heart, Clock, Users } from 'lucide-react';
 
 const About = () => {
   return (

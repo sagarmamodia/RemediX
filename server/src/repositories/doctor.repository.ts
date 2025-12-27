@@ -1,5 +1,6 @@
 import { DoctorDTO } from "../dtos/doctor.dto";
 import { DoctorModel, IDoctor } from "../models/doctor.model";
+import { getISTDetails } from "../utils/date";
 import {
   CreateDoctorDTO,
   UpdateDoctorDTO,
@@ -63,15 +64,15 @@ export const registerDoctor = async (
   return createdDoc._id.toHexString();
 };
 
-// RETURN THE DOCTORID AND PASSWORD OF THE DOCTOR MATCHING A PHONE NUMBER (UNIQUE)
-export const getDoctorByPhoneWithPassword = async (
-  phone: string
-): Promise<{ id: string; password: string } | null> => {
+// RETURN THE DOCTORID AND PASSWORD OF THE DOCTOR MATCHING A EMAIL (UNIQUE)
+export const getDoctorByEmailWithPassword = async (
+  email: string
+): Promise<{ id: string; passwordHash: string } | undefined> => {
   const doctor: IDoctor | null = await DoctorModel.findOne({
-    phone: phone,
+    email: email,
   });
-  if (!doctor) return null;
-  return { id: doctor._id.toHexString(), password: doctor.password };
+  if (!doctor) return undefined;
+  return { id: doctor._id.toHexString(), passwordHash: doctor.password };
 };
 
 // RETURN THE FILTERED LIST OF DOCTOR
@@ -147,8 +148,10 @@ export const getAvailableDoctors = async (
   endTime: Date
 ): Promise<DoctorDTO[]> => {
   // Convert Date objects to Minuts Since Midnight
-  const givenStartTimeMins = startTime.getHours() * 60 + startTime.getMinutes();
-  const givenEndTimeMins = endTime.getHours() * 60 + endTime.getMinutes();
+  const startTimeIST = getISTDetails(startTime);
+  const endTimeIST = getISTDetails(endTime);
+  // const givenStartTimeMins = startTimeIST.hour * 60 + startTimeIST.minute;
+  // const givenEndTimeMins = endTimeIST.hour * 60 + endTimeIST.minute;
 
   // Aggregation Pipeline to find doctors:
   // 1. Match doctors who shift covers the slot completely
@@ -161,13 +164,13 @@ export const getAvailableDoctors = async (
       $match: {
         available: true, // Only doctors accepting new bookings
         specialty: specialty,
-        shifts: {
-          $elemMatch: {
-            dayOfWeek: day,
-            startTime: { $lte: givenStartTimeMins },
-            endTime: { $gte: givenEndTimeMins },
-          },
-        },
+        // shifts: {
+        //   $elemMatch: {
+        //     dayOfWeek: day,
+        //     startTime: { $lte: givenStartTimeMins },
+        //     endTime: { $gte: givenEndTimeMins },
+        //   },
+        // },
       },
     },
     // Lookup Step: Check for existing consultations in the same time range

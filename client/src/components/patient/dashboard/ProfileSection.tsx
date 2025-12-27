@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { User, Mail, Phone, Calendar, UserCircle, Edit2, Save, X } from 'lucide-react';
-import { useAuth } from '../../../context/AuthContext';
+import { useEffect, useState } from 'react';
+import { Mail, Phone, Calendar, UserCircle, Edit2, Save, X } from 'lucide-react';
 import { patientService } from '../../../services/patient.service';
 import type { PatientProfile } from '../../../types';
 

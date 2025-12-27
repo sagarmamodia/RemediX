@@ -57,6 +57,8 @@ export interface RegisterFormData {
 export interface BookConsultationPayload {
   doctorId: string;
   sourceId: string;
+  slot: [string, string];
+  symptoms: string;
 }
 
 export interface BookConsultationResponse {
@@ -91,6 +93,7 @@ export interface Consultation {
   status: 'scheduled' | 'completed' | 'cancelled' | 'pending';
   amount: number;
   prescriptionUrl?: string;
+  symptoms?: string;
 }
 
 export interface BackendConsultationDTO {
@@ -105,6 +108,7 @@ export interface BackendConsultationDTO {
   endTime: string;
   status: string;
   prescriptionUrl?: string;
+  symptoms?: string;
 }
 
 export interface ConsultationListResponse {

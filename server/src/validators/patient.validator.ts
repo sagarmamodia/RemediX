@@ -13,7 +13,7 @@ export const CreatePatientSchema = z.object({
   gender: z.enum(["Male", "Female", "Other"]),
 
   // Optional fields
-  phone: z.string().optional(),
+  phone: z.string(),
 
   // Dates (Coerce string "2023-01-01" to Date object)
   dob: z.coerce.date(),

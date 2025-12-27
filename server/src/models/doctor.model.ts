@@ -20,6 +20,7 @@ export interface IDoctor extends Document {
   profileUrl: string;
   available: boolean; // Whether doctor is available for new consultation booking or not
   shifts: IShift[];
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const shiftSchema = new Schema<IShift>({
@@ -35,8 +36,8 @@ const shiftSchema = new Schema<IShift>({
 
 const doctorSchema = new Schema<IDoctor>({
   name: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
   password: { type: String, required: true },
   gender: { type: String, enum: ["Male", "Female", "Other"] },
   dob: { type: Date, required: true },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, Video, Clock, FileText, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { consultationService } from '../../../services/consultation.service';
@@ -127,6 +127,12 @@ const ConsultationsSection = () => {
                         {consultation.timeSlot}
                       </div>
                     </div>
+                    {consultation.symptoms && (
+                      <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-100 max-w-md">
+                        <p className="text-xs font-semibold text-text-muted mb-1">My Symptoms:</p>
+                        <p className="text-sm text-text-main line-clamp-2">{consultation.symptoms}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col items-start md:items-end gap-2 w-full md:w-auto">

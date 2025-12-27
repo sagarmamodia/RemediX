@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, MapPin, Star, IndianRupee } from 'lucide-react';
+import { Search, Filter, Star, IndianRupee } from 'lucide-react';
 import { doctorService } from '../../../services/doctor.service';
 import type { DoctorProfile } from '../../../types';
 import { getNextValidInstantSlot } from '../../../utils/slotGenerator';
