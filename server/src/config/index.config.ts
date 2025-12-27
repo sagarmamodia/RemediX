@@ -30,7 +30,7 @@ const config = {
   // },
   gmail: {
     user: process.env.GMAIL_USER ?? "test-user",
-    password: process.env.GMAIL_APP_PASSOWRD ?? "test-password",
+    password: process.env.GMAIL_APP_PASSWORD ?? "test-password",
   },
 
   videosdk: {

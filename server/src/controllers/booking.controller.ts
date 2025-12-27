@@ -5,9 +5,16 @@ import { CreateConsultationDTO } from "../dtos/consultation.dto";
 import { ShiftDTO } from "../dtos/doctor.dto";
 import * as ConsultationRepository from "../repositories/consultation.repository";
 import * as DoctorRepository from "../repositories/doctor.repository";
+import * as PatientRepository from "../repositories/patient.repository";
 import * as PaymentRepository from "../repositories/payment.repository";
 import { AppError } from "../utils/AppError";
 import { getISTDetails } from "../utils/date";
+import {
+  sendConsultationMailToDoctor,
+  sendConsultationMailToPatient,
+  sendRescheduleEmailToDoctor,
+  sendRescheduleEmailToPatient,
+} from "../utils/mail";
 import { BookSlotSchema } from "../validators/bookSlot.validator";
 import { CheckSlotSchema } from "../validators/checkSlot.validator";
 import { RescheduleSchema } from "../validators/reschedule.validator";
@@ -216,6 +223,29 @@ export const paymentAndSlotBookingHandler = async (
 
     console.log(`[INFO] Consultation successfully booked`);
 
+    // Send mails
+    const patient = await PatientRepository.getPatientById(user.id);
+    if (!patient) {
+      throw new AppError(
+        "[ERROR] Consultation has been booked but patient doesn't exist",
+        409
+      );
+    }
+    sendConsultationMailToDoctor(
+      doctor.email,
+      patient.name,
+      doctor.name,
+      startTime,
+      endTime
+    );
+    sendConsultationMailToPatient(
+      patient.email,
+      patient.name,
+      doctor.name,
+      startTime,
+      endTime
+    );
+
     return res
       .status(201)
       .json({ success: true, data: { consultationId: consultationId } });
@@ -358,6 +388,30 @@ export const rescheduleConsultationHandler = async (
       endTime
     );
     console.log(`[INFO] consultation rescheduled successfully`);
+
+    // Send mails
+    const doctor = await DoctorRepository.getDoctorById(doctorId);
+    const patient = await PatientRepository.getPatientById(user.id);
+    if (!patient || !doctor) {
+      throw new AppError(
+        "[ERROR] Consultation has been booked but either patient or doctor doesn't exist",
+        409
+      );
+    }
+    sendRescheduleEmailToDoctor(
+      doctor.email,
+      patient.name,
+      doctor.name,
+      startTime,
+      endTime
+    );
+    sendRescheduleEmailToPatient(
+      patient.email,
+      patient.name,
+      doctor.name,
+      startTime,
+      endTime
+    );
 
     return res.status(200).json({ success: true, data: {} });
   } catch (err) {
