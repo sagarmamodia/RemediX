@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "424f39f7-fb05-4177-8c7e-097029684747",
-		"name": "TC_PAR_REG",
+		"name": "TC_PAT_REG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "33039391",
 		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-424f39f7-fb05-4177-8c7e-097029684747?action=share&source=collection_link&creator=33039391"
@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Sagar\",\r\n    \"email\": \"sagar@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"gender\": \"Male\",\r\n    \"phone\": \"8168927482\",\r\n    \"profileUrl\": \"http://www.google.com\",\r\n    \"dob\": \"2003-01-01\"\r\n}",
+					"raw": "{\r\n    \"name\": \"Sahil\",\r\n    \"email\": \"sahil@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"gender\": \"Male\",\r\n    \"phone\": \"9053219021\",\r\n    \"profileUrl\": \"http://www.google.com\",\r\n    \"dob\": \"2003-01-01\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
