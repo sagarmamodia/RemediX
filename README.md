@@ -28,7 +28,6 @@ This README gives an overview of the project, how to run it locally, and where t
 - [Testing](#testing)
 - [Deployment](#deployment)
 - [Contributing](#contributing)
-- [License](#license)
 - [Maintainer / Contact](#maintainer--contact)
 
 ## Key features
@@ -195,9 +194,8 @@ Contributions are welcome. A suggested workflow:
 
 Please open issues for feature requests, bugs, or design discussions.
 
-## License
 
-No LICENSE file detected in the repository root. Add a LICENSE (for example, the MIT license) to make the project’s license explicit.
+
 
 ## Maintainer / Contact
 
