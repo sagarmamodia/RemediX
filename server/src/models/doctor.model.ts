@@ -20,6 +20,7 @@ export interface IDoctor extends Document {
   profileUrl: string;
   available: boolean; // Whether doctor is available for new consultation booking or not
   shifts: IShift[];
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const shiftSchema = new Schema<IShift>({
@@ -46,7 +47,5 @@ const doctorSchema = new Schema<IDoctor>({
   available: { type: Boolean, default: false },
   shifts: { type: [shiftSchema], required: true, id: false },
 });
-
-doctorSchema.index({ countryCode: 1, phone: 1 }, { unique: true });
 
 export const DoctorModel = model<IDoctor>("Doctor", doctorSchema);

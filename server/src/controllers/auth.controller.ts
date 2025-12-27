@@ -1,7 +1,7 @@
+import bcrypt from "bcryptjs";
 import type { NextFunction, Request, Response } from "express";
 import * as DoctorRepository from "../repositories/doctor.repository";
 import * as PatientRepository from "../repositories/patient.repository";
-
 import { AppError } from "../utils/AppError";
 import { generateAccessToken } from "../utils/jwt";
 import { CreateDoctorSchema } from "../validators/doctor.validator";
@@ -22,7 +22,18 @@ export const patientRegistrationHandler = async (
       throw new AppError("Invalid data", 400);
     }
 
+    // check if patient already exists
+    const patient = await PatientRepository.getPatientByEmailWithPassword(
+      parsed.data.email
+    );
+    if (patient) {
+      throw new AppError("Patient already registered", 409);
+    }
+
     // Register patient in the repository
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(parsed.data.password, salt);
+    parsed.data.password = hashedPassword;
     const id = await PatientRepository.registerPatient(parsed.data);
     console.log(id);
 
@@ -47,7 +58,19 @@ export const doctorRegistrationHandler = async (
       throw new AppError("Invalid data", 400);
     }
 
+    // check if doctor already registered
+    const doctor = await DoctorRepository.getDoctorByEmailWithPassword(
+      parsed.data.email
+    );
+
+    if (doctor) {
+      throw new AppError("Doctor already registered", 409);
+    }
+
     // Register patient in the repository
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(parsed.data.password, salt);
+    parsed.data.password = hashedPassword;
     const id = await DoctorRepository.registerDoctor(parsed.data);
 
     // return response
@@ -70,7 +93,7 @@ export const loginHandler = async (
     }
 
     const data = parsed.data;
-    let account: { id: string; password: string } | null = null;
+    let account: { id: string; passwordHash: string } | null = null;
     // Authenticate user
     if (data.role == "Doctor") {
       account = await DoctorRepository.getDoctorByEmailWithPassword(data.email);
@@ -88,7 +111,11 @@ export const loginHandler = async (
     }
 
     // if a Doctor exists with this phone number then match passwords and return access token
-    if (data.password != account.password) {
+    const passwordMatch = await bcrypt.compare(
+      data.password,
+      account.passwordHash
+    );
+    if (!passwordMatch) {
       return res
         .status(400)
         .json({ success: false, data: { error: "Invalid password" } });
