@@ -208,6 +208,7 @@ export const paymentAndSlotBookingHandler = async (
       paymentId: paymentId,
       startTime: startTime,
       endTime: endTime,
+      symptoms: parsed.data.symptoms,
       fee: fee,
     };
     const consultationId =

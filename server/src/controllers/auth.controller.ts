@@ -73,10 +73,10 @@ export const loginHandler = async (
     let account: { id: string; password: string } | null = null;
     // Authenticate user
     if (data.role == "Doctor") {
-      account = await DoctorRepository.getDoctorByPhoneWithPassword(data.phone);
+      account = await DoctorRepository.getDoctorByEmailWithPassword(data.email);
     } else {
-      account = await PatientRepository.getPatientByPhoneWithPassword(
-        data.phone
+      account = await PatientRepository.getPatientByEmailWithPassword(
+        data.email
       );
     }
 

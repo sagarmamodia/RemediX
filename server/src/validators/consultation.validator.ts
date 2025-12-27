@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-export const BookConsultationSchema = z.object({
-  doctorId: z.string(),
-  sourceId: z.string(),
+export const UpdateConsultationSchema = z.object({
+  consultationId: z.string(),
+  symptoms: z.string(),
 });
+
+export type UpdateConsultationDTO = z.infer<typeof UpdateConsultationSchema>;

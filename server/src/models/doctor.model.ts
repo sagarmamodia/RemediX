@@ -35,8 +35,8 @@ const shiftSchema = new Schema<IShift>({
 
 const doctorSchema = new Schema<IDoctor>({
   name: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
   password: { type: String, required: true },
   gender: { type: String, enum: ["Male", "Female", "Other"] },
   dob: { type: Date, required: true },
@@ -46,5 +46,7 @@ const doctorSchema = new Schema<IDoctor>({
   available: { type: Boolean, default: false },
   shifts: { type: [shiftSchema], required: true, id: false },
 });
+
+doctorSchema.index({ countryCode: 1, phone: 1 }, { unique: true });
 
 export const DoctorModel = model<IDoctor>("Doctor", doctorSchema);

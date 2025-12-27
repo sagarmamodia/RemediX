@@ -64,12 +64,12 @@ export const registerDoctor = async (
   return createdDoc._id.toHexString();
 };
 
-// RETURN THE DOCTORID AND PASSWORD OF THE DOCTOR MATCHING A PHONE NUMBER (UNIQUE)
-export const getDoctorByPhoneWithPassword = async (
-  phone: string
+// RETURN THE DOCTORID AND PASSWORD OF THE DOCTOR MATCHING A EMAIL (UNIQUE)
+export const getDoctorByEmailWithPassword = async (
+  email: string
 ): Promise<{ id: string; password: string } | null> => {
   const doctor: IDoctor | null = await DoctorModel.findOne({
-    phone: phone,
+    email: email,
   });
   if (!doctor) return null;
   return { id: doctor._id.toHexString(), password: doctor.password };

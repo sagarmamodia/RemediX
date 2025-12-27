@@ -3,6 +3,7 @@ export interface CreateConsultationDTO {
   patientId: string;
   paymentId: string;
   startTime: Date;
+  symptoms: string;
   endTime: Date;
   fee: number;
 }
@@ -14,6 +15,7 @@ export interface ConsultationDTO {
   paymentId: string;
   startTime: string;
   endTime: string;
+  symptoms: string;
   roomId?: string;
   prescriptionUrl?: string;
   fee: number;
@@ -25,6 +27,7 @@ export interface DoctorConsultationsDTO {
   patientName: string;
   patientProfileUrl: string;
   prescriptionUrl?: string;
+  symptoms: string;
   startTime: string;
   endTime: string;
   status: string;
@@ -35,6 +38,7 @@ export interface PatientConsultationsDTO {
   doctorName: string;
   doctorProfileUrl: string;
   doctorSpecialty: string;
+  symptoms: string;
   prescriptionUrl?: string;
   startTime: string;
   endTime: string;

@@ -17,5 +17,6 @@ export const BookSlotSchema = z.object({
       if (start < currentTime) return false;
       return true;
     }),
+  symptoms: z.string(),
   sourceId: z.string(),
 });
