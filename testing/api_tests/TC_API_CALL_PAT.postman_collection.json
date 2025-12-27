@@ -1,0 +1,102 @@
+{
+	"info": {
+		"_postman_id": "c53c4cb7-596c-4353-84b2-4e5bb88344a2",
+		"name": "TC_API_CALL_PAT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-c53c4cb7-596c-4353-84b2-4e5bb88344a2?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "Join Call by Patient",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{patientToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/consultation/join/id/{{consultationId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"consultation",
+						"join",
+						"id",
+						"{{consultationId}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Join Call by Patient",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/consultation/join/id/{{consultationId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"consultation",
+								"join",
+								"id",
+								"{{consultationId}}"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "92"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"5c-yTr6EwfdMs+sQesqEMoeJuH1caU\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 16:58:40 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": false,\n    \"data\": {\n        \"error\": \"You can only join 10 minutes before consultation starts\"\n    }\n}"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "e03ef1f9-3798-4289-8069-b14ea99005a5",
+		"name": "TC_API_DOC_PROF",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-e03ef1f9-3798-4289-8069-b14ea99005a5?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "UpdateDoctorProfile",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/doctor/update",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"doctor",
+						"update"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "UpdateDoctorProfile",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Aman Kumar\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/doctor/update",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"doctor",
+								"update"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "57"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"39-v+JTCbweFUEj0xgjUnjgkpYvliE\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 16:46:35 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": \"694fa353e2d52196d81467ba\"\n    }\n}"
+				}
+			]
+		}
+	]
+}

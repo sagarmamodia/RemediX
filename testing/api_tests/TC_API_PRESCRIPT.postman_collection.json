@@ -1,0 +1,56 @@
+{
+	"info": {
+		"_postman_id": "5de4aeb8-3655-4ce1-9dc3-f7638c365b0a",
+		"name": "TC_API_PRESCRIPT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-5de4aeb8-3655-4ce1-9dc3-f7638c365b0a?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "UploadPrescription",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{doctorToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": []
+						},
+						{
+							"key": "consultationId",
+							"value": "{{consultationId2}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/consultation/prescription/upload",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"consultation",
+						"prescription",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

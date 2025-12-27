@@ -1,0 +1,355 @@
+{
+	"info": {
+		"_postman_id": "70291cb9-1b9c-463c-b5ff-f14c87cfb372",
+		"name": "TC_API_BOOK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-70291cb9-1b9c-463c-b5ff-f14c87cfb372?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "Book Slot",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{patientToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"doctorId\": \"694fe9d2e21a0782764540fd\",\r\n    \"slot\": [\"2025-12-28T03:30:00.000Z\", \"2025-12-28T04:00:00.000Z\"],\r\n    \"sourceId\": \"cnon:card-nonce-ok\",\r\n    \"symptoms\": \"fever\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/consultation/book",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"consultation",
+						"book"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Book Slot",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"doctorId\": \"694fe9d2e21a0782764540fd\",\r\n    \"slot\": [\"2025-12-28T03:30:00.000Z\", \"2025-12-28T04:00:00.000Z\"],\r\n    \"sourceId\": \"cnon:card-nonce-ok\",\r\n    \"symptoms\": \"fever\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/consultation/book",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"consultation",
+								"book"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "69"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"45-JIMm6GIn1MYgxj3Lck0kUUmzVyA\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 16:52:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"consultationId\": \"69500edc0db97b6e8bc26fc4\"\n    }\n}"
+				},
+				{
+					"name": "Book Slot",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"doctorId\": \"694fe9d2e21a0782764540fd\",\r\n    \"slot\": [\"2025-12-28T03:30:00.000Z\", \"2025-12-28T04:00:00.000Z\"],\r\n    \"sourceId\": \"cnon:card-nonce-ok\",\r\n    \"symptoms\": \"fever\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/consultation/book",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"consultation",
+								"book"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "74"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"4a-vru/TbYWGztMZMWyNQWVkb3AEuI\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 18:03:28 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": false,\n    \"data\": {\n        \"error\": \"Response status code was not ok: 404.\"\n    }\n}"
+				},
+				{
+					"name": "Book Slot",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"doctorId\": \"694f91e1d9626ef1a554e6dd\",\r\n    \"slot\": [\"2025-12-28T03:30:00.000Z\", \"2025-12-28T04:00:00.000Z\"],\r\n    \"sourceId\": \"cnon:card-nonce-ok\",\r\n    \"symptoms\": \"fever\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/consultation/book",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"consultation",
+								"book"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "55"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"37-Fvf0K13YMQNnognrejvEqUFHnIg\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 18:09:55 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": false,\n    \"data\": {\n        \"error\": \"slot not avaliable\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Consultation Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/consultation/id/{{consultationId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"consultation",
+						"id",
+						"{{consultationId}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Consultation Details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/consultation/id/{{consultationId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"consultation",
+								"id",
+								"{{consultationId}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "297"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"129-GeqR538WkyWRcmb8NUTRpudEtag\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 16:55:21 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": \"69500edc0db97b6e8bc26fc4\",\n        \"doctorId\": \"694fe9d2e21a0782764540fd\",\n        \"patientId\": \"694fad3fe2d52196d81467dd\",\n        \"paymentId\": \"69500edc0db97b6e8bc26fc2\",\n        \"startTime\": \"2025-12-28T03:30:00.000Z\",\n        \"symptoms\": \"fever\",\n        \"endTime\": \"2025-12-28T04:00:00.000Z\",\n        \"status\": \"pending\",\n        \"fee\": 700\n    }\n}"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "52f834ad-0d23-4aa3-8bfe-f0095754e86e",
+		"name": "TC_API_AVAIL_LIST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-52f834ad-0d23-4aa3-8bfe-f0095754e86e?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "AvailableDoctors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/doctor/list?name=ag&available=false",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"doctor",
+						"list"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "ag"
+						},
+						{
+							"key": "available",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "AvailableDoctors",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/doctor/list?name=ri&available=true",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"doctor",
+								"list"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "ri"
+								},
+								{
+									"key": "available",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2672"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"a70-tSF4lP7Qy4aNXe5QsJctEzRD2Bw\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 16:39:38 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"list\": [\n            {\n                \"id\": \"694f91e1d9626ef1a554e6dd\",\n                \"name\": \"Dr. Ritik\",\n                \"email\": \"ritik@example.com\",\n                \"phone\": \"9876543210\",\n                \"gender\": \"Male\",\n                \"dob\": \"1990-01-01T00:00:00.000Z\",\n                \"fee\": 1000,\n                \"specialty\": \"Cardiologist\",\n                \"available\": true,\n                \"profileUrl\": \"https://ui-avatars.com/api/?name=Dr.%20Ritik&background=random\",\n                \"shifts\": [\n                    {\n                        \"dayOfWeek\": \"Mon\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6de\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Mon\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6df\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Tue\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6e0\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Tue\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6e1\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Wed\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6e2\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Wed\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6e3\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Thu\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6e4\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Thu\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6e5\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Fri\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6e6\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Fri\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694f91e1d9626ef1a554e6e7\"\n                    }\n                ]\n            },\n            {\n                \"id\": \"694fe9d2e21a0782764540fd\",\n                \"name\": \"Dr Ritik Dangi \",\n                \"email\": \"dangiiiritik@gmail.com\",\n                \"phone\": \"+911234567890\",\n                \"gender\": \"Male\",\n                \"dob\": \"2004-08-22T00:00:00.000Z\",\n                \"fee\": 700,\n                \"specialty\": \"Dentist\",\n                \"available\": true,\n                \"profileUrl\": \"https://ui-avatars.com/api/?name=Dr%20Ritik%20Dangi%20&background=random\",\n                \"shifts\": [\n                    {\n                        \"dayOfWeek\": \"Mon\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a0782764540fe\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Mon\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a0782764540ff\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Tue\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a078276454100\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Tue\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a078276454101\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Wed\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a078276454102\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Wed\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a078276454103\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Thu\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a078276454104\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Thu\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a078276454105\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Fri\",\n                        \"startTime\": 540,\n                        \"endTime\": 780,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a078276454106\"\n                    },\n                    {\n                        \"dayOfWeek\": \"Fri\",\n                        \"startTime\": 840,\n                        \"endTime\": 1080,\n                        \"slotDuration\": 30,\n                        \"_id\": \"694fe9d2e21a078276454107\"\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				}
+			]
+		}
+	]
+}

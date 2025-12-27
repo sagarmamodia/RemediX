@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "a809d988-bddf-4ae6-92a1-9ce8137c3e40",
+		"name": "TC_API_PAT_DETAILS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-a809d988-bddf-4ae6-92a1-9ce8137c3e40?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "GetPatientDetails",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{patientToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/profile",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"profile"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetPatientDetails",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/profile",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "222"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"de-hb6+KVKWcHXNbxKJhU8jrcJslu0\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 11:08:27 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"role\": \"Patient\",\n        \"id\": \"694fad3fe2d52196d81467dd\",\n        \"name\": \"Sahil\",\n        \"email\": \"sahil@gmail.com\",\n        \"phone\": \"9053219021\",\n        \"gender\": \"Male\",\n        \"dob\": \"2003-01-01T00:00:00.000Z\",\n        \"profileUrl\": \"http://www.google.com\"\n    }\n}"
+				}
+			]
+		}
+	]
+}
