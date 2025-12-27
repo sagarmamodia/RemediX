@@ -187,6 +187,7 @@ const Register = () => {
                   type="password"
                   name="password"
                   required
+                  minLength={8}
                   className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors bg-slate-50 focus:bg-white"
                   placeholder="••••••••"
                   value={formData.password}
