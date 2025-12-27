@@ -1,0 +1,52 @@
+{
+	"info": {
+		"_postman_id": "ec395dac-2531-474a-906c-5552a1568142",
+		"name": "TC_SET_AVAIL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-ec395dac-2531-474a-906c-5552a1568142?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "SetAvailability",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NGZhMzUzZTJkNTIxOTZkODE0NjdiYSIsInJvbGUiOiJEb2N0b3IiLCJpYXQiOjE3NjY4MjY4NTYsImV4cCI6MTc2OTQxODg1Nn0.TOrdoAVr_zUyp9QBCQiheEN_mXximAcbibxJchk3l9E",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"available\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/doctor/availability/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"doctor",
+						"availability",
+						"update"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

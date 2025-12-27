@@ -30,7 +30,7 @@ const config = {
   // },
   gmail: {
     user: process.env.GMAIL_USER ?? "test-user",
-    password: process.env.GMAIL_APP_PASSOWRD ?? "test-password",
+    password: process.env.GMAIL_APP_PASSWORD ?? "test-password",
   },
 
   videosdk: {
@@ -42,6 +42,10 @@ const config = {
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
+  },
+
+  resend: {
+    api_key: process.env.RESEND_API_KEY ?? "resend-key",
   },
 } as const;
 

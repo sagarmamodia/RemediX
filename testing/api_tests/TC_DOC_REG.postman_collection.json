@@ -12,6 +12,15 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Aman\",\r\n    \"email\": \"aman125@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"gender\": \"Male\",\r\n    \"phone\": \"9268927482\",\r\n    \"profileUrl\": \"http://www.amazon.com\",\r\n    \"specialty\": \"General Physician\",\r\n    \"fee\": 40,\r\n    \"dob\": \"2000-01-01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://localhost:3001/api/auth/doctor/register",
 					"protocol": "http",
