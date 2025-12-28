@@ -1,0 +1,120 @@
+{
+	"info": {
+		"_postman_id": "baa21f98-a02f-4e5a-af06-3d1c8fdfd4b3",
+		"name": "TC_API_PAT_PROF",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-baa21f98-a02f-4e5a-af06-3d1c8fdfd4b3?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "UpdatePatientDetails",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{patientToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/patient/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"patient",
+						"update"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "UpdatePatientDetails",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/patient/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"patient",
+								"update"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "206"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ce-2Sm06AsfTgDw8LuGjLIJxLP/XQk\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 16:37:28 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": \"694fad3fe2d52196d81467dd\",\n        \"name\": \"Sahil\",\n        \"email\": \"sahil1@gmail.com\",\n        \"phone\": \"9053219021\",\n        \"gender\": \"Male\",\n        \"dob\": \"2003-01-01T00:00:00.000Z\",\n        \"profileUrl\": \"http://www.google.com\"\n    }\n}"
+				}
+			]
+		}
+	]
+}

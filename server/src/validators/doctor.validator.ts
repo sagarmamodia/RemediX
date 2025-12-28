@@ -38,7 +38,7 @@ export const UpdateDoctorSchema = z.object({
   email: z.email("Invalid email address").optional(),
   gender: z.enum(["Male", "Female", "Other"]).optional(),
   dob: z.coerce.date().optional(),
-  specialty: z.enum(availableSpecialties),
+  specialty: z.enum(availableSpecialties).optional(),
   fee: z.coerce.number().optional(),
 });
 

@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "a6f3a184-9641-4356-b9bc-01ab3863d6b5",
+		"name": "TC_API_DOC_DETAILS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-a6f3a184-9641-4356-b9bc-01ab3863d6b5?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "GetDoctorDetails",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{doctorToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/profile",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"profile"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetDoctorDetails",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/profile",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1349"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"545-txqr/8lJf9zPTlgZhBGd8w8/VtI\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 17:05:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"role\": \"Doctor\",\n        \"id\": \"694f91e1d9626ef1a554e6dd\",\n        \"name\": \"Dr. Ritik\",\n        \"email\": \"ritik@example.com\",\n        \"phone\": \"9876543210\",\n        \"gender\": \"Male\",\n        \"dob\": \"1990-01-01T00:00:00.000Z\",\n        \"fee\": 1000,\n        \"specialty\": \"Cardiologist\",\n        \"available\": true,\n        \"profileUrl\": \"https://ui-avatars.com/api/?name=Dr.%20Ritik&background=random\",\n        \"shifts\": [\n            {\n                \"dayOfWeek\": \"Mon\",\n                \"startTime\": 540,\n                \"endTime\": 780,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6de\"\n            },\n            {\n                \"dayOfWeek\": \"Mon\",\n                \"startTime\": 840,\n                \"endTime\": 1080,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6df\"\n            },\n            {\n                \"dayOfWeek\": \"Tue\",\n                \"startTime\": 540,\n                \"endTime\": 780,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6e0\"\n            },\n            {\n                \"dayOfWeek\": \"Tue\",\n                \"startTime\": 840,\n                \"endTime\": 1080,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6e1\"\n            },\n            {\n                \"dayOfWeek\": \"Wed\",\n                \"startTime\": 540,\n                \"endTime\": 780,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6e2\"\n            },\n            {\n                \"dayOfWeek\": \"Wed\",\n                \"startTime\": 840,\n                \"endTime\": 1080,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6e3\"\n            },\n            {\n                \"dayOfWeek\": \"Thu\",\n                \"startTime\": 540,\n                \"endTime\": 780,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6e4\"\n            },\n            {\n                \"dayOfWeek\": \"Thu\",\n                \"startTime\": 840,\n                \"endTime\": 1080,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6e5\"\n            },\n            {\n                \"dayOfWeek\": \"Fri\",\n                \"startTime\": 540,\n                \"endTime\": 780,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6e6\"\n            },\n            {\n                \"dayOfWeek\": \"Fri\",\n                \"startTime\": 840,\n                \"endTime\": 1080,\n                \"slotDuration\": 30,\n                \"_id\": \"694f91e1d9626ef1a554e6e7\"\n            }\n        ]\n    }\n}"
+				}
+			]
+		}
+	]
+}

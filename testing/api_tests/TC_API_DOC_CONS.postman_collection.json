@@ -1,0 +1,98 @@
+{
+	"info": {
+		"_postman_id": "642c5d95-2961-4888-8aba-ee7deaefd354",
+		"name": "TC_API_DOC_CONS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-642c5d95-2961-4888-8aba-ee7deaefd354?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "ConsultationsOfDoctor",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{doctorToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/consultation/get",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"consultation",
+						"get"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "ConsultationsOfDoctor",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/consultation/get",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"consultation",
+								"get"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "521"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"209-gcSt5p1/8PnSKLVI0rhSMk5/4ZA\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 17:10:05 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"list\": [\n            {\n                \"consultationId\": \"695005415345d627797ca1fc\",\n                \"patientName\": \"Sagar\",\n                \"patientProfileUrl\": \"https://ui-avatars.com/api/?name=Sagar&background=random\",\n                \"startTime\": \"2025-12-27T16:16:26.278Z\",\n                \"endTime\": \"2025-12-27T16:46:26.278Z\",\n                \"symptoms\": \"Fever\",\n                \"status\": \"pending\"\n            },\n            {\n                \"consultationId\": \"69500edc0db97b6e8bc26fc4\",\n                \"patientName\": \"Sahil\",\n                \"patientProfileUrl\": \"http://www.google.com\",\n                \"startTime\": \"2025-12-28T03:30:00.000Z\",\n                \"endTime\": \"2025-12-28T04:00:00.000Z\",\n                \"symptoms\": \"fever\",\n                \"status\": \"pending\"\n            }\n        ]\n    }\n}"
+				}
+			]
+		}
+	]
+}

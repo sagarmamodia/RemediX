@@ -1,3 +1,8 @@
+#]Dummy details : 
+ 1. patient details : { email : testpatient@gmail.com , password : testpatient123 } password length : min 8 chars
+ 2. Doctor details : { email : testdoctor@gmail.com , password : testdoctor123 }
+ 3. payment card details : { card no : 4111 1111 1111 1111 , expiry date : 01/26(+) , cvv : xxx , zip code :  xxxx }
+
 # RemediX
 
 RemediX is a full‑stack health/consultation web application that provides patient and doctor workflows including authentication, booking, dashboards and consultation management. The project is split into two main parts:
@@ -28,7 +33,6 @@ This README gives an overview of the project, how to run it locally, and where t
 - [Testing](#testing)
 - [Deployment](#deployment)
 - [Contributing](#contributing)
-- [License](#license)
 - [Maintainer / Contact](#maintainer--contact)
 
 ## Key features
@@ -195,9 +199,8 @@ Contributions are welcome. A suggested workflow:
 
 Please open issues for feature requests, bugs, or design discussions.
 
-## License
 
-No LICENSE file detected in the repository root. Add a LICENSE (for example, the MIT license) to make the project’s license explicit.
+
 
 ## Maintainer / Contact
 

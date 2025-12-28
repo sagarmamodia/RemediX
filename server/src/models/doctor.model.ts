@@ -44,7 +44,7 @@ const doctorSchema = new Schema<IDoctor>({
   fee: { type: Number, required: true },
   specialty: { type: String, required: true },
   profileUrl: { type: String, required: true },
-  available: { type: Boolean, default: false },
+  available: { type: Boolean, default: true },
   shifts: { type: [shiftSchema], required: true, id: false },
 });
 

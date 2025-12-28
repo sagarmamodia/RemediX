@@ -1,0 +1,98 @@
+{
+	"info": {
+		"_postman_id": "84638257-f9de-47a1-869a-a1d25c78ae7d",
+		"name": "TC_API_PAT_CONS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-84638257-f9de-47a1-869a-a1d25c78ae7d?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "ConsultationsOfPatient",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{patientToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/consultation/get",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"consultation",
+						"get"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "ConsultationsOfPatient",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/consultation/get",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"consultation",
+								"get"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "35"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"23-1UpDhX3kYpXZRP63YFlAlEZb//k\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 12:05:30 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"list\": []\n    }\n}"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,42 @@
+{
+	"info": {
+		"_postman_id": "f0992b79-6049-4e3b-8cb8-80c9e9ebacaa",
+		"name": "TC_API_GET_PRESC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-f0992b79-6049-4e3b-8cb8-80c9e9ebacaa?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "GetPrescription",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{patientToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/consultation/id/{{consultationId2}}/prescription",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"consultation",
+						"id",
+						"{{consultationId2}}",
+						"prescription"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

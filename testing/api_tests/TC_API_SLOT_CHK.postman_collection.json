@@ -1,0 +1,116 @@
+{
+	"info": {
+		"_postman_id": "ec763717-6d84-45af-8661-c175db45fce5",
+		"name": "TC_API_SLOT_CHK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33039391",
+		"_collection_link": "https://sagar74822-8742332.postman.co/workspace/Testing~e69b9d09-42f5-42c3-a109-cf3bb8694b3b/collection/33039391-ec763717-6d84-45af-8661-c175db45fce5?action=share&source=collection_link&creator=33039391"
+	},
+	"item": [
+		{
+			"name": "Check Slot Availability",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{patientToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"doctorId\": \"{{doctorId}}\",\r\n  \"date\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/consultation/checkSlot",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"consultation",
+						"checkSlot"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Check Slot Availability",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"doctorId\": \"{{doctorId}}\",\r\n    \"slot\": [\"2025-12-29T05:00:00.000+00:00\",\"2025-12-29T05:30:00.000+00:00\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/consultation/checkSlot",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"consultation",
+								"checkSlot"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"2a-sgFfC+EYyqQk26lblRBFeAjzHlY\""
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 27 Dec 2025 17:18:36 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"validSlot\": true\n    }\n}"
+				}
+			]
+		}
+	]
+}
