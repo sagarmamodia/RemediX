@@ -22,3 +22,5 @@ const patientSchema = new Schema<IPatient>({
 });
 
 export const PatientModel = model<IPatient>("Patient", patientSchema);
+
+//
