@@ -36,7 +36,7 @@ const Room = () => {
         setMeetingId(currentMeetingId);
       } catch (err: any) {
         console.error('Error fetching credentials:', err);
-        setError('Failed to initialize meeting. Please try again.');
+        setError(err.response?.data?.data?.error || 'Failed to initialize meeting. Please try again.');
       } finally {
         setLoading(false);
       }

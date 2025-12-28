@@ -78,9 +78,9 @@ const FindDoctorsSection = () => {
           setDoctors(response.data.list);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching doctors:', err);
-      setError('Failed to load doctors list.');
+      setError(err.response?.data?.data?.error || 'Failed to load doctors list.');
     } finally {
       setLoading(false);
     }

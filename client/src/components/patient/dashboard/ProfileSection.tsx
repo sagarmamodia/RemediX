@@ -20,9 +20,9 @@ const ProfileSection = () => {
           setProfile(response.data);
           setFormData(response.data);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching profile:', err);
-        setError('Failed to load profile details.');
+        setError(err.response?.data?.data?.error || 'Failed to load profile details.');
       } finally {
         setLoading(false);
       }
@@ -51,9 +51,9 @@ const ProfileSection = () => {
         setProfile(response.data);
         setIsEditing(false);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error updating profile:', err);
-      setError('Failed to update profile. Please try again.');
+      setError(err.response?.data?.data?.error || 'Failed to update profile. Please try again.');
     } finally {
       setSaving(false);
     }

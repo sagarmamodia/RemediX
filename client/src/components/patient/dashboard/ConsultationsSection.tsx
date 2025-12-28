@@ -21,8 +21,8 @@ const ConsultationsSection = () => {
       try {
         const data = await consultationService.getConsultations();
         setConsultations(data);
-      } catch (err) {
-        setError('Failed to load consultations');
+      } catch (err: any) {
+        setError(err.response?.data?.data?.error || 'Failed to load consultations');
       } finally {
         setLoading(false);
       }

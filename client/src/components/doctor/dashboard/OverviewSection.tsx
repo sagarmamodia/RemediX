@@ -38,9 +38,9 @@ const OverviewSection = () => {
       const newStatus = !available;
       await doctorService.updateAvailability(newStatus);
       setAvailable(newStatus);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to update availability', err);
-      alert('Failed to update availability. You may have pending consultations.');
+      alert(err.response?.data?.data?.error || 'Failed to update availability. You may have pending consultations.');
     }
   };
 
@@ -51,9 +51,9 @@ const OverviewSection = () => {
         setConsultations(prev => prev.map(c => 
           c._id === consultationId ? { ...c, status: 'completed' } : c
         ));
-      } catch (err) {
+      } catch (err: any) {
         console.error('Failed to mark as completed:', err);
-        alert('Failed to update status');
+        alert(err.response?.data?.data?.error || 'Failed to update status');
       }
     }
   };

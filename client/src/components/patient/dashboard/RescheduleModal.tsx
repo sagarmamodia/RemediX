@@ -52,9 +52,9 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({ isOpen, onClose, cons
       const newTimeSlot = new Date(slot[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       onSuccess(slot[0], newTimeSlot);
       onClose();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to reschedule', err);
-      alert('Failed to reschedule consultation. Please try again.');
+      alert(err.response?.data?.data?.error || 'Failed to reschedule consultation. Please try again.');
     } finally {
       setRescheduling(false);
     }
