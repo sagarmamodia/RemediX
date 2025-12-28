@@ -8,7 +8,7 @@ export interface IPatient extends Document {
   password: string;
   gender: string;
   dob: Date;
-  profileUrl: string; // if user uploads no profile picture then a general profile pic url is added as a default
+  profileUrl: string;
 }
 
 const patientSchema = new Schema<IPatient>({
