@@ -4,7 +4,7 @@ import { User, Stethoscope, Mail, Phone, Lock, Calendar, IndianRupee, Award, Use
 import type { Role, RegisterFormData } from '../types';
 import api from '../services/api';
 
-import { seedUsers } from '../utils/seedData';
+// import { seedUsers } from '../utils/seedData';
 
 const SPECIALITIES = [
   'General Physician',
@@ -296,13 +296,13 @@ const Register = () => {
               </Link>
             </p>
             {/* Dev Tool: Seed Data */}
-            <button 
+            {/* <button 
               type="button"
               onClick={seedUsers}
               className="mt-4 text-xs text-slate-400 hover:text-slate-600 underline"
             >
               (Dev) Seed Test Users
-            </button>
+            </button> */}
           </div>
         </form>
       </div>
