@@ -44,6 +44,17 @@ const Register = () => {
     setError('');
     // setLoading(true);
 
+    // Validation
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
+
+    if (formData.phone.length < 10) {
+      setError('Phone number must be at least 10 digits long');
+      return;
+    }
+
     try {
       const defaultProfileUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`;
       
@@ -63,6 +74,7 @@ const Register = () => {
       const response = await api.post(endpoint, payload);
 
       if (response.data.success) {
+        alert('Registration successful! Please login to continue.');
         navigate('/login?role=' + role);
       }
     } catch (err: any) {

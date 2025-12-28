@@ -28,6 +28,12 @@ const Login = () => {
     setError('');
     setLoading(true);
 
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      setLoading(false);
+      return;
+    }
+
     try {
      // calling backend api to login
      
